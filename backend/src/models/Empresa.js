@@ -7,28 +7,12 @@ const Empresa = sequelize.define('Empresa', {
     autoIncrement: true,
     primaryKey: true,
   },
-  nombre: {
+  razon_social: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,  // Nombre único según validaciones
+    unique: true,  // Nombre legal único
   },
   sector: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  direccion: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  telefono: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  web: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -36,9 +20,24 @@ const Empresa = sequelize.define('Empresa', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  contacto: {
+  direccion: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  correo: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: { isEmail: true },  // Validación de email
+  },
+  telefono: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: { len: [10, 15] },  // Ej. longitud de teléfono
+  },
+  sitio_web: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    validate: { isUrl: true },  // Validación de URL
   },
 }, {
   tableName: 'EMPRESA',

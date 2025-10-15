@@ -4,50 +4,47 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 
 const register = async (req, res) => {
-    const { email, password, role } = req.body;
+    const schema = Joi.object({
+    nombre_completo: Joi.string().required(),
+    telefono: Joi.string().optional(),
+    generacion: Joi.string().required(),
+    carrera: Joi.string().required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(8).required(),
+    confirm_password: Joi.string().valid(Joi.ref('password')).required(),
+    });
+    const { error } = schema.validate(req.body);
+    if (error) return res.status(400).json({ error: error.details[0].message });
 
-    // Validaciones
-    if (!email || !password || password.length < 8) {
-        return res
-        .status(400)
-        .json({ message: "Email requerido y password mínimo 8 caracteres" });
-    }
+    const { nombre_completo, telefono, generacion, carrera, email, password } = req.body;
 
     try {
-        const existingUser = await User.findOne({ where: { email } });
-        if (existingUser)
-        return res.status(400).json({ message: "Email ya existe" });
+        if (await User.findOne({ where: { email } })) return res.status(400).json({ error: 'Email ya existe' });
 
-        const hashedPassword = await bcrypt.hash(password, 10); // Salting automático
-        const user = await User.create({ email, password: hashedPassword, role });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await User.create({ email, password: hashedPassword, role: 'egresado' });
 
-        res.status(201).json({ message: "Usuario registrado", userId: user.id });
+        await Egresado.create({
+        nombre_completo, telefono, generacion, carrera, email, user_id: user.id,
+        });
+
+        res.status(201).json({ message: 'Egresado registrado' });
     } catch (err) {
-        res.status(500).json({ message: "Error en registro", err });
+        res.status(500).json({ error: 'Error en registro' });
     }
 };
 
 const login = async (req, res) => {
     const { email, password } = req.body;
-
     try {
         const user = await User.findOne({ where: { email } });
-        if (!user)
-        return res.status(401).json({ message: "Credenciales inválidas" });
-
-        const match = await bcrypt.compare(password, user.password);
-        if (!match)
-        return res.status(401).json({ message: "Credenciales inválidas" });
-        // Generar JWT
-        const token = jwt.sign(
-        { id: user.id, role: user.role },
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" }
-        );
-        res.json({ token });
-
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+        return res.status(401).json({ error: 'Credenciales inválidas' });
+        }
+        const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.json({ token, role: user.role }); // Agrega role para redirigir en frontend
     } catch (err) {
-        res.status(500).json({ message: "Error en login", err });
+        res.status(500).json({ error: 'Error en login' });
     }
 };
 

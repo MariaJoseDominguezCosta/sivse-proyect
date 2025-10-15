@@ -1,3 +1,4 @@
+// models/Vacante.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Empresa = require('./Empresa');
@@ -5,53 +6,57 @@ const Empresa = require('./Empresa');
 const Vacante = sequelize.define('Vacante', {
   id: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
     primaryKey: true,
+    autoIncrement: true,
+  },
+  empresa_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: { model: 'Empresas', key: 'id' },
   },
   titulo: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false,
   },
   descripcion: {
     type: DataTypes.TEXT,
     allowNull: false,
   },
-  salario: {
-    type: DataTypes.DECIMAL,
-    allowNull: false,
+  requisitos: {
+    type: DataTypes.TEXT,
+    allowNull: true, // Opcional, pero mostrado en maquetado
   },
   ubicacion: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  estado: {
-    type: DataTypes.ENUM('Activa', 'Inactiva'),
-    defaultValue: 'Activa',
+    type: DataTypes.STRING(255),
+    allowNull: true, // Opcional, pero en BD y detalles
   },
   modalidad: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    type: DataTypes.STRING(10),
+    allowNull: true, // Ej. 'Remoto', 'Presencial', 'Mixto'
   },
-  empresa_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Empresa,
-      key: 'id',
+  salario_estimado: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: true, // Opcional, pero en BD y detalles
+  },
+  estado: {
+    type: DataTypes.STRING(50),
+    defaultValue: 'Activa',
+    validate: {
+      isIn: [['Activa', 'Inactiva']],
     },
+  },
+  fecha_publicacion: {
+    type: DataTypes.DATEONLY,
+    defaultValue: DataTypes.NOW,
   },
 }, {
   tableName: 'VACANTE',
-  timestamps: true,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
 });
 
-// Asociación inversa
-Vacante.associate = (models) => {
-  Vacante.belongsTo(models.Empresa, {
-    foreignKey: 'empresaId',
-    as: 'empresa',
-  });
-};
-
-Empresa.hasMany(Vacante, { foreignKey: 'empresa_id' });
+// Relación
+Empresa.hasMany(Vacante, { foreignKey: 'empresa_id', onDelete: 'CASCADE' });
+Vacante.belongsTo(Empresa, { foreignKey: 'empresa_id' });
 
 module.exports = Vacante;

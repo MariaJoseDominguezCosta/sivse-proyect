@@ -1,65 +1,55 @@
-// src/App.jsx - Rutas principales con React Router
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
-import Login from "./components/Login"; // Usa el componente con Formik
-import Register from "./components/Register"; // Usa el componente con Formik
-import AdminDashboard from "./pages/AdminDashboard";
-import EgresadoDashboard from "./pages/EgresadoDashboard";
-import Logout from "./components/Logout";
+// App.js
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import EgresadoLayout from './components/EgresadoLayout';
+import AdminLayout from './components/AdminLayout';
+import Profile from './pages/Profile';
+import Vacantes from './pages/Vacantes';
+import Favoritos from './pages/Favoritos';
+import AdminDashboard from './pages/AdminDashboard';
+import SeguimientoEgresados from './pages/SeguimientoEgresados';
+import BolsaTrabajo from './pages/BolsaTrabajo';
+import GestionEmpresas from './pages/GestionEmpresas';
+import Reportes from './pages/Reportes';
+import PrivateRoute from './components/PrivateRoute';
 
-const ProtectedRoute = ({ children, allowedRole }) => {
-  const token = localStorage.getItem("token");
-  if (!token) return <Navigate to="/login" />;
-
-  try {
-    const decoded = JSON.parse(atob(token.split(".")[1])); // Decodifica JWT
-    if (decoded.role !== allowedRole) return <Navigate to="/login" />;
-    return children;
-  } catch (err) {
-    console.error("Error decoding token:", err);
-    return <Navigate to="/login" />;
-  }
-};
-
-function App() {
+const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/logout" element={<Logout />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute allowedRole="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
+          path="/egresado-dashboard"
+          element={<PrivateRoute allowedRoles={['egresado']} />}
+        >
+          <Route path="" element={<EgresadoLayout />}>
+            <Route path="profile" element={<Profile />} />
+            <Route path="vacantes" element={<Vacantes />} />
+            <Route path="favoritos" element={<Favoritos />} />
+          </Route>
+        </Route>
         <Route
-          path="/egresado/dashboard"
-          element={
-            <ProtectedRoute allowedRole="egresado">
-              <EgresadoDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/admin/empresas" element={<EmpresasList />} />
-        <Route
-          path="/admin/empresas/:id/editar"
-          element={<AdminEmpresasPage />}
-        />
-        <Route path="/admin/empresas/nueva" element={<AdminEmpresasPage />} />
-        <Route path="/admin/empresas/:id" element={<EmpresaDetail />} />
+          path="/admin-dashboard"
+          element={<PrivateRoute allowedRoles={['admin']} />}
+        >
+          <Route path="" element={<AdminLayout />}>
+            <Route path="" element={<AdminDashboard />} />
+            <Route path="seguimiento-egresados" element={<SeguimientoEgresados />} />
+            <Route path="bolsa-trabajo" element={<BolsaTrabajo />} />
+            <Route path="gestion-empresas" element={<GestionEmpresas />} />
+            <Route path="reportes" element={<Reportes />} />
+          </Route>
+        </Route>
+        <Route path="/" element={<Login />} />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

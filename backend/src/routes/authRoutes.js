@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
+router.post('/forgot-password', exports.forgotPassword);
+router.post('/reset-password', exports.resetPassword);
 
 // Ejemplo de ruta protegida: app.use('/api/protected', authenticate, protectedRoute);
 

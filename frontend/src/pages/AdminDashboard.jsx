@@ -1,14 +1,25 @@
-// src/pages/AdminDashboard.js
-import React from 'react';
-import { Typography, Container } from '@mui/material';
-import { Link } from 'react-router-dom';
+// pages/AdminDashboard.js
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const AdminDashboard = () => (
-  <Container>
-    <Typography variant="h4">Dashboard Admin</Typography>
-    <Link to="/logout">Logout</Link>
-    {/* Lógica futura: Listas de egresados, vacantes */}
-  </Container>
-);
+const AdminDashboard = () => {
+  const [stats, setStats] = useState({ egresados: 0, empresas: 0, vacantes: 0 });
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axios.get('http://localhost:5000/api/admin/stats').then(res => setStats(res.data));
+  }, []);
+
+  return (
+    <div>
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-pink-100 p-4 rounded">Egresados Registrados: {stats.egresados}</div>
+        <div className="bg-pink-100 p-4 rounded">Empresas: {stats.empresas}</div>
+        <div className="bg-pink-100 p-4 rounded">Vacantes Activos: {stats.vacantes}</div>
+      </div>
+    </div>
+  );
+};
 
 export default AdminDashboard;
