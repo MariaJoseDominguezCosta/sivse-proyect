@@ -1,1 +1,1 @@
-Proeycto del TecNM Comitán, para el seguimiento de egresados
+Proyecto del TecNM Comitán, para el seguimiento de egresados
