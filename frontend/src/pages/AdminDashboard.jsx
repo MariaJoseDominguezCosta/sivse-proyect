@@ -4,11 +4,16 @@ import axios from 'axios';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({ egresados: 0, empresas: 0, vacantes: 0 });
+  const [notification, setNotification] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    axios.get('http://localhost:5000/api/admin/stats').then(res => setStats(res.data));
+    axios.get('http://localhost:5000/api/admin/stats').then(res => {
+      setStats(res.data);
+      setNotification('Estadísticas cargadas exitosamente.');
+      setTimeout(() => setNotification(''), 3000);
+    }).catch(() => setNotification('Error al cargar estadísticas.'));
   }, []);
 
   return (
@@ -18,6 +23,7 @@ const AdminDashboard = () => {
         <div className="bg-pink-100 p-4 rounded">Empresas: {stats.empresas}</div>
         <div className="bg-pink-100 p-4 rounded">Vacantes Activos: {stats.vacantes}</div>
       </div>
+      {notification && <p className="text-green-500 mt-4">{notification}</p>}
     </div>
   );
 };

@@ -12,7 +12,6 @@ Empresa.hasMany(Vacante, { foreignKey: 'empresa_id' });
 Vacante.belongsTo(Empresa, { foreignKey: 'empresa_id' });
 
 // Ejecuta asociaciones
-Empresa.associate({ Vacante });
-Vacante.associate({ Empresa });
+
 
 module.exports = { User, Egresado, Empresa, Vacante };

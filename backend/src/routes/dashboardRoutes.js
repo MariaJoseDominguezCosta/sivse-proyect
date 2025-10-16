@@ -1,7 +1,7 @@
 // src/routes/dashboardRoutes.js - Rutas protegidas por rol
 const express = require('express');
-const authenticate = require('../middlewares/authMiddleware');
-const authorize = require('../middlewares/roleMiddleware');
+const authenticate = require('../middlewares/authMiddleware').default;
+const authorize = require('../middlewares/roleMiddleware').default;
 const { adminDashboard, egresadoDashboard } = require('../controllers/dashboardController');
 
 const router = express.Router();

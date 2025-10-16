@@ -1,9 +1,11 @@
-// pages/EgresadoDashboard.js
+// pages/Profile.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import EditProfile from './EditProfile';
 
 const EgresadoDashboard = () => {
     const [profile, setProfile] = useState({});
+    const [notification, setNotification] = useState('');
     const [editing, setEditing] = useState(false);
 
     useEffect(() => {
@@ -11,14 +13,15 @@ const EgresadoDashboard = () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         axios.get('http://localhost:5000/api/egresado/profile').then(res => {
         setProfile(res.data);
-        localStorage.setItem('userName', res.data.nombre_completo); // Para header
-        });
+        localStorage.setItem('userName', res.data.nombre_completo);
+        setNotification('Perfil cargado exitosamente.');
+        setTimeout(() => setNotification(''), 3000); // Desaparece después de 3s
+        }).catch(() => setNotification('Error al cargar el perfil.'));
     }, []);
 
     const handleEditClick = () => setEditing(true);
 
     if (editing) {
-        // Placeholder para edición, usa EditProfile como modal
         return <EditProfile profile={profile} onSave={() => setEditing(false)} />;
     }
 
@@ -38,6 +41,7 @@ const EgresadoDashboard = () => {
             <p><strong>Teléfono:</strong> {profile.telefono}</p>
             <p><strong>Ubicación:</strong> {profile.ubicacion}</p>
         </div>
+        {notification && <p className="text-green-500 mt-4 col-span-2">{notification}</p>}
         </div>
     );
 };

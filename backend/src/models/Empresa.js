@@ -24,7 +24,7 @@ const Empresa = sequelize.define('Empresa', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  correo: {
+  correo_contacto: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: { isEmail: true },  // Validación de email

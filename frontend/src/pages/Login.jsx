@@ -7,6 +7,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [notification, setNotification] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -15,7 +16,8 @@ const Login = () => {
         const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('role', res.data.role);
-        navigate(res.data.role === 'admin' ? '/admin-dashboard' : '/egresado-dashboard');
+        setNotification('Inicio de sesión exitoso. Redirigiendo...');
+        setTimeout(() => navigate(res.data.role === 'admin' ? '/admin-dashboard' : '/egresado-dashboard'), 1000);
         } catch (err) {
         setError(err.response?.data?.error || 'Error en login');
         }
@@ -24,9 +26,9 @@ const Login = () => {
     return (
         <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center">
         <header className="w-full bg-blue-900 text-white py-4 flex justify-between px-8">
-            <div>Logo TecNM</div> {/* Reemplaza con <img src="logo-tecnm.png" /> */}
+            <div>Logo TecNM</div>
             <h1 className="text-4xl">SIVSE</h1>
-            <div>Logo Comitán</div> {/* Reemplaza con img */}
+            <div>Logo Comitán</div>
         </header>
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mt-20">
             <label className="block mb-2">Email</label>
@@ -38,6 +40,7 @@ const Login = () => {
             <p className="text-center"><a href="/register" className="text-blue-500">¿Eres egresado? Regístrate</a></p>
         </form>
         {error && <p className="text-red-500 mt-4">{error}</p>}
+        {notification && <p className="text-green-500 mt-4">{notification}</p>}
         </div>
     );
 };

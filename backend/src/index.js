@@ -4,11 +4,21 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
+const http = require('http');
+const { Server } = require('socket.io');
 const sequelize = require('./config/database'); // Conexión DB
 const egresadoRoutes = require('./routes/egresadoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const vacantesRoutes = require('./routes/vacantes'); // Rutas de vacantes
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000', // Ajusta al frontend (React) en desarrollo
+    methods: ['GET', 'POST'],
+  },
+});
 const PORT = process.env.PORT || 5000;
 
 // Middleware básico
@@ -22,15 +32,26 @@ app.use('/api/egresado', egresadoRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', require('./routes/dashboardRoutes')); // Rutas protegidas (dashboards)
 app.use('/api/empresas', require('./routes/empresasRoutes')); // Rutas de empresas
+app.use('/api/vacantes', vacantesRoutes); // Rutas de vacantes
 
-// app.js (extracto)
-const vacantesRoutes = require('./routes/vacantes');
-app.use('/api/vacantes', vacantesRoutes);
+// Configuración de Socket.io
+io.on('connection', (socket) => {
+  console.log(`Usuario conectado a Socket.io a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}`);
+  socket.on('disconnect', () => {
+    console.log(`Usuario desconectado a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}`);
+  });
+});
+
+// Exporta io para usarlo en controllers
+app.set('io', io);
+
 // Sincronizar DB y arrancar servidor
-sequelize.sync() // Sincroniza modelos con DB (usa { force: true } solo en dev para resetear)
+sequelize.sync({ alter: true }) // Sincroniza modelos con DB (usa { force: true } solo en dev para resetear)
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
+    server.listen(PORT, () => {
+      console.log(`Servidor backend corriendo en http://localhost:${PORT} a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}`);
     });
   })
-  .catch(err => console.error('Error al conectar DB:', err));
+  .catch(err => {
+    console.error(`Error al conectar DB a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}:`, err);
+  });

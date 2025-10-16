@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const empresasController = require('../controllers/empresasController');
-const { authMiddleware, adminMiddleware } = require('../middlewares/authMiddleware');  // Asume implementados
+const { authMiddleware, adminMiddleware } = require('../middlewares/authMiddleware').default;  // Asume implementados
 
 // GET todas (lectura para auth users)
 router.get('/', authMiddleware, empresasController.getAllEmpresas);
