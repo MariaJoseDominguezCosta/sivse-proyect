@@ -1,7 +1,7 @@
 // models/Vacante.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const Empresa = require("./Empresa");
+const Empresa = require("./empresa");
 
 const Vacante = sequelize.define(
   "Vacante",

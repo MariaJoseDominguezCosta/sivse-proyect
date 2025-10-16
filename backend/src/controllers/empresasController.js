@@ -1,14 +1,14 @@
 const { Op } = require('sequelize');
-const Empresa = require('../models/Empresa');
-const Vacante = require('../models/Vacante');  // Para chequeo de integridad
+const Empresa = require('../models/empresa');
+const Vacante = require('../models/vacante');
 
-// GET /api/empresas - Lista todas con filtros, paginación y orden
 exports.getAllEmpresas = async (req, res) => {
     try {
-        const { sector, nombre, page = 1, limit = 10, sort = 'nombre', order = 'ASC' } = req.query;
+        const { sector, tipo_convenio, razon_social, page = 1, limit = 10, sort = 'razon_social', order = 'ASC' } = req.query;
         const where = {};
         if (sector) where.sector = sector;
-        if (nombre) where.nombre = { [Op.like]: `%${nombre}%` };  // Búsqueda partial match
+        if (tipo_convenio) where.tipo_convenio = tipo_convenio;
+        if (razon_social) where.razon_social = { [Op.like]: `%${razon_social}%` };
 
         const empresas = await Empresa.findAndCountAll({
         where,
@@ -17,44 +17,39 @@ exports.getAllEmpresas = async (req, res) => {
         order: [[sort, order]],
         });
 
-        res.status(200).json({
-        success: true,
-        data: empresas.rows,
-        total: empresas.count,
-        page: parseInt(page),
-        limit: parseInt(limit),
-        });
+        res.status(200).json({ success: true, data: empresas.rows, total: empresas.count, page, limit, message: 'Empresas cargadas exitosamente' });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Error al listar empresas', error: error.message });
+        res.status(500).json({ success: false, message: 'Error al listar empresas: ' + error.message });
     }
 };
 
-// GET /api/empresas/:id - Detalle de empresa
 exports.getEmpresaById = async (req, res) => {
     try {
         const empresa = await Empresa.findByPk(req.params.id);
         if (!empresa) return res.status(404).json({ success: false, message: 'Empresa no encontrada' });
-        res.status(200).json({ success: true, data: empresa });
+        res.status(200).json({ success: true, data: empresa, message: 'Empresa cargada exitosamente' });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Error al obtener empresa', error: error.message });
+        res.status(500).json({ success: false, message: 'Error al obtener empresa: ' + error.message });
     }
 };
 
-// POST /api/empresas - Crear empresa (solo admin)
 exports.createEmpresa = async (req, res) => {
     try {
-        const { razon_social, sector, tipo_convenio, direccion, correo, telefono, sitio_web } = req.body;
-        if (!razon_social || !sector || !tipo_convenio || !direccion || !correo || !telefono) {
-        return res.status(400).json({ success: false, message: 'Campos requeridos faltantes' });
+        const { razon_social, sector, direccion, correo, telefono, tipo_convenio, sitio_web } = req.body;
+        if (!razon_social || !sector || !direccion || !correo || !telefono || !tipo_convenio) {
+        return res.status(400).json({ success: false, message: 'Todos los campos son requeridos' });
         }
-        // Validaciones adicionales (Sequelize maneja isEmail, isUrl, etc.)
+        if (razon_social.length < 3) {
+        return res.status(400).json({ success: false, message: 'Razón social debe tener al menos 3 caracteres' });
+        }
+
         const existing = await Empresa.findOne({ where: { razon_social } });
         if (existing) return res.status(400).json({ success: false, message: 'Razón social ya existe' });
 
-        const empresa = await Empresa.create({ razon_social, sector, tipo_convenio, direccion, correo, telefono, sitio_web });
-        res.status(201).json({ success: true, data: empresa });
+        const empresa = await Empresa.create({ razon_social, sector, direccion, correo, telefono, tipo_convenio, sitio_web });
+        res.status(201).json({ success: true, data: empresa, message: 'Empresa creada exitosamente' });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Error al crear empresa', error: error.message });
+        res.status(500).json({ success: false, message: 'Error al crear empresa: ' + error.message });
     }
 };
 
@@ -63,42 +58,43 @@ exports.updateEmpresa = async (req, res) => {
         const empresa = await Empresa.findByPk(req.params.id);
         if (!empresa) return res.status(404).json({ success: false, message: 'Empresa no encontrada' });
 
-        const { razon_social, sector, tipo_convenio, direccion, correo, telefono, sitio_web } = req.body;
-        await empresa.update({ razon_social, sector, tipo_convenio, direccion, correo, telefono, sitio_web });
-        res.status(200).json({ success: true, data: empresa });
+        const { razon_social, sector, direccion, correo, telefono, tipo_convenio, sitio_web } = req.body;
+        if (razon_social && razon_social.length < 3) {
+        return res.status(400).json({ success: false, message: 'Razón social debe tener al menos 3 caracteres' });
+        }
+
+        await empresa.update({ razon_social, sector, direccion, correo, telefono, tipo_convenio, sitio_web });
+        res.status(200).json({ success: true, data: empresa, message: 'Empresa actualizada exitosamente' });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Error al actualizar empresa', error: error.message });
+        res.status(500).json({ success: false, message: 'Error al actualizar empresa: ' + error.message });
     }
 };
 
-// DELETE /api/empresas/:id - Eliminar empresa (solo admin, con chequeo de vacantes)
 exports.deleteEmpresa = async (req, res) => {
     try {
         const empresa = await Empresa.findByPk(req.params.id);
         if (!empresa) return res.status(404).json({ success: false, message: 'Empresa no encontrada' });
 
-        // Chequeo de integridad: No eliminar si tiene vacantes asociadas
         const vacantes = await Vacante.count({ where: { empresaId: req.params.id } });
         if (vacantes > 0) {
         return res.status(400).json({ success: false, message: 'No se puede eliminar: Tiene vacantes asociadas' });
         }
 
         await empresa.destroy();
-        res.status(200).json({ success: true, message: 'Empresa eliminada' });
+        res.status(200).json({ success: true, message: 'Empresa eliminada exitosamente' });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Error al eliminar empresa', error: error.message });
+        res.status(500).json({ success: false, message: 'Error al eliminar empresa: ' + error.message });
     }
 };
 
-// GET /api/empresas/:id/vacantes - Listar vacantes por empresa
 exports.getVacantesByEmpresa = async (req, res) => {
     try {
         const empresa = await Empresa.findByPk(req.params.id, {
         include: [{ model: Vacante, as: 'vacantes' }],
         });
         if (!empresa) return res.status(404).json({ success: false, message: 'Empresa no encontrada' });
-        res.status(200).json({ success: true, data: empresa.vacantes });
+        res.status(200).json({ success: true, data: empresa.vacantes, message: 'Vacantes cargadas exitosamente' });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Error al listar vacantes', error: error.message });
+        res.status(500).json({ success: false, message: 'Error al listar vacantes: ' + error.message });
     }
 };

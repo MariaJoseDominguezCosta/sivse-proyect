@@ -1,41 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Grid, TextField, Button, Snackbar, Alert, Paper } from '@mui/material';
+import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Grid, Paper, Snackbar, Alert, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 
+const sectors = ['Tecnológica', 'Salud', 'Local', 'Nacional', 'Internacional', 'Otros'];
+const convenios = ['Local', 'Nacional', 'Internacional'];
+
 const validationSchema = Yup.object({
     razon_social: Yup.string().min(3, 'Mínimo 3 caracteres').required('Requerido'),
     sector: Yup.string().required('Requerido'),
-    tipo_convenio: Yup.string().required('Requerido'),
     direccion: Yup.string().required('Requerido'),
     correo: Yup.string().email('Correo inválido').required('Requerido'),
-    telefono: Yup.string().matches(/^\+?\d{10,15}$/, 'Teléfono inválido').required('Requerido'),
+    telefono: Yup.string().required('Requerido'),
+    tipo_convenio: Yup.string().required('Requerido'),
     sitio_web: Yup.string().url('URL inválida').nullable(),
-});
+    });
 
-const EmpresaForm = () => {
+    const EmpresaForm = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('info');
+    const [loading, setLoading] = useState(false);
 
     const formik = useFormik({
         initialValues: {
-        razon_social: '', sector: '', tipo_convenio: '', direccion: '', correo: '', telefono: '', sitio_web: '',
+        razon_social: '', sector: '', direccion: '', correo: '', telefono: '', tipo_convenio: '', sitio_web: '',
         },
         validationSchema,
         onSubmit: async (values) => {
+        setLoading(true);
         try {
             if (id) {
-            await axios.put(`/empresas/${id}`, values);
+            const res = await axios.put(`/empresas/${id}`, values);
+            setSnackbarMessage(res.data.message);
+            setSnackbarSeverity('success');
             } else {
-            await axios.post('/empresas', values);
+            const res = await axios.post('/empresas', values);
+            setSnackbarMessage(res.data.message);
+            setSnackbarSeverity('success');
             }
-            navigate('/admin/empresas');
+            setTimeout(() => navigate('/admin/empresas'), 2000); // Redirige tras notificación
         } catch (error) {
-            setErrorMessage(error.response?.data?.message || 'Error al guardar');
+            setSnackbarMessage(error.response?.data?.message || 'Error al guardar');
+            setSnackbarSeverity('error');
+        } finally {
+            setLoading(false);
             setOpenSnackbar(true);
         }
         },
@@ -43,24 +56,35 @@ const EmpresaForm = () => {
 
     useEffect(() => {
         if (id) {
-        const fetchEmpresa = async () => {
-            try {
-            const res = await axios.get(`/empresas/${id}`);
-            formik.setValues(res.data.data);
-            } catch (error) {
-            setErrorMessage('Error al cargar datos', error.response?.data?.message || 'Error al cargar datos');
-            setOpenSnackbar(true);
-            }
-        };
-        fetchEmpresa();
+            setLoading(true);
+            const fetchEmpresa = async () => {
+                try {
+                    const res = await axios.get(`/empresas/${id}`);
+                    formik.setValues(res.data.data);
+                    setSnackbarMessage(res.data.message);
+                    setSnackbarSeverity('info');
+                    setOpenSnackbar(true);
+                } catch (error) {
+                    console.error('Error al cargar datos', error);
+                    setSnackbarMessage('Error al cargar datos' );
+                    setSnackbarSeverity('error');
+                    setOpenSnackbar(true);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchEmpresa();
         }
-    }, [id, formik]);
+    }, [id]);
 
     return (
-        <Paper elevation={3} sx={{ p: 4, backgroundColor: '#F0F0F0', borderRadius: 2, maxWidth: 600, mx: 'auto' }}>
+        <Paper elevation={3} sx={{ p: 4, backgroundColor: '#f0f0f0', borderRadius: 2, maxWidth: 600, mx: 'auto' }}>
+        <Typography variant="h5" gutterBottom>
+            {id ? 'Editar Empresa' : 'Registrar nueva empresa'}
+        </Typography>
         <form onSubmit={formik.handleSubmit}>
             <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6}>
                 <TextField
                 label="Razón Social"
                 name="razon_social"
@@ -72,7 +96,7 @@ const EmpresaForm = () => {
                 placeholder="Nombre de la empresa"
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6}>
                 <TextField
                 label="Dirección"
                 name="direccion"
@@ -81,22 +105,22 @@ const EmpresaForm = () => {
                 error={formik.touched.direccion && Boolean(formik.errors.direccion)}
                 helperText={formik.touched.direccion && formik.errors.direccion}
                 fullWidth
-                placeholder="Value"
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
-                <TextField
-                label="Sector"
-                name="sector"
-                value={formik.values.sector}
-                onChange={formik.handleChange}
-                error={formik.touched.sector && Boolean(formik.errors.sector)}
-                helperText={formik.touched.sector && formik.errors.sector}
-                fullWidth
-                placeholder="Value"
-                />
+            <Grid item xs={6}>
+                <FormControl fullWidth>
+                <InputLabel>Sector</InputLabel>
+                <Select
+                    name="sector"
+                    value={formik.values.sector}
+                    onChange={formik.handleChange}
+                    error={formik.touched.sector && Boolean(formik.errors.sector)}
+                >
+                    {sectors.map((s) => <MenuItem key={s} value={s}>{s}</MenuItem>)}
+                </Select>
+                </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6}>
                 <TextField
                 label="Correo"
                 name="correo"
@@ -105,22 +129,22 @@ const EmpresaForm = () => {
                 error={formik.touched.correo && Boolean(formik.errors.correo)}
                 helperText={formik.touched.correo && formik.errors.correo}
                 fullWidth
-                placeholder="Value"
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
-                <TextField
-                label="Tipo de convenio"
-                name="tipo_convenio"
-                value={formik.values.tipo_convenio}
-                onChange={formik.handleChange}
-                error={formik.touched.tipo_convenio && Boolean(formik.errors.tipo_convenio)}
-                helperText={formik.touched.tipo_convenio && formik.errors.tipo_convenio}
-                fullWidth
-                placeholder="Value"
-                />
+            <Grid item xs={6}>
+                <FormControl fullWidth>
+                <InputLabel>Tipo de Convenio</InputLabel>
+                <Select
+                    name="tipo_convenio"
+                    value={formik.values.tipo_convenio}
+                    onChange={formik.handleChange}
+                    error={formik.touched.tipo_convenio && Boolean(formik.errors.tipo_convenio)}
+                >
+                    {convenios.map((c) => <MenuItem key={c} value={c}>{c}</MenuItem>)}
+                </Select>
+                </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6}>
                 <TextField
                 label="Teléfono"
                 name="telefono"
@@ -129,36 +153,43 @@ const EmpresaForm = () => {
                 error={formik.touched.telefono && Boolean(formik.errors.telefono)}
                 helperText={formik.touched.telefono && formik.errors.telefono}
                 fullWidth
-                placeholder="Value"
                 />
             </Grid>
             <Grid item xs={12}>
                 <TextField
-                label="Sitio web"
+                label="Sitio Web"
                 name="sitio_web"
                 value={formik.values.sitio_web}
                 onChange={formik.handleChange}
                 error={formik.touched.sitio_web && Boolean(formik.errors.sitio_web)}
                 helperText={formik.touched.sitio_web && formik.errors.sitio_web}
                 fullWidth
-                placeholder="Value"
                 />
             </Grid>
             </Grid>
-            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-            <Button variant="outlined" color="secondary" onClick={() => navigate('/admin/empresas')} sx={{ mr: 2 }}>
-                Cancelar
-            </Button>
-            <Button type="submit" variant="contained" color="primary">
-                Guardar
-            </Button>
-            </Box>
+            <Grid container justifyContent="flex-end" spacing={2} sx={{ mt: 2 }}>
+            <Grid item>
+                <Button variant="outlined" onClick={() => navigate('/admin/empresas')}>Cancelar</Button>
+            </Grid>
+            <Grid item>
+                <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                {loading ? 'Guardando...' : 'Guardar'}
+                </Button>
+            </Grid>
+            </Grid>
         </form>
-        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
-            <Alert severity="error">{errorMessage}</Alert>
+        <Snackbar
+            open={openSnackbar}
+            autoHideDuration={4000}
+            onClose={() => setOpenSnackbar(false)}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+            <Alert severity={snackbarSeverity} sx={{ width: '100%' }}>
+            {snackbarMessage}
+            </Alert>
         </Snackbar>
         </Paper>
-  );
+    );
 };
 
 export default EmpresaForm;

@@ -1,7 +1,7 @@
 // models/Notificacion.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./User'); // Asumir admin es user
+const User = require('./user'); // Asumir admin es user
 
 const Notificacion = sequelize.define('Notificacion', {
     id: {

@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Egresado = require('./Egresado');
-const Vacante = require('./Vacante');
+const Egresado = require('./egresado');
+const Vacante = require('./vacante');
 
 const Postulacion = sequelize.define('Postulacion', {
   id: {

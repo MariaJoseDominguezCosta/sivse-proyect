@@ -1,8 +1,8 @@
 // src/models/index.js - Relaciones entre modelos
-const User = require('./User');
-const Egresado = require('./Egresado');
-const Empresa = require('./Empresa');
-const Vacante = require('./Vacante');
+const User = require('./user');
+const Egresado = require('./egresado');
+const Empresa = require('./empresa');
+const Vacante = require('./vacante');
 
 // Relaciones
 User.hasOne(Egresado, { foreignKey: 'user_id' });

@@ -12,4 +12,4 @@ const authorize = (allowedRoles) => (req, res, next) => {
     next(); // Procede si el rol es válido
 };
 
-export default authorize;
+module.exports = authorize;
