@@ -1,10 +1,10 @@
 // controllers/vacantesController.js
 const Vacante = require('../models/vacante');
 const Empresa = require('../models/empresa');
-const Egresado = require('../models/egresado');
+const Egresado = require('../models/Egresado');
 const Notificacion = require('../models/Notificacion');
 const sendEmail = require('../utils/email');
-const io = require('../index').io; // Importa io
+const io = require('../config/socket').io; // Importa io
 
 const aplicar = async (req, res) => {
     const vacanteId = req.params.id;

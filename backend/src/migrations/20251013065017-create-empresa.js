@@ -10,7 +10,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      nombre: {
+      razon_social: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -30,11 +30,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      email: {
+      correo_contacto: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      web: {
+      sitio_web: {
         type: Sequelize.STRING,
         allowNull: false,
       },

@@ -42,7 +42,7 @@ const login = async (req, res) => {
         return res.status(401).json({ error: 'Credenciales inválidas' });
         }
         const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token, role: user.role }); // Agrega role para redirigir en frontend
+        res.json({ token, role: user.role });
     } catch (err) {
         res.status(500).json({ error: 'Error en login' });
     }

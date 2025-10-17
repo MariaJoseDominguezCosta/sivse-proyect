@@ -10,7 +10,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      nombre: {
+      nombre_completo: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -44,7 +44,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      puesto_actual: {
+      puesto: {
         type: Sequelize.STRING,
         allowNull: true,
       },

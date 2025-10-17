@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const VacantesRecomendadas = () => {
+const Vacantes = () => {
     const [vacantes, setVacantes] = useState([]);
 
     useEffect(() => {
@@ -27,4 +27,4 @@ const VacantesRecomendadas = () => {
     );
 };
 
-export default VacantesRecomendadas;
+export default Vacantes;

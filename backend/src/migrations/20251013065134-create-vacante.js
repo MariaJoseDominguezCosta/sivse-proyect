@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('VACANTE', {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("VACANTE", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -22,13 +22,13 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'EMPRESA',
-          key: 'id',
+          model: "EMPRESA",
+          key: "id",
         },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
-      salario: {
+      salario_estimado: {
         type: Sequelize.DECIMAL,
         allowNull: false,
       },
@@ -37,25 +37,57 @@ module.exports = {
         allowNull: false,
       },
       estado: {
-        type: Sequelize.ENUM('Activa', 'Inactiva'),
-        defaultValue: 'Activa',
+        type: Sequelize.ENUM("Activa", "Inactiva"),
+        defaultValue: "Activa",
       },
       modalidad: {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      requisitos: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      fecha_publicacion: {
+        type: Sequelize.DATEONLY,
+        defaultValue: Sequelize.NOW,
+      },
+      es_favorito: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+      empresa_id: {
+        type: Sequelize.INTEGER,
+        references: { model: "EMPRESA", key: "id" },
+      },
       createdAt: {
-        allowNull: false,
+        allowNull: true, // Temporalmente nullable
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true, // Temporalmente nullable
         type: Sequelize.DATE,
       },
     });
+
+    // Actualiza las columnas existentes con un valor predeterminado
+    await queryInterface.sequelize.query(`
+      UPDATE "VACANTE" SET "createdAt" = CURRENT_TIMESTAMP, "updatedAt" = CURRENT_TIMESTAMP
+      WHERE "createdAt" IS NULL OR "updatedAt" IS NULL;
+    `);
+
+    // Modifica las columnas para que sean NOT NULL
+    await queryInterface.changeColumn("VACANTE", "createdAt", {
+      type: Sequelize.DATE,
+      allowNull: false,
+    });
+    await queryInterface.changeColumn("VACANTE", "updatedAt", {
+      type: Sequelize.DATE,
+      allowNull: false,
+    });
   },
 
-  async down (queryInterface) {
-    await queryInterface.dropTable('VACANTE');
-  }
+  async down(queryInterface) {
+    await queryInterface.dropTable("VACANTE");
+  },
 };

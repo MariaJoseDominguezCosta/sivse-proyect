@@ -1,12 +1,12 @@
-// App.js
+// src/App.js
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import EgresadoLayout from './components/EgresadoLayout';
-import AdminLayout from './components/AdminLayout';
-import Profile from './pages/Profile';
+import EgresadoLayout from './layouts/EgresadoLayout';
+import AdminLayout from './layouts/AdminLayout';
+import Profile from './pages/EgresadoDashboard';
 import Vacantes from './pages/Vacantes';
 import Favoritos from './pages/Favoritos';
 import AdminDashboard from './pages/AdminDashboard';
@@ -15,6 +15,7 @@ import BolsaTrabajo from './pages/BolsaTrabajo';
 import GestionEmpresas from './pages/GestionEmpresas';
 import Reportes from './pages/Reportes';
 import PrivateRoute from './components/PrivateRoute';
+import './app.css';
 
 const App = () => {
   return (
