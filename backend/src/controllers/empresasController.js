@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
-const Empresa = require('../models/empresa');
-const Vacante = require('../models/vacante');
+const Empresa = require('../models/Empresa');
+const Vacante = require('../models/Vacante');
 
 exports.getAllEmpresas = async (req, res) => {
     try {

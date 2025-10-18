@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('NOTIFICACION', {
+    await queryInterface.createTable('Notificaciones', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'USUARIO',
+          model: 'Usuarios',
           key: 'id',
         },
         onDelete: 'CASCADE',
@@ -40,6 +40,6 @@ module.exports = {
   },
 
   async down (queryInterface) {
-    await queryInterface.dropTable('NOTIFICACION');
+    await queryInterface.dropTable('Notificacion');
   }
 };

@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./user');
+const User = require('./Usuario');
 
 const Egresado = (sequelize, DataTypes) => {
-  const EgresadoModel = sequelize.define('Egresado', {
+  const EgresadoModel = sequelize.define('Egresados', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     nombre_completo: { type: DataTypes.STRING, allowNull: false },
     telefono: { type: DataTypes.STRING },
@@ -21,7 +21,7 @@ const Egresado = (sequelize, DataTypes) => {
     foto_perfil: { type: DataTypes.STRING },
     user_id: { type: DataTypes.INTEGER, unique: true },
   }, {
-    tableName: 'EGRESADO',
+    tableName: 'Egresados',
     timestamps: true,
   });
 

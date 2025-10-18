@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("VACANTE", {
+    await queryInterface.createTable("Vacantes", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "EMPRESA",
+          model: "Empresas",
           key: "id",
         },
         onDelete: "CASCADE",
@@ -56,10 +56,6 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
-      empresa_id: {
-        type: Sequelize.INTEGER,
-        references: { model: "EMPRESA", key: "id" },
-      },
       createdAt: {
         allowNull: true, // Temporalmente nullable
         type: Sequelize.DATE,
@@ -72,22 +68,22 @@ module.exports = {
 
     // Actualiza las columnas existentes con un valor predeterminado
     await queryInterface.sequelize.query(`
-      UPDATE "VACANTE" SET "createdAt" = CURRENT_TIMESTAMP, "updatedAt" = CURRENT_TIMESTAMP
+      UPDATE "Vacantes" SET "createdAt" = CURRENT_TIMESTAMP, "updatedAt" = CURRENT_TIMESTAMP
       WHERE "createdAt" IS NULL OR "updatedAt" IS NULL;
     `);
 
     // Modifica las columnas para que sean NOT NULL
-    await queryInterface.changeColumn("VACANTE", "createdAt", {
+    await queryInterface.changeColumn("Vacantes", "createdAt", {
       type: Sequelize.DATE,
       allowNull: false,
     });
-    await queryInterface.changeColumn("VACANTE", "updatedAt", {
+    await queryInterface.changeColumn("Vacantes", "updatedAt", {
       type: Sequelize.DATE,
       allowNull: false,
     });
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable("VACANTE");
+    await queryInterface.dropTable("Vacantes");
   },
 };

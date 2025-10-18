@@ -6,6 +6,8 @@ const sequelize = require('../config/database');
 
 
 
+
+
 const db = {};
 
 fs.readdirSync(__dirname)
@@ -23,16 +25,17 @@ Object.keys(db).forEach(modelName => {
 });
 
 // Asociaciones específicas
-db.User.hasMany(db.Notificacion, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-db.Notificacion.belongsTo(db.User, { foreignKey: 'user_id' });
+
+db.Usuarios.hasMany(db.Notificaciones, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
+db.Notificaciones.belongsTo(db.Usuarios, { foreignKey: 'usuario_id' });
 
 // Otras asociaciones existentes (e.g., Empresa-Vacante)
-db.Empresa.hasMany(db.Vacante, {
+db.Empresas.hasMany(db.Vacantes, {
     foreignKey: 'empresa_id',
-    as: 'vacantes',
+    as: 'vacante',
     onDelete: 'CASCADE',
 });
-db.Vacante.belongsTo(db.Empresa, { foreignKey: 'empresa_id' });
+db.Vacantes.belongsTo(db.Empresas, { foreignKey: 'empresa_id' });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

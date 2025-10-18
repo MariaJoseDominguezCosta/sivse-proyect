@@ -9,13 +9,16 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    axios.get('http://localhost:5000/api/admin', {
+    axios.get('http://localhost:5000/api/admin/stats', {
       headers: { Authorization: `Bearer ${token}` },
     }).then(res => {
       setStats(res.data);
       setNotification('Estadísticas cargadas exitosamente.');
       setTimeout(() => setNotification(''), 3000);
-    }).catch(() => setNotification('Error al cargar estadísticas.'));
+    }).catch((err) => {
+        console.error('Error en frontend:', err);  // Log para depuración
+        setNotification('Error al cargar estadísticas: ' + (err.response?.data?.error) || 'Error en la solicitud');
+      });
   }, []);
 
   return (

@@ -10,7 +10,7 @@ module.exports = {
     const hashedPassword = await bcrypt.hash('password123', saltRounds); // Contraseña inicial
 
     // Datos iniciales para USUARIO
-    await queryInterface.bulkInsert('USUARIO', [
+    await queryInterface.bulkInsert('Usuarios', [
       {
         id: 1,
         email: 'admin@example.com',
@@ -30,7 +30,7 @@ module.exports = {
     ], {});
 
     // Datos iniciales para EGRESADO
-    await queryInterface.bulkInsert('EGRESADO', [
+    await queryInterface.bulkInsert('Egresados', [
       {
         id: 1,
         nombre_completo: 'Juan Pérez', // Alineado con egresado.js
@@ -49,7 +49,7 @@ module.exports = {
     ], {});
 
     // Datos iniciales para EMPRESA
-    await queryInterface.bulkInsert('EMPRESA', [
+    await queryInterface.bulkInsert('Empresas', [
       {
         id: 1,
         razon_social: 'TechCorp',
@@ -65,7 +65,7 @@ module.exports = {
     ], {});
 
     // Datos iniciales para VACANTE
-    await queryInterface.bulkInsert('VACANTE', [
+    await queryInterface.bulkInsert('Vacantes', [
       {
         id: 1,
         empresa_id: 1,
@@ -85,7 +85,7 @@ module.exports = {
     ], {});
 
     // Datos iniciales para POSTULACION
-    await queryInterface.bulkInsert('POSTULACION', [
+    await queryInterface.bulkInsert('Postulaciones', [
       {
         id: 1,
         egresado_id: 1,
@@ -98,10 +98,10 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('POSTULACION', null, {});
-    await queryInterface.bulkDelete('VACANTE', null, {});
-    await queryInterface.bulkDelete('EMPRESA', null, {});
-    await queryInterface.bulkDelete('EGRESADO', null, {});
-    await queryInterface.bulkDelete('USUARIO', null, {});
+    await queryInterface.bulkDelete('Postulaciones', null, {});
+    await queryInterface.bulkDelete('Vacantes', null, {});
+    await queryInterface.bulkDelete('Empresas', null, {});
+    await queryInterface.bulkDelete('Egresados', null, {});
+    await queryInterface.bulkDelete('Usuarios', null, {});
   }
 };

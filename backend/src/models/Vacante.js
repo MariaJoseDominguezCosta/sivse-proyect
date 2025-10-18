@@ -3,7 +3,7 @@ const sequelize = require("../config/database");
 
 const Vacante = (sequelize, DataTypes) => {
   const VacanteModel = sequelize.define(
-    "Vacante",
+    "Vacantes",
     {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       empresa_id: {
@@ -25,7 +25,7 @@ const Vacante = (sequelize, DataTypes) => {
       empresa_id: { 
         type: DataTypes.INTEGER,
       references: {
-        model: 'EMPRESA',
+        model: 'Empresas',
         key: 'id'
       },
     },
@@ -36,7 +36,7 @@ const Vacante = (sequelize, DataTypes) => {
       es_favorito: { type: DataTypes.BOOLEAN, defaultValue: false },
     },
     {
-      tableName: "VACANTE",
+      tableName: "Vacantes",
       timestamps: true,
     }
   );

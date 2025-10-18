@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Empresa = (sequelize, DataTypes) => {
-  const EmpresaModel = sequelize.define('Empresa', {
+  const EmpresaModel = sequelize.define('Empresas', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     razon_social: { type: DataTypes.STRING, allowNull: false, unique: true },
     sector: { type: DataTypes.STRING, allowNull: false },
@@ -12,7 +12,7 @@ const Empresa = (sequelize, DataTypes) => {
     telefono: { type: DataTypes.STRING, allowNull: false, validate: { len: [10, 15] } },
     sitio_web: { type: DataTypes.STRING, allowNull: true, validate: { isUrl: true } },
   }, {
-    tableName: 'EMPRESA',
+    tableName: 'Empresas',
     timestamps: true,
   });
 

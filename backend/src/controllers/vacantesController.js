@@ -1,6 +1,6 @@
 // controllers/vacantesController.js
-const Vacante = require('../models/vacante');
-const Empresa = require('../models/empresa');
+const Vacante = require('../models/Vacante');
+const Empresa = require('../models/Empresa');
 const Egresado = require('../models/Egresado');
 const Notificacion = require('../models/Notificacion');
 const sendEmail = require('../utils/email');

@@ -1,7 +1,7 @@
 // src/controllers/authController.js - Lógica de auth
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const { Usuarios: User, Egresados: Egresado } = require("../models");
 
 const register = async (req, res) => {
     const schema = Joi.object({

@@ -1,10 +1,15 @@
 // controllers/adminController.js
-const { Egresado, Empresa, Vacante } = require('../models');
+const  Usuarios = require('../models/Usuario');
+const {Empresa} = require('../models/Empresa');
+const {Vacante} = require('../models/Vacante');
+
+
+// Obtener estadísticas para el dashboard admin
 
 exports.getStats = async (req, res) => {
     try {
-        // Conteo de egresados (usa User con role='egresado' o Egresado)
-        const egresadosCount = await User.count({ where: { role: 'egresado' } });  // Alternativa: await Egresado.count()
+        // Conteo de egresados (usa Usuarios con role='egresado' o Egresado)
+        const egresadosCount = await Usuarios.count({ where: { role: 'egresado' } });  // Alternativa: await Egresado.count()
 
         // Conteo de empresas
         const empresasCount = await Empresa.count();
