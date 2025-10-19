@@ -26,5 +26,11 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
   });
 
+  Usuarios.associate = (models) => {
+    Usuarios.hasMany(models.Egresados, { foreignKey: 'user_id' });
+    Usuarios.hasMany(models.Notificaciones, { foreignKey: 'user_id' });
+  };
+
   return Usuarios;
 };
+

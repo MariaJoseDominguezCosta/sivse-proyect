@@ -25,17 +25,19 @@ Object.keys(db).forEach(modelName => {
 });
 
 // Asociaciones específicas
+// db.Usuarios.hasMany(db.Notificaciones, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
+// db.Notificaciones.belongsTo(db.Usuarios, { foreignKey: 'usuario_id' });
 
-db.Usuarios.hasMany(db.Notificaciones, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
-db.Notificaciones.belongsTo(db.Usuarios, { foreignKey: 'usuario_id' });
-
-// Otras asociaciones existentes (e.g., Empresa-Vacante)
-db.Empresas.hasMany(db.Vacantes, {
-    foreignKey: 'empresa_id',
-    as: 'vacante',
-    onDelete: 'CASCADE',
-});
-db.Vacantes.belongsTo(db.Empresas, { foreignKey: 'empresa_id' });
+// // Otras asociaciones (agrega basadas en PDF)
+// db.Usuarios.hasOne(db.Egresados, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
+// db.Usuarios.hasOne(db.Admin, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
+// db.Empresas.hasMany(db.Vacantes, { foreignKey: 'empresa_id', as: 'vacantes', onDelete: 'CASCADE' });
+// db.Vacantes.belongsTo(db.Empresas, { foreignKey: 'empresa_id' });
+// db.Egresados.hasMany(db.Favoritos, { foreignKey: 'egresado_id', onDelete: 'CASCADE' });
+// db.Favoritos.belongsTo(db.Egresados, { foreignKey: 'egresado_id' });
+// db.Favoritos.belongsTo(db.Vacantes, { foreignKey: 'vacante_id' });
+// db.Egresados.hasMany(db.HistorialActualizaciones, { foreignKey: 'egresado_id', onDelete: 'CASCADE' });
+// db.HistorialActualizaciones.belongsTo(db.Egresados, { foreignKey: 'egresado_id' });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

@@ -1,0 +1,7 @@
+/* src/components/JobForm.css - Add error style */
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: -8px;
+  display: block;
+}

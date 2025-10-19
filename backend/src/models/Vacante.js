@@ -41,6 +41,10 @@ const Vacante = (sequelize, DataTypes) => {
     }
   );
 
+  VacanteModel.associate = (models) => {
+    VacanteModel.belongsTo(models.Empresas, { foreignKey: "empresa_id" });
+  };
+
   return VacanteModel;
 };
 

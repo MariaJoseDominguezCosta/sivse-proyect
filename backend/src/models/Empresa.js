@@ -16,6 +16,10 @@ const Empresa = (sequelize, DataTypes) => {
     timestamps: true,
   });
 
+  EmpresaModel.associate = (models) => {
+    EmpresaModel.hasMany(models.Vacantes, { foreignKey: 'empresa_id' });
+  };
+
   return EmpresaModel;
 };
 

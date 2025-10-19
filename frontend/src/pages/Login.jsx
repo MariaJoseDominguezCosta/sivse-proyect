@@ -1,48 +1,63 @@
-// pages/Login.js
+// frontend/src/pages/Login.jsx
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../assets/Login.css';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [notification, setNotification] = useState('');
-    const navigate = useNavigate();
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-        const res = await axios.post('http://localhost:5000/api/auth/login', { email, password }, { headers: { 'Content-Type': 'application/json' } });
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('role', res.data.role);
-        setNotification('Inicio de sesión exitoso. Redirigiendo...');
-        setTimeout(() => navigate(res.data.role === 'admin' ? '/admin-dashboard' : '/egresado-dashboard'), 1000);
-        } catch (err) {
-        setError(err.response?.data?.error || 'Error en login');
-        }
-    };
+  const handleChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
 
-    return (
-        <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center">
-        <header className="w-full bg-blue-900 text-white py-4 flex justify-between px-8">
-            <div>Logo TecNM</div>
-            <h1 className="text-4xl">SIVSE</h1>
-            <div>Logo Comitán</div>
-        </header>
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mt-20">
-            <label className="block mb-2">Email</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-2 border rounded mb-4" required />
-            <label className="block mb-2">Password</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-2 border rounded mb-4" required />
-            <button type="submit" className="w-full bg-black text-white py-2 rounded">Iniciar Sesión</button>
-            <p className="text-center mt-2"><a href="/forgot-password" className="text-blue-500">¿Olvidaste tu contraseña?</a></p>
-            <p className="text-center"><a href="/register" className="text-blue-500">¿Eres egresado? Regístrate</a></p>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', credentials);
+      localStorage.setItem('token', response.data.token); // Asume que el backend devuelve un token
+      navigate('/admin');
+    } catch (err) {
+      setError('Error en las credenciales: ' + (err.response?.data?.error || 'Error en la solicitud'));
+    }
+  };
+
+  return (
+    <div className="login-container">
+      <div className="login-box">
+        <h2>Iniciar Sesión</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Correo Electrónico</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={credentials.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={credentials.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          {error && <p className="error-message">{error}</p>}
+          <button type="submit" className="login-btn">Iniciar Sesión</button>
         </form>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
-        {notification && <p className="text-green-500 mt-4">{notification}</p>}
-        </div>
-    );
+        <p className="register-link">¿No tienes cuenta? <a href="/register">Regístrate</a></p>
+      </div>
+    </div>
+  );
 };
 
 export default Login;

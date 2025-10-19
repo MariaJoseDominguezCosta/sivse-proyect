@@ -1,7 +1,6 @@
+// backend/src/models/Postulacion.js (ajustado)
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const Egresado = require("./Egresado");
-const Vacante = require("./Vacante");
 
 const Postulacion = (sequelize, DataTypes) => {
   const PostulacionModel = sequelize.define(
@@ -10,11 +9,11 @@ const Postulacion = (sequelize, DataTypes) => {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       egresado_id: {
         type: DataTypes.INTEGER,
-        references: { model: Egresado(sequelize, DataTypes), key: "id" },
+        references: { model: 'Egresados', key: "id" }, // Corrección aquí
       },
       vacante_id: {
         type: DataTypes.INTEGER,
-        references: { model: Vacante(sequelize, DataTypes), key: "id" },
+        references: { model: 'Vacantes', key: "id" }, // Corrección aquí
       },
       fecha_postulacion: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     },
@@ -24,14 +23,10 @@ const Postulacion = (sequelize, DataTypes) => {
     }
   );
 
-  Egresado(sequelize, DataTypes).belongsToMany(Vacante(sequelize, DataTypes), {
-    through: PostulacionModel,
-    foreignKey: "egresado_id",
-  });
-  Vacante(sequelize, DataTypes).belongsToMany(Egresado(sequelize, DataTypes), {
-    through: PostulacionModel,
-    foreignKey: "vacante_id",
-  });
+  PostulacionModel.associate = (models) => {
+    PostulacionModel.belongsTo(models.Egresados, { foreignKey: "egresado_id" });
+    PostulacionModel.belongsTo(models.Vacantes, { foreignKey: "vacante_id" });
+  };
 
   return PostulacionModel;
 };

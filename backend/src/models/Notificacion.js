@@ -26,6 +26,10 @@ const Notificacion = (sequelize, DataTypes) => {
         timestamps: true,
     });
 
+    NotificacionModel.associate = (models) => {
+        NotificacionModel.belongsTo(models.Usuarios, { foreignKey: 'user_id' });
+    };
+
     return NotificacionModel;
 };
 
