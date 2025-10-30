@@ -1,19 +1,5 @@
-/* src/components/AdminLayout.css */
-.admin-layout {
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.content-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: #e6f2ff; /* Fondo azul claro */
-}
-
-.main-content {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
+/* src/styles/adminLayout.css */
+.admin-layout { display: flex; flex-direction: column; min-height: 100vh; }
+.admin-body { display: flex; flex: 1; }
+.admin-content { flex: 1; padding: 0; }
+.page-padding { padding: 2rem; }

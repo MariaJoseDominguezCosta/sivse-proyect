@@ -1,10 +1,10 @@
+// backend/src/models/Egresado.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const User = require("./Usuario");
 
-const Egresado = (sequelize, DataTypes) => {
-  const EgresadoModel = sequelize.define(
-    "Egresados",
+module.exports = (sequelize, DataTypes) => {
+  const Egresado = sequelize.define(
+    "Egresado",
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       nombre_completo: { type: DataTypes.STRING, allowNull: false },
@@ -29,26 +29,24 @@ const Egresado = (sequelize, DataTypes) => {
     }
   );
 
-  EgresadoModel.associate = (models) => {
-    EgresadoModel.hasMany(models.HistorialActualizaciones, {
-      foreignKey: "egresado_id",
-      onDelete: "CASCADE",
-    });
-    EgresadoModel.hasMany(models.Postulaciones, {
-      foreignKey: "egresado_id",
-      onDelete: "CASCADE",
-    });
-    EgresadoModel.hasMany(models.Notificaciones, {
-      foreignKey: "egresado_id",
-      onDelete: "CASCADE",
-    });
-  };
+  // Egresado.associate = (models) => {
+  //   Egresado.hasMany(models.HistorialActualizacion, {
+  //     foreignKey: "egresado_id",
+  //     onDelete: "CASCADE",
+  //   });
+  //   Egresado.hasMany(models.Postulacion, {
+  //     foreignKey: "egresado_id",
+  //     onDelete: "CASCADE",
+  //   });
+  //   Egresado.hasMany(models.Notificacion, {
+  //     foreignKey: "egresado_id",
+  //     onDelete: "CASCADE",
+  //   });
+  //   Egresado.belongsTo(models.Usuario, {
+  //     foreignKey: "user_id",
+  //   });
+  // };
 
-  EgresadoModel.belongsTo(User(sequelize, DataTypes), {
-    foreignKey: "user_id",
-  });
-
-  return EgresadoModel;
+  return Egresado;
 };
 
-module.exports = Egresado;

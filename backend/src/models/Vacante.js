@@ -1,10 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
-const Vacante = (sequelize, DataTypes) => {
-  const VacanteModel = sequelize.define(
-    "Vacantes",
-    {
+module.exports = (sequelize, DataTypes) => {
+  const Vacante = sequelize.define('Vacante', {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       empresa_id: {
         type: DataTypes.INTEGER,
@@ -22,13 +20,13 @@ const Vacante = (sequelize, DataTypes) => {
         defaultValue: "Activa",
         validate: { isIn: [["Activa", "Inactiva"]] },
       },
-      empresa_id: { 
+      empresa_id: {
         type: DataTypes.INTEGER,
-      references: {
-        model: 'Empresas',
-        key: 'id'
+        references: {
+          model: "Empresas",
+          key: "id",
+        },
       },
-    },
       fecha_publicacion: {
         type: DataTypes.DATEONLY,
         defaultValue: DataTypes.NOW,
@@ -41,11 +39,12 @@ const Vacante = (sequelize, DataTypes) => {
     }
   );
 
-  VacanteModel.associate = (models) => {
-    VacanteModel.belongsTo(models.Empresas, { foreignKey: "empresa_id" });
-  };
+  // Vacante.associate = (models) => {
+  //   Vacante.belongsTo(models.Empresa, {
+  //     foreignKey: "empresa_id",
+  //     as: "empresa",
+  //   });
+  // };
 
-  return VacanteModel;
+  return Vacante;
 };
-
-module.exports = Vacante;

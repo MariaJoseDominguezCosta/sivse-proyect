@@ -1,189 +1,214 @@
 // backend/src/controllers/adminController.js
-const db = require('../models');
-
-exports.getStats = async (req, res) => {
-  try {
-    const egresadosCount = await db.Egresados.count();
-    const empresasCount = await db.Empresas.count();
-    const vacantesCount = await db.Vacantes.count({ where: { estado: 'Activa' } });
-    res.status(200).json({ egresados: egresadosCount, empresas: empresasCount, vacantes: vacantesCount });
-  } catch (error) {
-    console.error('Error en getStats:', error);
-    res.status(500).json({ message: 'Error al obtener estadísticas' });
-  }
-};
-
-exports.getEgresados = async (req, res) => {
-  try {
-    const egresados = await db.Egresados.findAll({
-      attributes: ['id', 'nombre_completo', 'puesto', 'ubicacion'],
-      include: [{ model: db.Usuarios, attributes: ['email', 'role'] }, { model: db.Postulaciones, attributes: ['vacante_id', 'fecha_postulacion'] }],
-    });
-    res.status(200).json(egresados);
-  } catch (error) {
-    console.error('Error al cargar egresados:', error);
-    res.status(500).json({ message: 'Error al cargar egresados' });
-  }
-};
-
-exports.getEgresadoById = async (req, res) => {
-  try {
-    const egresado = await db.Egresados.findByPk(req.params.id, {
-      attributes: ['id', 'nombre_completo', 'puesto', 'ubicacion'],
-      include: [{ model: db.Usuarios, attributes: ['email', 'role'] }, { model: db.Postulaciones, attributes: ['vacante_id', 'fecha_postulacion'] }],
-    });
-    if (!egresado) return res.status(404).json({ message: 'Egresado no encontrado' });
-    res.status(200).json(egresado);
-  } catch (error) {
-    console.error('Error al cargar egresado:', error);
-    res.status(500).json({ message: 'Error al cargar egresado' });
-  }
-};
+const { Empresa, Vacante, Egresado } = require('../models');
 
 exports.getEmpresas = async (req, res) => {
   try {
-    const empresas = await db.Empresas.findAll({ attributes: ['id', 'razon_social', 'sector', 'tipo_convenio', 'telefono'] });
-    res.status(200).json(empresas);
+    const empresas = await Empresa.findAll({
+      include: [{ model: Vacante, as: 'vacantes' }]
+    });
+    res.json(empresas);
   } catch (error) {
-    console.error('Error al cargar empresas:', error);
-    res.status(500).json({ message: 'Error al cargar empresas' });
-  }
-};
-
-exports.getEmpresaById = async (req, res) => {
-  try {
-    const empresa = await db.Empresas.findByPk(req.params.id);
-    if (!empresa) return res.status(404).json({ message: 'Empresa no encontrada' });
-    res.status(200).json(empresa);
-  } catch (error) {
-    console.error('Error al cargar empresa:', error);
-    res.status(500).json({ message: 'Error al cargar empresa' });
+    console.error('Error fetching empresas:', error);
+    res.status(500).json({ message: 'Error al obtener empresas', error });
   }
 };
 
 exports.createEmpresa = async (req, res) => {
   try {
-    const { razon_social, sector, tipo_convenio, direccion, correo_contacto, telefono, sitio_web } = req.body;
-    if (!razon_social || !sector || !tipo_convenio || !direccion || !correo_contacto || !telefono) {
-      return res.status(400).json({ message: 'Todos los campos obligatorios son requeridos' });
-    }
-    const nuevaEmpresa = await db.Empresas.create({ razon_social, sector, tipo_convenio, direccion, correo_contacto, telefono, sitio_web });
-    res.status(201).json({ message: 'Empresa creada exitosamente', empresa: nuevaEmpresa });
+    const nuevaEmpresa = await Empresa.create(req.body);
+    res.status(201).json(nuevaEmpresa);
   } catch (error) {
-    console.error('Error al crear empresa:', error);
-    res.status(500).json({ message: 'Error al crear empresa' });
+    console.error('Error creating empresa:', error);
+    res.status(500).json({ message: 'Error al registrar empresa', error });
+  }
+};
+
+exports.getEmpresaById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const empresa = await Empresa.findByPk(id, {
+      include: [{ model: Vacante, as: 'vacantes' }]
+    });
+    if (!empresa) return res.status(404).json({ message: 'Empresa no encontrada' });
+    res.json(empresa);
+  } catch (error) {
+    console.error('Error fetching empresa:', error);
+    res.status(500).json({ message: 'Error al obtener empresa', error });
   }
 };
 
 exports.updateEmpresa = async (req, res) => {
   try {
     const { id } = req.params;
-    const { razon_social, sector, tipo_convenio, direccion, correo_contacto, telefono, sitio_web } = req.body;
-
-    const empresa = await db.Empresas.findByPk(id);
-    if (!empresa) {
-      return res.status(404).json({ message: 'Empresa no encontrada' });
-    }
-
-    await empresa.update({ razon_social, sector, tipo_convenio, direccion, correo_contacto, telefono, sitio_web });
-    res.status(200).json({ message: 'Empresa actualizada exitosamente', empresa });
+    const [updated] = await Empresa.update(req.body, { where: { id } });
+    if (!updated) return res.status(404).json({ message: 'Empresa no encontrada' });
+    const updatedEmpresa = await Empresa.findByPk(id);
+    res.json(updatedEmpresa);
   } catch (error) {
-    console.error('Error al actualizar empresa:', error);
-    res.status(500).json({ message: 'Error al actualizar empresa' });
+    console.error('Error updating empresa:', error);
+    res.status(500).json({ message: 'Error al actualizar empresa', error });
   }
 };
 
 exports.deleteEmpresa = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const empresa = await db.Empresas.findByPk(id);
-    if (!empresa) {
-      return res.status(404).json({ message: 'Empresa no encontrada' });
+    const deleted = await Empresa.destroy({ where: { id } });
+    if (deleted) {
+      await Vacante.destroy({ where: { empresa_id: id } }); // Elimina vacantes asociadas
+      res.json({ message: 'Empresa y vacantes asociadas eliminadas' });
+    } else {
+      res.status(404).json({ message: 'Empresa no encontrada' });
     }
-
-    await empresa.destroy();
-    res.status(200).json({ message: 'Empresa eliminada exitosamente' });
   } catch (error) {
-    console.error('Error al eliminar empresa:', error);
-    res.status(500).json({ message: 'Error al eliminar empresa' });
+    console.error('Error deleting empresa:', error);
+    res.status(500).json({ message: 'Error al eliminar empresa', error });
   }
 };
 
-exports.getVacantes = async (req, res) => {
+exports.getVacantesByEmpresa = async (req, res) => {
   try {
-    const vacantes = await db.Vacantes.findAll({
-      attributes: ['id', 'titulo', 'ubicacion', 'estado', 'fecha_publicacion'],
-      include: [{ model: db.Empresas, attributes: ['razon_social'] }],
+    const { empresa_id } = req.params;
+    const vacantes = await Vacante.findAll({
+      where: { empresa_id },
+      include: [{ model: Empresa, as: 'empresa' }]
     });
-    res.status(200).json(vacantes);
+    res.json(vacantes);
   } catch (error) {
-    console.error('Error al cargar vacantes:', error);
-    res.status(500).json({ message: 'Error al cargar vacantes' });
+    console.error('Error fetching vacantes by empresa:', error);
+    res.status(500).json({ message: 'Error al obtener vacantes', error });
   }
 };
 
 exports.createVacante = async (req, res) => {
   try {
-    const { empresa_id, titulo, descripcion, requisitos, ubicacion, modalidad, salario_estimado } = req.body;
-    if (!empresa_id || !titulo || !descripcion) {
-      return res.status(400).json({ message: 'Campos obligatorios faltantes' });
-    }
-    const nuevaVacante = await db.Vacantes.create({
-      empresa_id, titulo, descripcion, requisitos, ubicacion, modalidad, salario_estimado, estado: 'Activa',
+    const { empresa_id, titulo, descripcion, requisitos, ubicacion,  modalidad, salario_estimado, estado } = req.body;
+    const nuevaVacante = await Vacante.create({ empresa_id, titulo, descripcion, requisitos, ubicacion,  modalidad, salario_estimado, estado });
+    res.status(201).json(nuevaVacante);
+  } catch (error) {
+    console.error('Error creating vacante:', error);
+    res.status(500).json({ message: 'Error al crear vacante', error });
+  }
+};
+
+exports.getAllVacantes = async (req, res) => {
+  try {
+    const vacantes = await Vacante.findAll({
+      include: [{ model: Empresa, as: 'empresa' }]
     });
-    res.status(201).json({ message: 'Vacante creada exitosamente', vacante: nuevaVacante });
+    res.json(vacantes);
   } catch (error) {
-    console.error('Error al crear vacante:', error);
-    res.status(500).json({ message: 'Error al crear vacante' });
-  }
-};
-
-exports.updateVacante = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { empresa_id, titulo, descripcion, requisitos, ubicacion, modalidad, salario_estimado } = req.body;
-    const vacante = await db.Vacantes.findByPk(id);
-    if (!vacante) {
-      return res.status(404).json({ message: 'Vacante no encontrada' });
-    }
-    await vacante.update({ empresa_id, titulo, descripcion, requisitos, ubicacion, modalidad, salario_estimado });
-    res.status(200).json({ message: 'Vacante actualizada exitosamente', vacante });
-  } catch (error) {
-    console.error('Error al actualizar vacante:', error);
-    res.status(500).json({ message: 'Error al actualizar vacante' });
-  }
-};
-
-exports.deleteVacante = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const vacante = await db.Vacantes.findByPk(id);
-    if (!vacante) {
-      return res.status(404).json({ message: 'Vacante no encontrada' });
-    }
-    await vacante.destroy();
-    res.status(200).json({ message: 'Vacante eliminada exitosamente' });
-  } catch (error) {
-    console.error('Error al eliminar vacante:', error);
-    res.status(500).json({ message: 'Error al eliminar vacante' });
+    console.error('Error fetching all vacantes:', error);
+    res.status(500).json({ message: 'Error al obtener todas las vacantes', error });
   }
 };
 
 exports.getVacanteById = async (req, res) => {
   try {
     const { id } = req.params;
-    const vacante = await db.Vacantes.findByPk(id);
-    if (!vacante) {
-      return res.status(404).json({ message: 'Vacante no encontrada' });
-    }
-    res.status(200).json(vacante);
+    const vacante = await Vacante.findByPk(id, {
+      include: [{ model: Empresa, as: 'empresa' }]
+    });
+    if (!vacante) return res.status(404).json({ message: 'Vacante no encontrada' });
+    res.json(vacante);
   } catch (error) {
-    console.error('Error al obtener vacante:', error);
-    res.status(500).json({ message: 'Error al obtener vacante' });
+    console.error('Error fetching vacante:', error);
+    res.status(500).json({ message: 'Error al obtener vacante', error });
   }
 };
 
+exports.updateVacante = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [updated] = await Vacante.update(req.body, { where: { id } });
+    if (!updated) return res.status(404).json({ message: 'Vacante no encontrada' });
+    const updatedVacante = await Vacante.findByPk(id);
+    res.json(updatedVacante);
+  } catch (error) {
+    console.error('Error updating vacante:', error);
+    res.status(500).json({ message: 'Error al actualizar vacante', error });
+  }
+};
 
+exports.deleteVacante = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Vacante.destroy({ where: { id } });
+    if (deleted) {
+      res.json({ message: 'Vacante eliminada' });
+    } else {
+      res.status(404).json({ message: 'Vacante no encontrada' });
+    }
+  } catch (error) {
+    console.error('Error deleting vacante:', error);
+    res.status(500).json({ message: 'Error al eliminar vacante', error });
+  }
+};
 
-module.exports = exports;
+exports.getEgresados = async (req, res) => {
+  try {
+    const egresados = await Egresado.findAll();
+    res.json(egresados);
+  } catch (error) {
+    console.error('Error fetching egresados:', error);
+    res.status(500).json({ message: 'Error al obtener egresados', error });
+  }
+};
+
+exports.getEgresadoById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const egresado = await Egresado.findByPk(id);
+    if (!egresado) return res.status(404).json({ message: 'Egresado no encontrado' });
+    res.json(egresado);
+  } catch (error) {
+    console.error('Error fetching egresado:', error);
+    res.status(500).json({ message: 'Error al obtener egresado', error });
+  }
+};
+
+exports.updateEgresado = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [updated] = await Egresado.update(req.body, { where: { id } });
+    if (!updated) return res.status(404).json({ message: 'Egresado no encontrado' });
+    const updatedEgresado = await Egresado.findByPk(id);
+    res.json(updatedEgresado);
+  } catch (error) {
+    console.error('Error updating egresado:', error);
+    res.status(500).json({ message: 'Error al actualizar egresado', error });
+  }
+};
+
+exports.deleteEgresado = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Egresado.destroy({ where: { id } });
+    if (deleted) {
+      res.json({ message: 'Egresado eliminado' });
+    } else {
+      res.status(404).json({ message: 'Egresado no encontrado' });
+    }
+  } catch (error) {
+    console.error('Error deleting egresado:', error);
+    res.status(500).json({ message: 'Error al eliminar egresado', error });
+  }
+};
+
+exports.getDashboardSummary = async (req, res) => {
+  try {
+    const [empresaCount, vacanteCount, egresadoCount] = await Promise.all([
+      Empresa.count(),
+      Vacante.count(),
+      Egresado.count()
+    ]);
+    res.json({
+      empresas: empresaCount,
+      vacantes: vacanteCount,
+      egresados: egresadoCount
+    });
+  } catch (error) {
+    console.error('Error fetching dashboard summary:', error);
+    res.status(500).json({ message: 'Error al obtener resumen del dashboard', error });
+  }
+};

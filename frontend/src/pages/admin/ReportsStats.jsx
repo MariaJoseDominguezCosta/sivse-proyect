@@ -1,37 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { CSVLink } from 'react-csv'; // Instala npm install react-csv para generar CSV
+import React from 'react';
+import { Grid, Button } from '@mui/material';
+import { CSVLink } from 'react-csv'; // Requiere npm install react-csv
+import Typography from '@mui/material/Typography';
 
 const ReportsStats = () => {
-  const [stats, setStats] = useState({ egresados: [], empresas: [], vacantes: [] }); // Asume backend devuelve arrays para reportes
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/admin/stats', { // Asume /stats devuelve datos detallados para reportes
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setStats(res.data);
-      } catch (err) {
-        console.error('Error fetching stats for reports:', err);
-      }
-    };
-    fetchStats();
-  }, []);
+  // Asume datos mock o fetch si hay endpoint para reportes detallados
+  const egresadosData = []; // Fetch from API if needed
+  const empresasData = [];
+  const vacantesData = [];
 
   return (
-    <div className="dashboard-cards">
-      <CSVLink data={stats.egresados} filename="egresados_por_generacion.csv">
-        <button className="btn">Generar reporte de egresados por generación</button>
-      </CSVLink>
-      <CSVLink data={stats.empresas} filename="empresas_por_sector.csv">
-        <button className="btn">Generar reporte de empresas por sector</button>
-      </CSVLink>
-      <CSVLink data={stats.vacantes} filename="vacantes_activas.csv">
-        <button className="btn">Generar reporte de vacantes activas</button>
-      </CSVLink>
-    </div>
+    <Grid container spacing={3} className="dashboard-cards">
+      <Grid item>
+        <CSVLink data={egresadosData} filename="egresados_por_generacion.csv">
+          <Button className="btn-save">Generar</Button>
+        </CSVLink>
+        <Typography>Egresados por generación</Typography>
+      </Grid>
+      <Grid item>
+        <CSVLink data={empresasData} filename="empresas_por_sector.csv">
+          <Button className="btn-save">Generar</Button>
+        </CSVLink>
+        <Typography>Empresas por sector</Typography>
+      </Grid>
+      <Grid item>
+        <CSVLink data={vacantesData} filename="vacantes_activas.csv">
+          <Button className="btn-save">Generar</Button>
+        </CSVLink>
+        <Typography>Vacantes Activos</Typography>
+      </Grid>
+    </Grid>
   );
 };
 

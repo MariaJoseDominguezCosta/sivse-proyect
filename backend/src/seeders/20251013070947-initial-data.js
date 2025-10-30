@@ -14,7 +14,7 @@ module.exports = {
       {
         id: 1,
         email: 'admin@example.com',
-        password: hashedPassword,
+        password: await bcrypt.hash('admin123', saltRounds),
         role: 'admin',
         createdAt: new Date('2025-10-15'),
         updatedAt: new Date('2025-10-15'),

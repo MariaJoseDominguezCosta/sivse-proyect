@@ -1,53 +1,28 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('Postulaciones', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      egresado_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Egresados',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      },
-      vacante_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Vacantes',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      },
-      fecha_postulacion: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW,
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.addConstraint('Postulaciones', {
+      fields: ['egresado_id'],
+      type: 'foreign key',
+      name: 'fk_postulacion_egresado',
+      references: { table: 'Egresados', field: 'id' },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
+    await queryInterface.addConstraint('Postulaciones', {
+      fields: ['vacante_id'],
+      type: 'foreign key',
+      name: 'fk_postulacion_vacante',
+      references: { table: 'Vacantes', field: 'id' },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
+    // Añade más constraints según sea necesario
   },
 
-  async down (queryInterface) {
-    await queryInterface.dropTable('Postulaciones');
+  down: async (queryInterface) => {
+    await queryInterface.removeConstraint('Postulaciones', 'fk_postulacion_egresado');
+    await queryInterface.removeConstraint('Postulaciones', 'fk_postulacion_vacante');
   }
 };
-

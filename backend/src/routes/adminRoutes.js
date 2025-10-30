@@ -4,19 +4,33 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
-// Rutas para el administrador
-router.get('/stats', authMiddleware, adminController.getStats);
-router.get('/egresados', authMiddleware, adminController.getEgresados);
-router.get('/egresados/:id', authMiddleware, adminController.getEgresadoById);
-router.get('/empresas', authMiddleware, adminController.getEmpresas);
-router.get('/empresas/:id', authMiddleware, adminController.getEmpresaById);
-router.post('/empresas', authMiddleware, adminController.createEmpresa);
-router.put('/empresas/:id', authMiddleware, adminController.updateEmpresa); // Línea 15
-router.delete('/empresas/:id', authMiddleware, adminController.deleteEmpresa);
-router.get('/vacantes', authMiddleware, adminController.getVacantes);
-router.post('/vacantes', authMiddleware, adminController.createVacante);
-router.put('/vacantes/:id', authMiddleware, adminController.updateVacante);
-router.delete('/vacantes/:id', authMiddleware, adminController.deleteVacante);
-router.get('/vacantes/:id', authMiddleware, adminController.getVacanteById);
+// Proteger todas las rutas con autenticación y rol admin
+router.use(authMiddleware.requireAuth);
+router.use(authMiddleware.requireRole('admin'));
+
+// Gestión de empresas
+router.get('/empresas', adminController.getEmpresas);
+router.post('/empresas', adminController.createEmpresa);
+router.get('/empresas/:id', adminController.getEmpresaById);
+router.put('/empresas/:id', adminController.updateEmpresa);
+router.delete('/empresas/:id', adminController.deleteEmpresa);
+
+// Gestión de vacantes
+router.get('/vacantes', adminController.getAllVacantes);
+router.get('/vacantes/:id', adminController.getVacanteById);
+router.put('/vacantes/:id', adminController.updateVacante);
+router.delete('/vacantes/:id', adminController.deleteVacante);
+
+// Gestión de vacantes por empresa
+router.get('/empresas/:empresaId/vacantes', adminController.getVacantesByEmpresa);
+router.post('/empresas/:empresaId/vacantes', adminController.createVacante);
+
+// Gestión de egresados
+router.get('/egresados', adminController.getEgresados);
+router.get('/egresados/:id', adminController.getEgresadoById);
+router.put('/egresados/:id', adminController.updateEgresado);
+router.delete('/egresados/:id', adminController.deleteEgresado);
+
+router.get('/dashboard', adminController.getDashboardSummary);
 
 module.exports = router;

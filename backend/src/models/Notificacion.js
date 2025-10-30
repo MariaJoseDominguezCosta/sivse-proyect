@@ -1,36 +1,34 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Notificacion = (sequelize, DataTypes) => {
-    const NotificacionModel = sequelize.define('Notificaciones', {
+module.exports = (sequelize, DataTypes) => {    
+    const Notificacion = sequelize.define('Notificacion', {
         id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
         },
         user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: 'Usuarios', key: 'id' }, // Referencia a USUARIO
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: { model: 'Usuarios', key: 'id' }, // Referencia a USUARIO
         },
         mensaje: {
-        type: DataTypes.STRING,
-        allowNull: false,
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         leida: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
         },
     }, {
         tableName: 'Notificaciones',
         timestamps: true,
     });
 
-    NotificacionModel.associate = (models) => {
-        NotificacionModel.belongsTo(models.Usuarios, { foreignKey: 'user_id' });
-    };
+    // Notificacion.associate = (models) => {
+    //     Notificacion.belongsTo(models.Usuario, { foreignKey: 'user_id' });
+    // };
 
-    return NotificacionModel;
+    return Notificacion;
 };
-
-module.exports = Notificacion;

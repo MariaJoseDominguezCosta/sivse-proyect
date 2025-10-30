@@ -4,40 +4,47 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const sequelize = require('../config/database');
 
-
-
-
-
 const db = {};
 
 fs.readdirSync(__dirname)
-    .filter(file => file !== 'index.js' && file.endsWith('.js'))
-    .forEach(file => {
-        const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-        db[model.name] = model;
-    });
-
-// Definir asociaciones después de cargar todos los modelos
-Object.keys(db).forEach(modelName => {
-    if (db[modelName].associate) {
-        db[modelName].associate(db);
+  .filter(file => file !== 'index.js' && file.endsWith('.js'))
+  .forEach(file => {
+    try {
+      const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+      db[model.name] = model;
+      console.log(`Modelo cargado: ${model.name}`); // Depuración
+    } catch (error) {
+      console.error(`Error cargando el modelo desde ${file}:`, error);
     }
-});
+  });
 
-// Asociaciones específicas
-// db.Usuarios.hasMany(db.Notificaciones, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
-// db.Notificaciones.belongsTo(db.Usuarios, { foreignKey: 'usuario_id' });
+// NO ejecutar associate aquí para evitar duplicados
+// Object.keys(db).forEach(modelName => {
+//   if (db[modelName] && db[modelName].associate) {
+//     db[modelName].associate(db);
+//   }
+// });
 
-// // Otras asociaciones (agrega basadas en PDF)
-// db.Usuarios.hasOne(db.Egresados, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
-// db.Usuarios.hasOne(db.Admin, { foreignKey: 'usuario_id', onDelete: 'CASCADE' });
-// db.Empresas.hasMany(db.Vacantes, { foreignKey: 'empresa_id', as: 'vacantes', onDelete: 'CASCADE' });
-// db.Vacantes.belongsTo(db.Empresas, { foreignKey: 'empresa_id' });
-// db.Egresados.hasMany(db.Favoritos, { foreignKey: 'egresado_id', onDelete: 'CASCADE' });
-// db.Favoritos.belongsTo(db.Egresados, { foreignKey: 'egresado_id' });
-// db.Favoritos.belongsTo(db.Vacantes, { foreignKey: 'vacante_id' });
-// db.Egresados.hasMany(db.HistorialActualizaciones, { foreignKey: 'egresado_id', onDelete: 'CASCADE' });
-// db.HistorialActualizaciones.belongsTo(db.Egresados, { foreignKey: 'egresado_id' });
+// Asociaciones específicas (centralizadas aquí)
+db.Usuario.hasMany(db.Egresado, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+db.Egresado.belongsTo(db.Usuario, { foreignKey: 'user_id' });
+
+db.Usuario.hasMany(db.Notificacion, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+db.Notificacion.belongsTo(db.Usuario, { foreignKey: 'user_id' });
+
+db.Egresado.hasMany(db.HistorialActualizacion, { foreignKey: 'egresado_id', onDelete: 'CASCADE' });
+db.HistorialActualizacion.belongsTo(db.Egresado, { foreignKey: 'egresado_id' });
+
+db.Egresado.hasMany(db.Postulacion, { foreignKey: 'egresado_id', onDelete: 'CASCADE' });
+db.Postulacion.belongsTo(db.Egresado, { foreignKey: 'egresado_id' });
+db.Postulacion.belongsTo(db.Vacante, { foreignKey: 'vacante_id' });
+
+db.Empresa.hasMany(db.Vacante, { foreignKey: 'empresa_id', as: 'vacantes', onDelete: 'CASCADE' });
+db.Vacante.belongsTo(db.Empresa, { foreignKey: 'empresa_id', as: 'empresa' });
+
+db.Egresado.hasMany(db.Favorito, { foreignKey: 'egresado_id', onDelete: 'CASCADE' });
+db.Favorito.belongsTo(db.Egresado, { foreignKey: 'egresado_id' });
+db.Favorito.belongsTo(db.Vacante, { foreignKey: 'vacante_id' });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

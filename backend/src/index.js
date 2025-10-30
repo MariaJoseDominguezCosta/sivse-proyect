@@ -9,7 +9,6 @@ const { Server } = require('socket.io');
 const sequelize = require('./config/database'); // Conexión DB
 const egresadoRoutes = require('./routes/egresadoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const vacantesRoutes = require('./routes/vacantes'); // Rutas de vacantes
 
 const app = express();
 const server = http.createServer(app);
@@ -30,9 +29,7 @@ app.use(bodyParser.json()); // Parsea JSON en req.body
 app.use('/api/auth', require('./routes/authRoutes')); // Rutas públicas (registro/login)
 app.use('/api/egresado', egresadoRoutes); 
 app.use('/api/admin', adminRoutes);
-app.use('/api', require('./routes/dashboardRoutes')); // Rutas protegidas (dashboards)
-app.use('/api/empresas', require('./routes/empresasRoutes')); // Rutas de empresas
-app.use('/api/vacantes', vacantesRoutes); // Rutas de vacantes
+
 
 // Configuración de Socket.io
 io.on('connection', (socket) => {
@@ -46,7 +43,7 @@ io.on('connection', (socket) => {
 app.set('io', io);
 
 // Sincronizar DB y arrancar servidor
-sequelize.sync({ alter: true }) // Sincroniza modelos con DB (usa { force: true } solo en dev para resetear)
+sequelize.sync({ alter: true, force: false }) // Sincroniza modelos con DB (usa { force: true } solo en dev para resetear)
   .then(() => {
     server.listen(PORT, () => {
       console.log(`Servidor backend corriendo en http://localhost:${PORT} a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}`);
@@ -55,3 +52,4 @@ sequelize.sync({ alter: true }) // Sincroniza modelos con DB (usa { force: true 
   .catch(err => {
     console.error(`Error al conectar DB a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}:`, err);
   });
+

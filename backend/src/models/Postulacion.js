@@ -2,9 +2,9 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
-const Postulacion = (sequelize, DataTypes) => {
-  const PostulacionModel = sequelize.define(
-    "Postulaciones",
+module.exports = (sequelize, DataTypes) => {
+    const Postulacion = sequelize.define(
+    "Postulacion",
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       egresado_id: {
@@ -23,12 +23,10 @@ const Postulacion = (sequelize, DataTypes) => {
     }
   );
 
-  PostulacionModel.associate = (models) => {
-    PostulacionModel.belongsTo(models.Egresados, { foreignKey: "egresado_id" });
-    PostulacionModel.belongsTo(models.Vacantes, { foreignKey: "vacante_id" });
-  };
+  // Postulacion.associate = (models) => {
+  //   Postulacion.belongsTo(models.Egresado, { foreignKey: "egresado_id" });
+  //   Postulacion.belongsTo(models.Vacante, { foreignKey: "vacante_id" });
+  // };
 
-  return PostulacionModel;
+  return Postulacion;
 };
-
-module.exports = Postulacion;

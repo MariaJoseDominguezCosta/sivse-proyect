@@ -1,77 +1,63 @@
 import React, { useState, useEffect } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Select, MenuItem, IconButton } from '@mui/material';
+import { Info } from '@mui/icons-material';
+import axios from '../../utils/axiosConfig';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { FaInfoCircle } from 'react-icons/fa';
 
 const AlumniTracking = () => {
   const [alumni, setAlumni] = useState([]);
   const [search, setSearch] = useState('');
-  const [filteredAlumni, setFilteredAlumni] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAlumni = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/admin/egresados', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get('/admin/egresados');
         setAlumni(res.data);
-        setFilteredAlumni(res.data);
+        console.log('Egresados fetched:', res.data);
       } catch (err) {
-        console.error('Error fetching alumni:', err);
+        console.error('Error fetching alumni', err);
       }
     };
     fetchAlumni();
   }, []);
 
-  useEffect(() => {
-    setFilteredAlumni(
-      alumni.filter((a) =>
-        a.nombre.toLowerCase().includes(search.toLowerCase())
-      )
-    );
-  }, [search, alumni]);
+  // Filtra solo si nombre existe, evitando undefined
+  const filteredAlumni = alumni.filter(alum => 
+    alum?.nombre_completo && typeof alum.nombre_completo === 'string' && alum.nombre_completo.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div>
+    <div className="table-container">
       <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Hinted search text"
-          className="search-input"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <select className="filter-select"><option>Generación ▼</option></select>
-        <select className="filter-select"><option>Estado Laboral ▼</option></select>
+        <TextField placeholder="Hinted search text" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <Select defaultValue=""><MenuItem>Generación ▼</MenuItem></Select>
+        <Select defaultValue=""><MenuItem>Estado Laboral ▼</MenuItem></Select>
       </div>
-      <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Nombre</th>
-              <th>Puesto</th>
-              <th>Ubicación</th>
-              <th>Ver detalles</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAlumni.map((alumni, index) => (
-              <tr key={alumni.id}>
-                <td>{index + 1}</td>
-                <td>{alumni.nombre}</td>
-                <td>{alumni.puesto}</td>
-                <td>{alumni.ubicacion}</td>
-                <td>
-                  <FaInfoCircle onClick={() => navigate(`/admin/egresados/${alumni.id}`)} />
-                </td>
-              </tr>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>#</TableCell>
+              <TableCell>Nombre</TableCell>
+              <TableCell>Puesto</TableCell>
+              <TableCell>Ubicación</TableCell>
+              <TableCell>Ver detalles</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredAlumni.map((alum, index) => (
+              <TableRow key={alum.id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{alum.nombre_completo}</TableCell>
+                <TableCell>{alum.puesto}</TableCell>
+                <TableCell>{alum.ubicacion}</TableCell>
+                <TableCell><IconButton onClick={() => navigate(`/admin/egresados/${alum.id}`)}><Info /></IconButton></TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

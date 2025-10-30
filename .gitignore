@@ -4,7 +4,6 @@
 /backend/node_modules
 /backend/jest.config.js
 /backend/test
-/frontend/public
 /backend/package-lock.json
 /backend/package.json
 /frontend/vite.config.js

@@ -1,198 +1,147 @@
-/* Colores basados en capturas: azul oscuro sidebar, azul claro fondo, gris forms */
+/* App.css - Estilos globales basados en el maquetado */
 :root {
-  --primary-dark: #001f3f; /* Azul sidebar */
-  --primary-light: #f0f8ff; /* Fondo claro */
-  --gray-form: #f0f0f0; /* Forms y tablas */
-  --text-dark: #333;
-  --accent: #6a1b9a; /* Morado para user icon */
-  --border-radius: 8px;
-
+  --primary-dark: #223373; /* Azul oscuro del sidebar, coincide con el maquetado */
+  --primary-light: #E1F2FF; /* Fondo claro de las vistas, coincide con el maquetado */
+  --gray-form: #FFFDFD; /* Fondo de formularios y tablas */
+  --text-dark: #1E1E1E; /* Texto principal */
+  --accent: #4F378A; /* Morado del ícono de usuario, ajustado al morado oscuro de tu paleta */
+  --border-radius: 10px; /* Radio de bordes más consistente */
+  --button-save: #2C2C2C; /* Negro para botones guardar */
+  --button-cancel: #F5F5F5; /* Blanco para botones cancelar con borde, ajustado a gris claro */
+  --card-bg: #F0E0E0; /* Fondo de las cards del dashboard, ajustado a rosado muy claro */
+  --table-bg: #FFFDFD; /* Fondo de tablas */
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: var(--primary-light);
-}
-
-.admin-layout {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
+  font-family: 'Arial', sans-serif; /* Tipografía alineada al diseño */
+  color: var(--text-dark);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .sidebar {
-  width: 250px;
   background-color: var(--primary-dark);
   color: white;
-  padding: 20px;
+  padding: 20px 10px;
+  height: 100vh;
+  width: 250px;
+  position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.sidebar .logo {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  display: flex;
+.sidebar .MuiListItem-root {
+  padding: 10px 15px;
+  margin: 5px 0;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
+.sidebar .MuiListItem-root:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.sidebar li {
-  margin: 10px 0;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.sidebar li svg, .sidebar li span {
-  margin-right: 10px;
-}
-
-.sidebar .logout {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.main-content {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.header h1 {
-  font-size: 2rem;
-  color: var(--text-dark);
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  color: var(--accent);
-}
-
-.user-profile svg {
-  margin-right: 5px;
-}
-
-.form-container, .profile-container {
+.form-container {
   background-color: var(--gray-form);
+  padding: 25px;
+  border-radius: var(--border-radius);
+  max-width: 700px;
+  margin: 30px auto;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.table-container {
+  background-color: var(--table-bg);
+  border-radius: var(--border-radius);
+  margin: 30px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.search-bar .MuiTextField-root {
+  width: 250px;
+}
+
+.search-bar .MuiSelect-root {
+  width: 200px;
+  height: 40px;
+}
+
+.search-bar .MuiButton-root {
+  height: 40px;
+  padding: 0 20px;
+}
+
+.dashboard-cards {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin: 30px;
+}
+
+.card {
+  background-color: var(--card-bg);
   padding: 20px;
   border-radius: var(--border-radius);
-  max-width: 600px;
-  margin: 0 auto;
+  text-align: center;
+  width: 220px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.form-group {
-  display: flex;
-  justify-content: space-between;
+.card .MuiAvatar-root {
   margin-bottom: 15px;
-}
-
-.form-group input, .form-group select {
-  width: 45%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  background-color: var(--accent);
 }
 
 .buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-}
-
-.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  gap: 15px;
+  margin-top: 20px;
 }
 
 .btn-cancel {
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: var(--button-cancel);
+  border: 1px solid #ccc;
+  color: var(--text-dark);
+  padding: 8px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.btn-cancel:hover {
+  background-color: #f0f0f0;
 }
 
 .btn-save {
-  background-color: #000;
+  background-color: var(--button-save);
   color: white;
+  padding: 8px 20px;
+  border-radius: 5px;
+  transition: opacity 0.3s;
 }
 
-.table-container {
-  background-color: white;
-  border-radius: var(--border-radius);
-  overflow: hidden;
+.btn-save:hover {
+  opacity: 0.9;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
+.MuiTableCell-root {
   padding: 10px;
-  text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
-.search-bar {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.search-input {
-  width: 300px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-}
-
-.filter-select {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.btn-new {
-  background-color: #000;
+.MuiTableHead-root .MuiTableCell-root {
+  background-color: var(--primary-dark);
   color: white;
-  padding: 10px 20px;
-  border-radius: 4px;
-}
-
-.dashboard-cards {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-}
-
-.card {
-  background-color: #ffebee;
-  padding: 20px;
-  border-radius: var(--border-radius);
-  text-align: center;
-  width: 200px;
-}
-
-.card svg {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.card h3 {
-  font-size: 2.5rem;
+  font-weight: bold;
 }

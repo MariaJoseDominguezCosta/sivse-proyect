@@ -1,98 +1,61 @@
 import React, { useState, useEffect } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Select, MenuItem, Button, IconButton } from '@mui/material';
+import { Edit } from '@mui/icons-material';
+import axios from '../../utils/axiosConfig';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { FaPencilAlt } from 'react-icons/fa';
 
 const JobBoard = () => {
-  const [vacancies, setVacancies] = useState([]);
+  const [vacantes, setVacantes] = useState([]);
   const [search, setSearch] = useState('');
-  const [filteredVacancies, setFilteredVacancies] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchVacancies = async () => {
+    const fetchVacantes = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/admin/vacantes', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setVacancies(res.data);
-        setFilteredVacancies(res.data);
+        const res = await axios.get('/admin/vacantes');
+        setVacantes(res.data);
+        console.log('Vacantes fetched:', res.data);
       } catch (err) {
-        console.error('Error fetching vacancies:', err);
+        console.error('Error fetching vacantes', err);
       }
     };
-    fetchVacancies();
+    fetchVacantes();
   }, []);
 
-  useEffect(() => {
-    setFilteredVacancies(
-      vacancies.filter((vacancy) =>
-        vacancy.titulo.toLowerCase().includes(search.toLowerCase())
-      )
-    );
-  }, [search, vacancies]);
-
-  const deleteVacancy = async (id) => {
-    if (window.confirm('¿Seguro que quieres eliminar esta vacante?')) {
-      try {
-        const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/admin/vacantes/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setVacancies(vacancies.filter((v) => v.id !== id));
-      } catch (err) {
-        console.error('Error deleting vacancy:', err);
-      }
-    }
-  };
+  const filteredVacantes = vacantes.filter(vac => vac.titulo.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div>
+    <div className="table-container">
       <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Hinted search text"
-          className="search-input"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <select className="filter-select"><option>Ubicación ▼</option></select>
-        <select className="filter-select"><option>Empresa ▼</option></select>
-        <button className="btn-new" onClick={() => navigate('/admin/vacantes/register')}>
-          Publicar nueva vacante
-        </button>
+        <TextField placeholder="Hinted search text" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <Select defaultValue=""><MenuItem>Ubicación ▼</MenuItem></Select>
+        <Select defaultValue=""><MenuItem>Empresa ▼</MenuItem></Select>
+        <Button className="btn-save" onClick={() => navigate('/admin/vacantes/register')}>Publicar nueva vacante</Button>
       </div>
-      <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Titulo</th>
-              <th>Empresa</th>
-              <th>Ubicación</th>
-              <th>Editor</th>
-              <th>Remover</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredVacancies.map((vacancy, index) => (
-              <tr key={vacancy.id}>
-                <td>{index + 1}</td>
-                <td>{vacancy.titulo}</td>
-                <td>{vacancy.empresa}</td> {/* Asume que backend devuelve empresa */}
-                <td>{vacancy.ubicacion}</td>
-                <td>
-                  <FaPencilAlt onClick={() => navigate(`/admin/vacantes/edit/${vacancy.id}`)} />
-                </td>
-                <td>
-                  <FaTrashAlt onClick={() => deleteVacancy(vacancy.id)} />
-                </td>
-              </tr>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>#</TableCell>
+              <TableCell>Titulo</TableCell>
+              <TableCell>Empresa</TableCell>
+              <TableCell>Ubicación</TableCell>
+              <TableCell>Editor</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredVacantes.map((vac, index) => (
+              <TableRow key={vac.id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{vac.titulo}</TableCell>
+                <TableCell>{vac.empresa.razon_social}</TableCell>
+                <TableCell>{vac.ubicacion}</TableCell>
+                <TableCell><IconButton onClick={() => navigate(`/admin/vacantes/edit/${vac.id}`)}><Edit /></IconButton></TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

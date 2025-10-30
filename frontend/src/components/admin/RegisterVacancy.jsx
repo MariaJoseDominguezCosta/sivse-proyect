@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
+import { Box, Button, TextField, Switch, Select, MenuItem, FormControlLabel } from '@mui/material';
+import axios from '../../utils/axiosConfig';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const RegisterVacancy = () => {
   const [formData, setFormData] = useState({
-    titulo: '',
-    salario: '',
-    descripcion: '',
-    modalidad: '',
-    requisitos: '',
-    estado: false,
-    empresaAsociada: '',
-    fechaPublicacion: '',
+    titulo: '', salario: '', descripcion: '', modalidad: '', requisitos: '', estado: false, empresaAsociada: '', fechaPublicacion: ''
   });
   const navigate = useNavigate();
 
@@ -23,42 +17,30 @@ const RegisterVacancy = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/admin/vacantes', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.post('/admin/vacantes', formData);
       navigate('/admin/vacantes');
     } catch (err) {
-      console.error('Error creating vacancy:', err);
+      console.error('Error registering vacancy', err);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form-container">
-      <div className="form-group">
-        <input name="titulo" placeholder="Título" value={formData.titulo} onChange={handleChange} />
-        <input name="salario" placeholder="Salario" value={formData.salario} onChange={handleChange} />
-      </div>
-      <input name="descripcion" placeholder="Descripción" value={formData.descripcion} onChange={handleChange} style={{ width: '100%', marginBottom: '15px' }} />
-      <div className="form-group">
-        <input name="modalidad" placeholder="Modalidad" value={formData.modalidad} onChange={handleChange} />
-      </div>
-      <div className="form-group">
-        <input name="requisitos" placeholder="Requisitos (Separados con comas)" value={formData.requisitos} onChange={handleChange} />
-        <label>Estado: Activa/Inactiva <input type="checkbox" name="estado" checked={formData.estado} onChange={handleChange} /></label>
-      </div>
-      <div className="form-group">
-        <select name="empresaAsociada" value={formData.empresaAsociada} onChange={handleChange}><option>Empresa asociada ▼</option>{/* Opciones desde API si necesitas */}</select>
-        <input name="fechaPublicacion" placeholder="Fecha de publicación" value={formData.fechaPublicacion} onChange={handleChange} />
-      </div>
-      <div className="buttons">
-        <button type="button" className="btn btn-cancel" onClick={() => navigate('/admin/vacantes')}>Cancelar</button>
-        <button type="submit" className="btn btn-save">Guardar</button>
-      </div>
-    </form>
+    <Box component="form" onSubmit={handleSubmit} className="form-container">
+      <TextField name="titulo" label="Título" value={formData.titulo} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
+      <TextField name="salario" label="Salario" value={formData.salario} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
+      <TextField name="descripcion" label="Descripción" value={formData.descripcion} onChange={handleChange} fullWidth margin="normal" multiline placeholder="Value" />
+      <TextField name="modalidad" label="Modalidad" value={formData.modalidad} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
+      <TextField name="requisitos" label="Requisitos (Separados con comas)" value={formData.requisitos} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
+      <FormControlLabel control={<Switch name="estado" checked={formData.estado} onChange={handleChange} />} label="Estado Activa/Inactiva" />
+      <Select name="empresaAsociada" value={formData.empresaAsociada} onChange={handleChange} fullWidth margin="normal">
+        <MenuItem value="">Value</MenuItem>
+      </Select>
+      <TextField name="fechaPublicacion" label="Fecha de publicación" value={formData.fechaPublicacion} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
+      <Box className="buttons">
+        <Button className="btn-cancel" onClick={() => navigate('/admin/vacantes')}>Cancelar</Button>
+        <Button className="btn-save" type="submit">Guardar</Button>
+      </Box>
+    </Box>
   );
 };
 
