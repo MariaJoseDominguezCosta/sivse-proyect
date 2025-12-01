@@ -1,66 +1,85 @@
-import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField } from '@mui/material';
-import { Add } from '@mui/icons-material';
-import axios from '../../utils/axiosConfig';
-import { useParams, useNavigate } from 'react-router-dom';
+// src/pages/admin/VacanteManagement.jsx
+import React, { useState, useEffect } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+} from "@mui/material"; // Removido TextField, Add
+import { Add } from "@mui/icons-material";
+import axios from "../../utils/axiosConfig";
+import { useParams, useNavigate } from "react-router-dom";
 
 const VacanteManagement = () => {
-  const { empresaId } = useParams();
+  const { empresa_id } = useParams(); // Usaremos empresa_id para ser consistentes con el routes.js
   const [vacantes, setVacantes] = useState([]);
-  const [newVacante, setNewVacante] = useState({ titulo: '', descripcion: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchVacantes = async () => {
+      // Asegurar que el ID exista
+      if (!empresa_id) return;
       try {
-        const res = await axios.get(`/admin/empresas/${empresaId}/vacantes`);
+        // Usar empresa_id del useParams (asumimos que la ruta es /admin/empresas/:empresa_id/vacantes)
+        const res = await axios.get(`/admin/empresas/${empresa_id}/vacantes`);
         setVacantes(res.data);
       } catch (err) {
-        console.error('Error fetching vacantes', err);
+        console.error("Error fetching vacantes", err);
       }
     };
     fetchVacantes();
-  }, [empresaId]);
+  }, [empresa_id]); // Dependencia del ID
 
-  const handleAddVacante = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post(`/admin/empresas/${empresaId}/vacantes`, { ...newVacante, empresaId });
-      setNewVacante({ titulo: '', descripcion: '' });
-      const res = await axios.get(`/admin/empresas/${empresaId}/vacantes`);
-      setVacantes(res.data);
-    } catch (err) {
-      console.error('Error adding vacante', err);
-    }
+  const handleRedirectRegister = () => {
+    // Redirigir a la página de registro, pasando el ID de la empresa en la query string
+    navigate(`/admin/vacantes/register?empresa_id=${empresa_id}`);
   };
+
+  // NOTA: El componente original no tenía el nombre de la empresa,
+  // pero deberías obtenerlo del contexto o al montar para mostrarlo en el SectionBanner.
+  // Asumiendo que el SectionBanner maneja el título:
 
   return (
     <div className="table-container">
-      <form onSubmit={handleAddVacante}>
-        <TextField name="titulo" label="Título" value={newVacante.titulo} onChange={(e) => setNewVacante({ ...newVacante, titulo: e.target.value })} fullWidth margin="normal" />
-        <TextField name="descripcion" label="Descripción" value={newVacante.descripcion} onChange={(e) => setNewVacante({ ...newVacante, descripcion: e.target.value })} fullWidth margin="normal" />
-        <Button type="submit" variant="contained" startIcon={<Add />}>Agregar Vacante</Button>
-      </form>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Título</TableCell>
-              <TableCell>Descripción</TableCell>
-              <TableCell>Fecha Publicación</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {vacantes.map((vacante) => (
-              <TableRow key={vacante.id}>
-                <TableCell>{vacante.titulo}</TableCell>
-                <TableCell>{vacante.descripcion}</TableCell>
-                <TableCell>{new Date(vacante.fecha_publicacion).toLocaleDateString()}</TableCell>
+      {/* Botón para añadir vacante, reemplaza el formulario inline */}
+      <Button
+        type="button"
+        variant="contained"
+        startIcon={<Add />}
+        className="btn-save"
+        onClick={handleRedirectRegister}
+        sx={{ mb: 2 }} // Un poco de margen inferior
+      >
+        Publicar nueva vacante
+      </Button>
+      <div style={{ maxHeight: "calc(100vh - 350px)", overflowY: "auto" }}>
+        <TableContainer component={Paper}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Título</TableCell>
+                <TableCell>Descripción</TableCell>
+                <TableCell>Fecha Publicación</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {vacantes.map((vacante) => (
+                <TableRow key={vacante.id}>
+                  <TableCell>{vacante.titulo}</TableCell>
+                  <TableCell>{vacante.descripcion}</TableCell>
+                  <TableCell>
+                    {new Date(vacante.fecha_publicacion).toLocaleDateString()}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </div>
   );
 };

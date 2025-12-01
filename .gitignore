@@ -11,3 +11,5 @@
 /frontend/package-lock.json
 /frontend/eslint.config.js
 /frontend/README.md
+/frontend/src/tailwind.config.js
+/backend/src/seeders

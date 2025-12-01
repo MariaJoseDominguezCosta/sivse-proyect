@@ -2,14 +2,17 @@
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { User } = require('../models');
+const { Usuario: User } = require('../models');
+
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
+    host: 'smtp.gmail.com', // <-- Especificar host
+    port: 465,             // <-- Puerto seguro para SSL
+    secure: true,          // <-- Usar SSL (secure: true para port 465)
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
 });
 
 exports.forgotPassword = async (req, res) => {
@@ -18,21 +21,26 @@ exports.forgotPassword = async (req, res) => {
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '15m' });
-    const resetLink = `${process.env.APP_URL}/reset-password?token=${token}`;
+    // Usar la URL de la aplicación de React
+    const resetLink = `${process.env.APP_URL}/recover?token=${token}`; // <-- Cambiar /reset-password a /recover para tu ruta de React
 
     await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: email,
         subject: 'Restablecimiento de Contraseña - SIVSE',
+        // --- CORRECCIÓN: Enviar el enlace ---
         text: `Hola,\n\nTu solicitud para restablecer la contraseña ha sido procesada. Haz clic en el siguiente enlace para crear una nueva contraseña:\n${resetLink}\n\nEste enlace expira en 15 minutos.\n\nSaludos,\nEquipo SIVSE`,
     });
 
-    res.json({ message: 'Enlace enviado al email' });
+    res.json({ message: 'Enlace de restablecimiento enviado al email' });
 };
 
+
 exports.resetPassword = async (req, res) => {
-    const { token, newPassword, confirmPassword } = req.body;
-    if (newPassword !== confirmPassword) return res.status(400).json({ error: 'Contraseñas no coinciden' });
+     // El frontend envía: token (en el campo 'code'), newPassword, confirmPassword
+    const { token, newPassword, confirmPassword } = req.body; 
+
+    if (newPassword !== confirmPassword) return res.status(400).json({ error: 'Las contraseñas no coinciden' });
     if (newPassword.length < 8) return res.status(400).json({ error: 'Contraseña mínima 8 caracteres' });
 
     try {
@@ -51,6 +59,7 @@ exports.resetPassword = async (req, res) => {
 
         res.json({ message: 'Contraseña actualizada' });
     } catch (err) {
-        res.status(400).json({ error: 'Token inválido o expirado' });
+        const errorMsg = err.name === 'TokenExpiredError' ? 'El código ha expirado.' : 'Código inválido o error desconocido.';
+        res.status(400).json({ error: errorMsg });
     }
 };

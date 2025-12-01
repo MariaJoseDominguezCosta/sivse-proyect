@@ -10,6 +10,7 @@ const sequelize = require('./config/database'); // Conexión DB
 const egresadoRoutes = require('./routes/egresadoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {

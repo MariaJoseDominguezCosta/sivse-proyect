@@ -98,10 +98,23 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Postulaciones', null, {});
-    await queryInterface.bulkDelete('Vacantes', null, {});
-    await queryInterface.bulkDelete('Empresas', null, {});
-    await queryInterface.bulkDelete('Egresados', null, {});
-    await queryInterface.bulkDelete('Usuarios', null, {});
+    try {
+        // Hijos de Vacantes y Egresados
+        await queryInterface.bulkDelete('Postulaciones', null, {});
+        await queryInterface.bulkDelete('Favoritos', null, {});
+
+        // Hijos de Usuarios
+        // (No tienes datos iniciales de Notificaciones, pero si los tuvieras, irían aquí)
+
+        // Tablas Padre/Intermedias
+        await queryInterface.bulkDelete('Vacantes', null, {});
+        await queryInterface.bulkDelete('Empresas', null, {});
+        await queryInterface.bulkDelete('Egresados', null, {});
+        await queryInterface.bulkDelete('Usuarios', null, {});
+    } catch (error) {
+        // En un seeder, si un bulkDelete falla por no existir la tabla, 
+        // simplemente lo registramos y continuamos. 
+        console.warn(`Advertencia al intentar eliminar datos: ${error.message}. Asumiendo que la tabla fue eliminada por una migración.`);
+    }
   }
 };

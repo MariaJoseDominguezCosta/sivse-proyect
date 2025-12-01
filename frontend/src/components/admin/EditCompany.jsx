@@ -3,10 +3,11 @@ import { Box, Button, TextField } from '@mui/material';
 import axios from '../../utils/axiosConfig';
 import { useParams, useNavigate } from 'react-router-dom';
 
+
 const EditCompany = () => {
   const { id } = useParams();
   const [formData, setFormData] = useState({
-    razonSocial: '', direccion: '', sector: '', correo: '', tipoConvenio: '', telefono: '', sitioWeb: ''
+    razon_social: '', direccion: '', sector: '', correo_contacto: '', tipo_convenio: '', telefono: '', sitio_web: ''
   });
   const navigate = useNavigate();
 
@@ -38,13 +39,13 @@ const EditCompany = () => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} className="form-container">
-      <TextField name="razonSocial" label="Razón Social" value={formData.razonSocial} onChange={handleChange} fullWidth margin="normal" placeholder="Nombre de la empresa" />
+      <TextField name="razon_social" label="Razón Social" value={formData.razon_social} onChange={handleChange} fullWidth margin="normal" placeholder="Nombre de la empresa" />
       <TextField name="direccion" label="Dirección" value={formData.direccion} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
       <TextField name="sector" label="Sector" value={formData.sector} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
-      <TextField name="correo" label="Correo" value={formData.correo} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
-      <TextField name="tipoConvenio" label="Tipo de convenio" value={formData.tipoConvenio} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
+      <TextField name="correo_contacto" label="Correo" value={formData.correo_contacto} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
+      <TextField name="tipo_convenio" label="Tipo de convenio" value={formData.tipo_convenio} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
       <TextField name="telefono" label="Teléfono" value={formData.telefono} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
-      <TextField name="sitioWeb" label="Sitio web" value={formData.sitioWeb} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
+      <TextField name="sitio_web" label="Sitio web" value={formData.sitio_web} onChange={handleChange} fullWidth margin="normal" placeholder="Value" />
       <Box className="buttons">
         <Button className="btn-cancel" onClick={() => navigate('/admin/empresas')}>Cancelar</Button>
         <Button className="btn-save" type="submit">Guardar</Button>

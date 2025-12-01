@@ -24,8 +24,11 @@ const SidebarEgresado = () => {
   return (
     <Box sx={{ width: 250, bgcolor: '#223373', color: '#FFFDFD', height: '100vh', p: 2 }}>
       {/* Logo del Tecnológico */}
-      <img src="/logo-tecnologico.png" alt="Logo" style={{ width: '100%', marginBottom: '16px' }} />
-      {/* Ícono de usuario (Egresado) */}
+      <img
+      src="/logo-tecnologico-comitan-removebg-preview.png"
+        alt="Logo"
+        style={{ width: "50%", marginBottom: "16px", marginLeft: "25%" }}
+      />
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, color: '#FFFDFD' }}>
         <Avatar sx={{ bgcolor: '#4F378A', mr: 1 }}>E</Avatar>
         <span>Egresado</span>

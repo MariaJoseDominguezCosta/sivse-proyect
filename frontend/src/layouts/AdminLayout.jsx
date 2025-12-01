@@ -1,12 +1,13 @@
 // src/layouts/AdminLayout.jsx
-import Header from '../components/common/Header';
+// REMOVIDO: import Header from '../components/common/Header';
 import SectionBanner from '../components/common/SectionBanner';
 import SidebarAdmin from '../components/admin/SidebarAdmin';
+import "../assets/adminLayout.css";
 
 const AdminLayout = ({ children, title }) => {
   return (
     <div className="admin-layout">
-      <Header userRole="admin" userName="Admin SIVSE" />
+      {/* REMOVIDO: <Header userRole="admin" userName="Admin SIVSE" /> */}
       <div className="admin-body">
         <SidebarAdmin />
         <main className="admin-content">

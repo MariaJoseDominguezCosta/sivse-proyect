@@ -46,22 +46,54 @@ const Login = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 8 }}>
-      <Typography variant="h4">SIVSE</Typography>
+    // Removido Box con mt: 8, ya que PublicLayout centra el contenido
+    <Box sx={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        p: 4, 
+        bgcolor: 'white', // Contenedor blanco para el formulario
+        borderRadius: 2, 
+        boxShadow: 3,
+        width: '100%', 
+        maxWidth: 350 // Tamaño fijo para el box del formulario
+    }}>
+      <Typography variant="h4" sx={{ mb: 3 }}>SIVSE</Typography>
       <Formik initialValues={{ email: '', password: '' }} validationSchema={validationSchema} onSubmit={handleSubmit}>
         {({ isSubmitting, errors }) => (
-          <Form>
-            <Field as={TextField} name="email" label="Email" fullWidth margin="normal" />
-            <ErrorMessage name="email" component="div" style={{ color: 'red' }} />
-            <Field as={TextField} name="password" type="password" label="Password" fullWidth margin="normal" />
-            <ErrorMessage name="password" component="div" style={{ color: 'red' }} />
-            {errors.general && <div style={{ color: 'red' }}>{errors.general}</div>}
-            <Button variant="contained" type="submit" fullWidth disabled={isSubmitting}>Iniciar Sesión</Button>
+          <Form style={{ width: '100%' }}>
+            {/* Campos de Formik Field */}
+            <Field as={TextField} name="email" label="Email" fullWidth margin="normal" variant="outlined" placeholder="Value" />
+            <ErrorMessage name="email" component="div" style={{ color: 'red', fontSize: '0.8rem' }} />
+            <Field as={TextField} name="password" type="password" label="Password" fullWidth margin="normal" variant="outlined" placeholder="Value" />
+            <ErrorMessage name="password" component="div" style={{ color: 'red', fontSize: '0.8rem' }} />
+            {errors.general && <div style={{ color: 'red', fontSize: '0.8rem', marginBottom: '10px' }}>{errors.general}</div>}
+            
+            {/* Botón de Iniciar Sesión (Estilo de la maqueta: negro, sin contorno) */}
+            <Button 
+                variant="contained" 
+                type="submit" 
+                fullWidth 
+                disabled={isSubmitting}
+                sx={{ 
+                    mt: 2, 
+                    bgcolor: 'var(--button-save)', // Negro
+                    '&:hover': { bgcolor: 'var(--button-save)', opacity: 0.9 } 
+                }}
+            >
+                Iniciar Sesión
+            </Button>
           </Form>
         )}
       </Formik>
-      <Link href="/recover">¿Olvidaste tu contraseña?</Link>
-      <Link href="/register">Regístrate como egresado</Link>
+      
+      {/* Links de recuperación y registro */}
+      <Link href="/recover" variant="body2" sx={{ mt: 2, fontSize: '0.9rem' }}>
+          ¿Olvidaste tu contraseña?
+      </Link>
+      <Link href="/register" variant="body2" sx={{ mt: 1, fontSize: '0.9rem' }}>
+          Regístrate como egresado
+      </Link>
     </Box>
   );
 };

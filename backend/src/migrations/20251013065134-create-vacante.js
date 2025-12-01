@@ -84,6 +84,15 @@ module.exports = {
   },
 
   async down(queryInterface) {
+    try {
+        await queryInterface.dropTable("Favoritos"); 
+        await queryInterface.dropTable("Postulaciones"); 
+    } catch(e) {
+        console.warn(`Advertencia al eliminar tablas dependientes de Vacantes: ${e.message}`);
+        // Ignorar si no existen (lo cual es raro en un down)
+    }
+
+    // 2. ELIMINAR LA TABLA VACANTES
     await queryInterface.dropTable("Vacantes");
   },
 };

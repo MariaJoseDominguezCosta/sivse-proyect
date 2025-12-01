@@ -21,13 +21,15 @@ module.exports = (sequelize, DataTypes) => {
         {
         tableName: "Favoritos",
         timestamps: true,
+                indexes: [
+            {
+                unique: true,
+                fields: ['egresado_id', 'vacante_id']
+            }
+        ]
+
         }
     );
-
-    // Favorito.associate = (models) => {
-    //     Favorito.belongsTo(models.Egresado, { foreignKey: "egresado_id" });
-    //     Favorito.belongsTo(models.Vacante, { foreignKey: "vacante_id" });
-    // };
 
     return Favorito;
 };

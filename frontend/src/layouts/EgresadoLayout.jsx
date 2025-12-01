@@ -1,18 +1,20 @@
+// src/layouts/EgresadoLayout.jsx
 import React from 'react';
-import { Box } from '@mui/material';
-import SidebarEgresado from '../components/egresados/SidebarEgresado';
-import Header from '../components/common/Header';
 import SectionBanner from '../components/common/SectionBanner';
+import SidebarEgresado from '../components/egresados/SidebarEgresado';
+import { Outlet } from 'react-router-dom';
 
-
-const EgresadoLayout = ({ children, title }) => {
+// El componente EgresadoLayout recibe el título de App.jsx, aunque su
+// implementación original dentro de App.jsx mezclaba props y children.
+// Adoptamos el patrón de AdminLayout para consistencia.
+const EgresadoLayout = ({ children, title }) => { 
   return (
-    <div className="egresado-layout">
-      <Header userRole="egresado" />
-      <div className="egresado-body">
+    <div className="admin-layout">
+      <div className="admin-body">
         <SidebarEgresado />
-        <main className="egresado-content">
-          <SectionBanner title={title} />
+        <main className="admin-content">
+          {/* Se integra el SectionBanner para el título */}
+          <SectionBanner title={title || 'SIVSE'} />
           <div className="page-padding">
             {children}
           </div>

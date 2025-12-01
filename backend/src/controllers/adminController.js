@@ -82,8 +82,9 @@ exports.getVacantesByEmpresa = async (req, res) => {
 
 exports.createVacante = async (req, res) => {
   try {
-    const { empresa_id, titulo, descripcion, requisitos, ubicacion,  modalidad, salario_estimado, estado } = req.body;
-    const nuevaVacante = await Vacante.create({ empresa_id, titulo, descripcion, requisitos, ubicacion,  modalidad, salario_estimado, estado });
+    const { empresaAsociada, titulo, descripcion, requisitos, ubicacion,  modalidad, salario_estimado, estado, fecha_publicacion } = req.body;
+    const estadoString = estado ? 'Activa' : 'Inactiva';
+    const nuevaVacante = await Vacante.create({ empresa_id: empresaAsociada, titulo, descripcion, requisitos, ubicacion,  modalidad, salario_estimado, estado: estadoString, fecha_publicacion });
     res.status(201).json(nuevaVacante);
   } catch (error) {
     console.error('Error creating vacante:', error);
@@ -120,7 +121,12 @@ exports.getVacanteById = async (req, res) => {
 exports.updateVacante = async (req, res) => {
   try {
     const { id } = req.params;
-    const [updated] = await Vacante.update(req.body, { where: { id } });
+     const updateData = { ...req.body }; // Copiamos el cuerpo de la solicitud
+    // Si el estado viene en el cuerpo, lo convertimos a string.
+    if (typeof updateData.estado === 'boolean') {
+        updateData.estado = updateData.estado ? 'Activa' : 'Inactiva';
+    }
+    const [updated] = await Vacante.update(updateData, { where: { id } });
     if (!updated) return res.status(404).json({ message: 'Vacante no encontrada' });
     const updatedVacante = await Vacante.findByPk(id);
     res.json(updatedVacante);

@@ -1,28 +1,52 @@
 'use strict';
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.addConstraint('Postulaciones', {
-      fields: ['egresado_id'],
-      type: 'foreign key',
-      name: 'fk_postulacion_egresado',
-      references: { table: 'Egresados', field: 'id' },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable('Postulaciones', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
+      egresado_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false, // Asumiendo que no puede ser nulo
+        references: {
+          model: 'Egresados', // Nombre de la tabla
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      vacante_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false, // Asumiendo que no puede ser nulo
+        references: {
+          model: 'Vacantes', // Nombre de la tabla
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      fecha_postulacion: { // Añadir la columna de datos
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
     });
-    await queryInterface.addConstraint('Postulaciones', {
-      fields: ['vacante_id'],
-      type: 'foreign key',
-      name: 'fk_postulacion_vacante',
-      references: { table: 'Vacantes', field: 'id' },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    });
-    // Añade más constraints según sea necesario
   },
 
-  down: async (queryInterface) => {
-    await queryInterface.removeConstraint('Postulaciones', 'fk_postulacion_egresado');
-    await queryInterface.removeConstraint('Postulaciones', 'fk_postulacion_vacante');
+  async down (queryInterface) {
+    // La función down debe eliminar la tabla completa
+    await queryInterface.dropTable('Postulaciones');
   }
 };

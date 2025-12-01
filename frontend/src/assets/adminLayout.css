@@ -1,5 +1,25 @@
 /* src/styles/adminLayout.css */
-.admin-layout { display: flex; flex-direction: column; min-height: 100vh; }
-.admin-body { display: flex; flex: 1; }
-.admin-content { flex: 1; padding: 0; }
-.page-padding { padding: 2rem; }
+.admin-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.admin-body {
+  display: flex;
+  flex: 1; /* Ocupa el espacio restante en altura */
+  overflow: hidden; /* Evita scrollbars duplicados */
+}
+
+.admin-content {
+  flex: 1; /* Ocupa el espacio restante en anchura junto al sidebar */
+  background-color: var(--primary-light); /* Fondo #E1F2FF */
+  display: flex;
+  flex-direction: column; /* Apila el Banner y el Contenido */
+  padding: 0; /* padding se agrega en .page-padding */
+}
+
+.page-padding {
+  /* Padding consistente para todo el contenido debajo del banner */
+  padding: 30px; 
+}

@@ -44,7 +44,8 @@ db.Vacante.belongsTo(db.Empresa, { foreignKey: 'empresa_id', as: 'empresa' });
 
 db.Egresado.hasMany(db.Favorito, { foreignKey: 'egresado_id', onDelete: 'CASCADE' });
 db.Favorito.belongsTo(db.Egresado, { foreignKey: 'egresado_id' });
-db.Favorito.belongsTo(db.Vacante, { foreignKey: 'vacante_id' });
+db.Favorito.belongsTo(db.Vacante, { foreignKey: 'vacante_id', as: 'vacantes' });
+
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

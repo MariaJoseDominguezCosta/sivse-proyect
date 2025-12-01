@@ -10,6 +10,7 @@ import RegisterEgresado from './pages/common/RegisterEgresado';
 import RecoverPassword from './pages/common/RecoverPassword';
 import AdminLayout from './layouts/AdminLayout';
 import EgresadoLayout from './layouts/EgresadoLayout';
+import PublicLayout from './layouts/PublicLayout';
 
 // Pages Admin
 import DashboardAdmin from './pages/admin/DashboardAdmin';
@@ -29,38 +30,42 @@ import DashboardEgresado from './pages/egresados/DashboardEgresado';
 import EditPerfil from './pages/egresados/EditPerfil';
 import FavoritesList from './pages/egresados/FavoritesList';
 import VacantesList from './pages/egresados/VacantesList';
-import VacanteDetail from './components/egresados/VacanteDetail';
+import VacanteDetail from './pages/egresados/VacanteDetail';
 
-const AppContent = () => {
+// **NUEVO COMPONENTE:** Lógica de Inactividad Separada
+const InactivityMonitor = ({ isAuthenticated }) => {
   const navigate = useNavigate();
-
-  // Configuración del tiempo de inactividad (15 minutos total, aviso a 1 minuto del final)
-  const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutos
-  const WARNING_TIMEOUT = 1 * 60 * 1000; // 1 minuto de advertencia
-
+  
+  // La lógica de inactividad solo debe ejecutarse si isAuthenticated es TRUE
   useEffect(() => {
+    if (!isAuthenticated) return; // Salir si no está autenticado
+
     let inactivityTimeoutId;
     let warningTimeoutId;
 
-    // Función para reiniciar el temporizador
+    // Configuración del tiempo de inactividad
+    const INACTIVITY_TIMEOUT = 15 * 60 * 1000;
+    const WARNING_TIMEOUT = 1 * 60 * 1000;
+
     const resetTimeout = () => {
       clearTimeout(inactivityTimeoutId);
       clearTimeout(warningTimeoutId);
 
-      // Establecer advertencia 1 minuto antes del cierre
+      // ... (Lógica de advertencia de timeout, es la misma) ...
       warningTimeoutId = setTimeout(() => {
         toast.warn('Tu sesión está a punto de expirar. ¿Deseas permanecer activo?', {
           position: 'top-right',
           autoClose: false,
           closeOnClick: false,
           draggable: false,
-          onClose: () => resetTimeout(), // Reinicia si el usuario cierra la notificación
+          onClose: () => resetTimeout(), 
           action: {
             label: 'Permanecer Activo',
             onClick: () => resetTimeout(),
           },
         });
       }, INACTIVITY_TIMEOUT - WARNING_TIMEOUT);
+
 
       // Cierre de sesión después del tiempo total
       inactivityTimeoutId = setTimeout(() => {
@@ -70,62 +75,63 @@ const AppContent = () => {
       }, INACTIVITY_TIMEOUT);
     };
 
-    // Agregar event listeners para detectar actividad
     const events = ['mousemove', 'keydown', 'scroll', 'touchstart'];
     events.forEach((event) => window.addEventListener(event, resetTimeout));
-
-    // Iniciar el temporizador al montar el componente
     resetTimeout();
 
-    // Limpieza al desmontar el componente
     return () => {
       events.forEach((event) => window.removeEventListener(event, resetTimeout));
       clearTimeout(inactivityTimeoutId);
       clearTimeout(warningTimeoutId);
     };
-  }, [navigate, INACTIVITY_TIMEOUT, WARNING_TIMEOUT]);
+  }, [navigate, isAuthenticated]); // Re-ejecutar solo si isAuthenticated cambia
 
-  // Verificar si hay token para redirigir a login si no está autenticado
-  const isAuthenticated = !!localStorage.getItem('token');
+  return null; // Este componente no renderiza nada visible
+};
 
+
+const AppContent = () => {
+  // Se usa useNavigate aquí, pero el hook no se usa directamente en esta función
   return (
     <Routes>
       {/* Common views */}
-      <Route path="/" element={isAuthenticated ? <Navigate to="/admin" /> : <Login />} />
-      <Route path="/register" element={<RegisterEgresado />} />
-      <Route path="/recover" element={<RecoverPassword />} />
+      <Route path="/" element={<PublicLayout> <Login /></PublicLayout>} />
+      <Route path="/register" element={<PublicLayout><RegisterEgresado /></PublicLayout>} />
+      <Route path="/recover" element={<PublicLayout><RecoverPassword /></PublicLayout>} />
 
       {/* Admin routes */}
       <Route element={<PrivateRoute allowedRoles={['admin']} />}>
-        <Route path="/admin" element={<AdminLayout title="Dashboard"><DashboardAdmin /></AdminLayout>} />
+        <Route path="/admin" element={<AdminLayout title="Bienvenido/a"><DashboardAdmin /></AdminLayout>} />
         <Route path="/admin/empresas" element={<AdminLayout title="Empresas"><CompanyManagement /></AdminLayout>} />
         <Route path="/admin/empresas/register" element={<AdminLayout title="Registrar Empresa"><RegisterCompany /></AdminLayout>} />
         <Route path="/admin/empresas/edit/:id" element={<AdminLayout title="Editar Empresa"><EditCompany /></AdminLayout>} />
-        <Route path="/admin/vacantes" element={<AdminLayout title="Vacantes"><JobBoard /></AdminLayout>} />
+        <Route path="/admin/vacantes" element={<AdminLayout title="Bolsa de Trabajo"><JobBoard /></AdminLayout>} />
         <Route path="/admin/vacantes/register" element={<AdminLayout title="Registrar Vacante"><RegisterVacancy /></AdminLayout>} />
         <Route path="/admin/vacantes/edit/:id" element={<AdminLayout title="Editar Vacante"><EditVacancy /></AdminLayout>} />
-        <Route path="/admin/empresas/:empresaId/vacantes" element={<AdminLayout title="Gestión de Vacantes"><VacanteManagement /></AdminLayout>} />
+        <Route path="/admin/empresas/:empresa_id/vacantes" element={<AdminLayout title="Gestión de Vacantes"><VacanteManagement /></AdminLayout>} />
         <Route path="/admin/egresados" element={<AdminLayout title="Egresados"><AlumniTracking /></AdminLayout>} />
         <Route path="/admin/egresados/:id" element={<AdminLayout title="Detalle de Egresado"><AlumniDetail /></AdminLayout>} />
         <Route path="/admin/reportes" element={<AdminLayout title="Reportes"><ReportsStats /></AdminLayout>} />
       </Route>
 
-      {/* Egresado routes */}
+       {/* Egresado routes */}
       <Route element={<PrivateRoute allowedRoles={['egresado']} />}>
-        <Route path="/egresado" element={<EgresadoLayout title="Dashboard"><DashboardEgresado /></EgresadoLayout>} />
-        <Route path="/egresados/perfil/edit" element={<EgresadoLayout title="Editar Perfil"><EditPerfil /></EgresadoLayout>} />
+        <Route path="/egresado" element={<EgresadoLayout title=""><DashboardEgresado /></EgresadoLayout>} />
+        <Route path="/egresados/perfil/edit" element={<EgresadoLayout title="Perfil del Egresado"><EditPerfil /></EgresadoLayout>} /> {/* Título corregido según imagen */}
         <Route path="/egresados/favoritos" element={<EgresadoLayout title="Favoritos"><FavoritesList /></EgresadoLayout>} />
         <Route path="/egresados/vacantes" element={<EgresadoLayout title="Vacantes"><VacantesList /></EgresadoLayout>} />
-        <Route path="/egresados/vacantes/:id" element={<EgresadoLayout title="Detalle de Vacante"><VacanteDetail /></EgresadoLayout>} />
+        <Route path="/egresados/vacantes/:id" element={<EgresadoLayout title="Detalle de Vacante"><VacanteDetail /></EgresadoLayout>} /> {/* Título corregido según imagen */}
       </Route>
     </Routes>
   );
 };
 
 function App() {
+  const isAuthenticated = !!localStorage.getItem('token');
   return (
     <Router>
       <ToastContainer />
+      <InactivityMonitor isAuthenticated={isAuthenticated} /> {/* Renderizar el monitor aquí */}
       <AppContent />
     </Router>
   );

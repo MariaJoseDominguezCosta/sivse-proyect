@@ -48,7 +48,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      redes_sociales: {
+      redes: {
         type: Sequelize.STRING,
         allowNull: true,
       },
@@ -74,6 +74,21 @@ module.exports = {
   },
 
   async down (queryInterface) {
+    // CORRECCIÓN CLAVE: Eliminar las tablas dependientes antes de Egresados
+    
+    // 1. Eliminar Postulaciones y Favoritos (aunque ya deberían estar eliminadas, se repite por seguridad)
+    // Se asume que HistorialActualizaciones existe en tu DB, por eso PostgreSQL da el error.
+    try {
+        // Estas tablas dependen de Egresados, deben ser eliminadas PRIMERO
+        await queryInterface.dropTable('Postulaciones'); 
+        await queryInterface.dropTable('Favoritos');
+        await queryInterface.dropTable('historial_actualizaciones'); // <-- ¡CRÍTICO: Eliminar la tabla que bloquea!
+    } catch(e) {
+        console.warn(`Advertencia al eliminar tablas dependientes de Egresados: ${e.message}`);
+        // Si fallan aquí, es porque ya fueron eliminadas por otra migración (lo cual es ideal).
+    }
+
+    // 2. Eliminar la tabla Egresados
     await queryInterface.dropTable('Egresados');
   }
 };

@@ -17,13 +17,14 @@ router.delete('/empresas/:id', adminController.deleteEmpresa);
 
 // Gestión de vacantes
 router.get('/vacantes', adminController.getAllVacantes);
+router.post('/vacantes', adminController.createVacante);
 router.get('/vacantes/:id', adminController.getVacanteById);
 router.put('/vacantes/:id', adminController.updateVacante);
 router.delete('/vacantes/:id', adminController.deleteVacante);
 
 // Gestión de vacantes por empresa
-router.get('/empresas/:empresaId/vacantes', adminController.getVacantesByEmpresa);
-router.post('/empresas/:empresaId/vacantes', adminController.createVacante);
+router.get('/empresas/:empresa_id/vacantes', adminController.getVacantesByEmpresa);
+router.post('/empresas/:empresa_id/vacantes', adminController.createVacante);
 
 // Gestión de egresados
 router.get('/egresados', adminController.getEgresados);

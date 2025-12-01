@@ -1,66 +1,47 @@
-/* App.css - Estilos globales basados en el maquetado */
+/* src/App.css - Estilos globales y de componentes */
 :root {
-  --primary-dark: #223373; /* Azul oscuro del sidebar, coincide con el maquetado */
-  --primary-light: #E1F2FF; /* Fondo claro de las vistas, coincide con el maquetado */
-  --gray-form: #FFFDFD; /* Fondo de formularios y tablas */
+  --primary-dark: #223373; /* Azul oscuro del sidebar */
+  --primary-light: #E1F2FF; /* Fondo claro de las vistas */
+  --gray-form: #FFFDFD; /* Fondo de formularios y tablas (Casi blanco) */
   --text-dark: #1E1E1E; /* Texto principal */
-  --accent: #4F378A; /* Morado del ícono de usuario, ajustado al morado oscuro de tu paleta */
-  --border-radius: 10px; /* Radio de bordes más consistente */
+  --accent: #4F378A; /* Morado del ícono de usuario */
+  --border-radius: 10px;
   --button-save: #2C2C2C; /* Negro para botones guardar */
-  --button-cancel: #F5F5F5; /* Blanco para botones cancelar con borde, ajustado a gris claro */
-  --card-bg: #F0E0E0; /* Fondo de las cards del dashboard, ajustado a rosado muy claro */
-  --table-bg: #FFFDFD; /* Fondo de tablas */
+  --button-cancel: #F5F5F5; /* Gris claro para cancelar */
+  --card-bg: #F0E0E0; /* Rosado muy claro */
+  --table-bg: #FFFDFD;
 }
 
 body {
   margin: 0;
   background-color: var(--primary-light);
-  font-family: 'Arial', sans-serif; /* Tipografía alineada al diseño */
+  font-family: 'Arial', sans-serif;
   color: var(--text-dark);
   font-size: 14px;
   line-height: 1.5;
 }
 
-.sidebar {
-  background-color: var(--primary-dark);
-  color: white;
-  padding: 20px 10px;
-  height: 100vh;
-  width: 250px;
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.sidebar .MuiListItem-root {
-  padding: 10px 15px;
-  margin: 5px 0;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.sidebar .MuiListItem-root:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.form-container {
+/* --- Contenedores de Vistas (Forms, Tables) --- */
+.form-container, .table-container {
   background-color: var(--gray-form);
   padding: 25px;
   border-radius: var(--border-radius);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* Permite scroll vertical si el contenido es muy largo */
+}
+
+.form-container {
   max-width: 700px;
   margin: 30px auto;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* --- AJUSTE CLAVE PARA EL SCROLL INTERNO --- */
+  /* Limita la altura del contenedor con respecto a la ventana */
+  max-height: calc(100vh - 150px); /* 100vh menos el Banner, Header y márgenes */
+  overflow-y: auto; /* Habilita el scroll interno si el contenido excede el max-height */
+  /* ------------------------------------------- */
 }
 
-.table-container {
-  background-color: var(--table-bg);
-  border-radius: var(--border-radius);
-  margin: 30px;
-  padding: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
 
+/* --- Barra de Búsqueda y Filtros --- */
 .search-bar {
   display: flex;
   gap: 15px;
@@ -68,41 +49,7 @@ body {
   align-items: center;
 }
 
-.search-bar .MuiTextField-root {
-  width: 250px;
-}
-
-.search-bar .MuiSelect-root {
-  width: 200px;
-  height: 40px;
-}
-
-.search-bar .MuiButton-root {
-  height: 40px;
-  padding: 0 20px;
-}
-
-.dashboard-cards {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-  margin: 30px;
-}
-
-.card {
-  background-color: var(--card-bg);
-  padding: 20px;
-  border-radius: var(--border-radius);
-  text-align: center;
-  width: 220px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.card .MuiAvatar-root {
-  margin-bottom: 15px;
-  background-color: var(--accent);
-}
-
+/* --- Botones --- */
 .buttons {
   display: flex;
   justify-content: flex-end;
@@ -110,22 +57,27 @@ body {
   margin-top: 20px;
 }
 
+.btn-cancel, .btn-save {
+  min-width: 120px;
+  text-transform: none !important; /* Mantiene el texto como "Guardar" y no "GUARDAR" */
+  font-weight: bold !important;
+}
+
 .btn-cancel {
-  background-color: var(--button-cancel);
-  border: 1px solid #ccc;
-  color: var(--text-dark);
+  background-color: var(--button-cancel) !important;
+  border: 1px solid #ccc !important;
+  color: var(--text-dark) !important;
   padding: 8px 20px;
   border-radius: 5px;
-  transition: background-color 0.3s;
 }
 
 .btn-cancel:hover {
-  background-color: #f0f0f0;
+  background-color: #f0f0f0 !important;
 }
 
 .btn-save {
-  background-color: var(--button-save);
-  color: white;
+  background-color: var(--button-save) !important;
+  color: white !important;
   padding: 8px 20px;
   border-radius: 5px;
   transition: opacity 0.3s;
@@ -135,9 +87,11 @@ body {
   opacity: 0.9;
 }
 
+/* --- Tablas --- */
 .MuiTableCell-root {
   padding: 10px;
   border-bottom: 1px solid #ddd;
+  overflow-y: auto; /* Permite scroll vertical si el contenido es muy largo */
 }
 
 .MuiTableHead-root .MuiTableCell-root {
@@ -145,3 +99,46 @@ body {
   color: white;
   font-weight: bold;
 }
+
+/* --- Cards del Dashboard --- */
+.dashboard-cards {
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 30px;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.card {
+  background-color: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  width: 333px;  /* Ancho Exacto */
+  height: 312px; /* Alto Exacto */
+  /* Asegura que el contenido se centre verticalmente si es necesario */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card .MuiAvatar-root {
+  /* --- AJUSTES PARA AVATAR 105x106 --- */
+  width: 105px !important;  /* ¡Importante usar !important o el prop sx para sobrescribir MUI! */
+  height: 106px !important; /* ¡Importante usar !important o el prop sx para sobrescribir MUI! */
+  font-size: 3rem !important; /* Ajustar el tamaño del ícono dentro del Avatar */
+  margin-bottom: 15px;
+  background-color: var(--accent);
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* Centrar el Avatar en el card */
+}
+
+/* Opcional: Centrar el ícono dentro del Avatar */
+.card .MuiAvatar-root .MuiSvgIcon-root {
+    font-size: 3rem; /* Ajustar el ícono dentro del nuevo Avatar */
+    margin: 0 auto;
+}
+

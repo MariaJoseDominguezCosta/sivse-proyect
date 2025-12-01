@@ -47,7 +47,7 @@ const AlumniDetail = () => {
   return (
     <Box className="form-container">
       <Typography variant="h5" gutterBottom>
-        {alumni.nombre || 'Sin nombre'} - {alumni.ubicacion || 'Sin ubicación'}
+        {alumni.nombre_completo || 'Sin nombre'} - {alumni.ubicacion || 'Sin ubicación'}
       </Typography>
       <Typography variant="subtitle1" color="text.secondary">
         Generación: {alumni.generacion || 'No especificada'}

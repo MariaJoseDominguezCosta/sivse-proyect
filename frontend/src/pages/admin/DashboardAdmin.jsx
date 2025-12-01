@@ -42,7 +42,7 @@ const Dashboard = () => {
         <Card className="card">
           <CardContent>
             <Avatar>
-              <People />
+              <People/>
             </Avatar>
             <Typography>Egresados Registrados</Typography>
             <Typography variant="h3">{stats.egresados}</Typography>
