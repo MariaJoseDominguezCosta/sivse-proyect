@@ -58,7 +58,7 @@ const AlumniDetail = () => {
       <Typography variant="h6" mt={2} gutterBottom>
         Información de empresa actual
       </Typography>
-      <Typography>Nombre: {alumni.empresa || 'No empleada'}</Typography>
+      <Typography>Nombre: {alumni.empresa_actual || 'No empleada'}</Typography>
       <Typography>Puesto: {alumni.puesto || 'No especificado'}</Typography>
       <Typography>Modalidad: {alumni.modalidad || 'No especificada'}</Typography>
       <Typography variant="h6" mt={2} gutterBottom>
@@ -68,9 +68,9 @@ const AlumniDetail = () => {
       <Typography variant="h6" mt={2} gutterBottom>
         Redes sociales
       </Typography>
-      <Typography>LinkedIn: {alumni.linkedin || 'No proporcionado'}</Typography>
-      <Typography>Instagram: {alumni.instagram || 'No proporcionado'}</Typography>
-      <Typography>Otro: {alumni.otro || 'No proporcionado'}</Typography>
+      <Typography>LinkedIn: {alumni.redes.linkedin || 'No proporcionado'}</Typography>
+      <Typography>Instagram: {alumni.redes.instagram || 'No proporcionado'}</Typography>
+      <Typography>Otro: {alumni.redes.otro || 'No proporcionado'}</Typography>
     </Box>
   );
 };
