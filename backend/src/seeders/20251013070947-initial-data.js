@@ -3,6 +3,14 @@
 const bcrypt = require('bcrypt');
 const { QueryInterface } = require('sequelize');
 
+//Funcion auxiliar para resetear la secuencia de auto-incremento
+async function resetSequence(queryInterface, tableName) {
+  if (queryInterface.sequelize.getDialect() === 'postgres') {
+    await queryInterface.sequelize.query(`SELECT setval(pg_get_serial_sequence('"${tableName}"', 'id'), COALESCE(MAX(id), 0) + 1, false) FROM "${tableName}";`);
+  }
+  
+}
+
 module.exports = {
   async up (queryInterface, Sequelize) {
     // Configuración de bcrypt
@@ -29,6 +37,8 @@ module.exports = {
       },
     ], {});
 
+    await resetSequence(queryInterface, 'Usuarios');
+
     // Datos iniciales para EGRESADO
     await queryInterface.bulkInsert('Egresados', [
       {
@@ -48,6 +58,8 @@ module.exports = {
       },
     ], {});
 
+    await resetSequence(queryInterface, 'Egresados');
+
     // Datos iniciales para EMPRESA
     await queryInterface.bulkInsert('Empresas', [
       {
@@ -63,6 +75,8 @@ module.exports = {
         updatedAt: new Date('2025-10-15'),
       },
     ], {});
+
+    await resetSequence(queryInterface, 'Empresas');
 
     // Datos iniciales para VACANTE
     await queryInterface.bulkInsert('Vacantes', [
@@ -84,6 +98,8 @@ module.exports = {
       },
     ], {});
 
+    await resetSequence(queryInterface, 'Vacantes');
+
     // Datos iniciales para POSTULACION
     await queryInterface.bulkInsert('Postulaciones', [
       {
@@ -95,6 +111,8 @@ module.exports = {
         updatedAt: new Date('2025-10-15'),
       },
     ], {});
+
+    await resetSequence(queryInterface, 'Postulaciones');
   },
 
   async down (queryInterface, Sequelize) {
@@ -104,7 +122,7 @@ module.exports = {
         await queryInterface.bulkDelete('Favoritos', null, {});
 
         // Hijos de Usuarios
-        // (No tienes datos iniciales de Notificaciones, pero si los tuvieras, irían aquí)
+        // (No hay datos iniciales de Notificaciones, pero si los tuvieras, irían aquí)
 
         // Tablas Padre/Intermedias
         await queryInterface.bulkDelete('Vacantes', null, {});

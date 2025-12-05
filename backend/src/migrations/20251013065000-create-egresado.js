@@ -49,7 +49,15 @@ module.exports = {
         allowNull: true,
       },
       redes: {
-        type: Sequelize.STRING,
+        type: Sequelize.JSON,
+        allowNull: true,
+      },
+      historial: {
+        type: Sequelize.JSON,
+        allowNull: true,
+      },
+      foto_perfil: {
+        type: Sequelize.BLOB,
         allowNull: true,
       },
       user_id: {

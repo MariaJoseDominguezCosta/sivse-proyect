@@ -9,9 +9,7 @@ exports.getCarreras = async (req, res) => {
         const egresados = await Egresado.findAll({
             attributes: ['carrera'] // Solo trae el campo carrera
         });
-        
-        console.log("DATOS DE EGRESADOS (CARRERAS):", egresados);
-        
+                
         // Vuelve al código original (pero comentado)
         const carrerasUnicas = egresados.map(e => e.carrera).filter(Boolean);
         const uniqueCarreras = [...new Set(carrerasUnicas)];
@@ -32,9 +30,7 @@ exports.getGeneraciones = async (req, res) => {
         const egresados = await Egresado.findAll({
             attributes: ['generacion'] // Solo trae el campo generacion
         });
-        
-        console.log("DATOS DE EGRESADOS (GENERACIONES):", egresados);
-        
+                
         // Vuelve al código original (pero comentado)
         const generacionesUnicas = egresados.map(e => e.generacion).filter(Boolean);
         const uniqueGeneraciones = [...new Set(generacionesUnicas)];

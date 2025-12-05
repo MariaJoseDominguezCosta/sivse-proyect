@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const egresadoController = require('../controllers/egresadoController');
 const authMiddleware = require('../middlewares/authMiddleware');
+const uploadProfilePhoto = require('../middlewares/uploadMiddleware');
 
 // Proteger todas las rutas con autenticación y rol egresado
 router.use(authMiddleware.requireAuth);
@@ -26,6 +27,9 @@ router.get('/vacantes/:id', egresadoController.getVacanteById);
 
 //Dashboard egresado
 router.get('/dashboard', egresadoController.getDashboardSummary);
+
+// Ruta de subida de foto de perfil
+router.put('/profile/photo', uploadProfilePhoto, egresadoController.updateProfilePhoto);
 
 
 module.exports = router;

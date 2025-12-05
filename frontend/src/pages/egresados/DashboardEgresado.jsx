@@ -12,7 +12,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import api from "../../utils/axiosConfig";
 
 // --- FUNCIÓN UTILITARIA AVANZADA ---
@@ -74,6 +74,8 @@ const DashboardEgresado = () => {
   const [tabValue, setTabValue] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  const location = useLocation();
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       const token = localStorage.getItem("token");
@@ -88,6 +90,7 @@ const DashboardEgresado = () => {
       try {
         const res = await api.get("/egresado/dashboard");
         setProfile(res.data.perfil);
+        console.log("Dashboard data:", res.data.perfil.foto_perfil);
         setFavoritosCount(res.data.favoritosCount);
         setRecommendedVacancies(res.data.vacantesRecomendadas);
       } catch (error) {
@@ -99,7 +102,7 @@ const DashboardEgresado = () => {
       }
     };
     fetchDashboardData();
-  }, []);
+  }, [location.key]);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -135,6 +138,7 @@ const DashboardEgresado = () => {
                   height: 100,
                   mb: 2,
                   bgcolor: "var(--accent)",
+
                 }}
               />
 

@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       fecha_inicio: { type: DataTypes.DATE },
       redes: { type: DataTypes.JSON },
       historial: { type: DataTypes.JSON },
-      foto_perfil: { type: DataTypes.STRING },
+      foto_perfil: { type: DataTypes.BLOB },
       user_id: { type: DataTypes.INTEGER, unique: true },
     },
     {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, CircularProgress, Button, TextField, Grid } from '@mui/material';
+import { Box, Typography, CircularProgress, Button, TextField, Grid, Avatar } from '@mui/material';
 import axios from '../../utils/axiosConfig';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -23,6 +23,7 @@ const EditPerfil = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   // Eliminamos el estado isEditing, ya que esta página es SIEMPRE la edición.
   const navigate = useNavigate(); // Necesario para el botón Cancelar
@@ -34,6 +35,9 @@ const EditPerfil = () => {
       try {
         // CORRECCIÓN DE ENDPOINT: /egresado/profile
         const res = await axios.get('/egresado/profile');
+        if (res.data?.foto_perfil) {
+          setPreviewImage(res.data?.foto_perfil);
+        }
         setProfile(res.data);
       } catch (err) {
         console.error('Error fetching profile:', err);
@@ -45,6 +49,28 @@ const EditPerfil = () => {
     };
     fetchProfile();
   }, []);
+
+  // Función para manejar el cambio de archivo de foto de perfil
+  const handlePhotoUpload = async (file) => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('foto_perfil', file); // 'photo' DEBE coincidir con el nombre del campo de Multer
+
+    try {
+        const res = await axios.put('/egresado/profile/photo', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        console.log('Foto de perfil actualizada:', res.data);
+        
+        // Actualizar el estado del perfil con la nueva URL
+        setProfile(prev => ({ ...prev, foto_perfil: res.data?.foto_perfil }));
+        toast.success('Foto de perfil actualizada.');
+    } catch (err) {
+        console.error('Error al subir la foto:', err.response?.data || err.message);
+        toast.error('Error al subir la foto.');
+    }
+  };
 
   const validationSchema = Yup.object({
     nombre_completo: Yup.string().required('Requerido'),
@@ -72,7 +98,7 @@ const EditPerfil = () => {
           // Convertir la fecha de vuelta a formato Date si es necesario
           fecha_inicio: values.fecha_inicio ? new Date(values.fecha_inicio) : null,
           // user_id y email no se deben enviar o deben ser protegidos en el backend.
-      };
+                };
       // Eliminar campos de redes del nivel superior
       delete dataToSend.linkedin;
       delete dataToSend.instagram;
@@ -107,6 +133,19 @@ const EditPerfil = () => {
     );
   }
 
+  
+  
+  // --- MANEJADOR DE CAMBIO DE INPUT ---
+  const handleFileChange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+          // 1. Crear una URL de objeto temporal para la vista previa
+          setPreviewImage(URL.createObjectURL(file)); 
+          // 2. Subir el archivo
+          handlePhotoUpload(file); 
+      }
+  }; 
+
    // Mapeo inicial de datos del perfil a la estructura del formulario de Formik
   const initialData = {
     // Campos principales (Asegurarse de que el nombre del campo coincida con el del backend)
@@ -131,11 +170,27 @@ const EditPerfil = () => {
     return (
     // Aplicar estilos del formulario
     <Box className="form-container" sx={{ maxWidth: '900px', margin: '30px auto' }}>
+    {/* -- Campo de foto de perfil -- */}
+          <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mb:3}}>
+          <Avatar src={ previewImage} alt="Foto de Perfil" sx={{ width: 100, height: 100, mb: 2, bgcolor: 'var(--accent)' }} />
+          <input accept='image/*' style={{display: 'none'}} id='photo-upload-button' type="file" onChange={handleFileChange} />
+          <label htmlFor="photo-upload-button">
+                <Button 
+                    variant="outlined" 
+                    component="span" // Permite que el botón active el input de archivo
+                    sx={{ textTransform: 'none' }}
+                >
+                    Cambiar Foto
+                </Button>
+            </label>
+          </Box>
+
         <Formik
           initialValues={initialData}
           validationSchema={validationSchema}
           onSubmit={handleSave}
         >
+        
           {({ isSubmitting, errors, touched}) => (
             <Form>
               <Grid container spacing={2}>

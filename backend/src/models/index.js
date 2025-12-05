@@ -12,7 +12,6 @@ fs.readdirSync(__dirname)
     try {
       const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
       db[model.name] = model;
-      console.log(`Modelo cargado: ${model.name}`); // Depuración
     } catch (error) {
       console.error(`Error cargando el modelo desde ${file}:`, error);
     }

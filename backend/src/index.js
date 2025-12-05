@@ -9,7 +9,7 @@ const { Server } = require('socket.io');
 const sequelize = require('./config/database'); // Conexión DB
 const egresadoRoutes = require('./routes/egresadoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -26,6 +26,9 @@ app.use(helmet()); // Seguridad contra vulnerabilidades comunes
 app.use(cors()); // Permite peticiones cross-origin (para frontend)
 app.use(bodyParser.json()); // Parsea JSON en req.body
 
+// Rutas estáticas
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Rutas (asegúrate de incluir todas)
 app.use('/api/auth', require('./routes/authRoutes')); // Rutas públicas (registro/login)
 app.use('/api/egresado', egresadoRoutes); 
@@ -40,17 +43,20 @@ io.on('connection', (socket) => {
   });
 });
 
-// Exporta io para usarlo en controllers
+/// Exporta io para usarlo en controllers
 app.set('io', io);
 
-// Sincronizar DB y arrancar servidor
-sequelize.sync({ alter: true, force: false }) // Sincroniza modelos con DB (usa { force: true } solo en dev para resetear)
-  .then(() => {
-    server.listen(PORT, () => {
-      console.log(`Servidor backend corriendo en http://localhost:${PORT} a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}`);
+// Sincronizar DB y arrancar servidor SOLO si no estamos en modo de prueba
+if (process.env.NODE_ENV !== 'test') {
+  sequelize.sync({ alter: true, force: false })
+    .then(() => {
+      server.listen(PORT, () => {
+        console.log(`Servidor backend corriendo en http://localhost:${PORT} a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}`);
+      });
+    })
+    .catch(err => {
+      console.error(`Error al conectar DB a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}:`, err);
     });
-  })
-  .catch(err => {
-    console.error(`Error al conectar DB a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}:`, err);
-  });
+}
 
+module.exports = server; // Exporta el servidor para Supertest
