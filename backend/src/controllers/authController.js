@@ -14,11 +14,12 @@ const register = async (req, res) => {
     email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
     confirm_password: Joi.string().valid(Joi.ref("password")).required(),
+    sexo: Joi.string().valid('Masculino', 'Femenino', 'Otro').required(),
   });
   const { error } = schema.validate(req.body);
   if (error) return res.status(400).json({ error: error.details[0].message });
 
-  const { nombre_completo, telefono, generacion, carrera, email, password } =
+  const { nombre_completo, telefono, generacion, carrera, email, password, sexo } =
     req.body;
 
   // --- INICIO DE LA TRANSACCIÓN ---
@@ -48,6 +49,7 @@ const register = async (req, res) => {
       carrera, 
       email, 
       user_id: user.id,
+      sexo
     }, { transaction });
 
     // 5. Commit si ambas operaciones fueron exitosas

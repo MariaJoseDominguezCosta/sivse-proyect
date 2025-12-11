@@ -34,4 +34,7 @@ router.delete('/egresados/:id', adminController.deleteEgresado);
 
 router.get('/dashboard', adminController.getDashboardSummary);
 
+// Gestion de administradores
+router.post('/register', adminController.registerAdmin);
+
 module.exports = router;

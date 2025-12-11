@@ -21,4 +21,6 @@ axios.interceptors.response.use(
   }
 );
 
+export const IMAGE_BASE_URL = 'http://localhost:5000'; // Ajusta si es necesario
+
 export default axios;

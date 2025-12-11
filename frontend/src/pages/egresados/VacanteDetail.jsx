@@ -34,7 +34,7 @@ const VacanteDetail = () => {
       const res = await api.post('/egresado/favoritos', { vacante_id: id });
       if (res.status === 201) {
         toast.success('Vacante añadida a favoritos.');
-        // Opcional: Actualizar el estado 'es_favorito'
+        // Actualizar el estado 'es_favorito'
         setVacante(prev => ({ ...prev, es_favorito: true }));
       }
     } catch (error) {

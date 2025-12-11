@@ -15,15 +15,16 @@ import PublicLayout from './layouts/PublicLayout';
 // Pages Admin
 import DashboardAdmin from './pages/admin/DashboardAdmin';
 import CompanyManagement from './pages/admin/CompanyManagement';
-import EditCompany from './components/admin/EditCompany';
+import EditCompany from './pages/admin/EditCompany';
 import RegisterCompany from './pages/admin/RegisterCompany';
 import JobBoard from './pages/admin/BolsaTrabajo';
-import EditVacancy from './components/admin/EditVacancy';
-import RegisterVacancy from './components/admin/RegisterVacancy';
+import EditVacancy from './pages/admin/EditVacancy';
+import RegisterVacancy from './pages/admin/RegisterVacancy';
 import AlumniTracking from './pages/admin/SeguimientoEgresados';
 import AlumniDetail from './pages/admin/AlumniDetail';
 import ReportsStats from './pages/admin/ReportsStats';
 import VacanteManagement from './pages/admin/VacanteManagement';
+import RegisterAdmin from './pages/admin/RegisterAdmin';
 
 // Pages Egresados
 import DashboardEgresado from './pages/egresados/DashboardEgresado';
@@ -111,6 +112,7 @@ const AppContent = () => {
         <Route path="/admin/empresas/:empresa_id/vacantes" element={<AdminLayout title="Gestión de Vacantes"><VacanteManagement /></AdminLayout>} />
         <Route path="/admin/egresados" element={<AdminLayout title="Egresados"><AlumniTracking /></AdminLayout>} />
         <Route path="/admin/egresados/:id" element={<AdminLayout title="Detalle de Egresado"><AlumniDetail /></AdminLayout>} />
+        <Route path="/admin/register-admin" element={<AdminLayout title="Registrar Administrador"><RegisterAdmin /></AdminLayout>} />
         <Route path="/admin/reportes" element={<AdminLayout title="Reportes"><ReportsStats /></AdminLayout>} />
       </Route>
 

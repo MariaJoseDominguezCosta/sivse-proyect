@@ -16,7 +16,10 @@ const storage = multer.diskStorage({
         });
     },
     filename: (req, file, cb) => {
-        const fileName = `${Date.now()}-${file.originalname}`;
+        // Usar userId del token para el nombre (asumiendo que req.user está inyectado por el middleware)
+        const userId = req.user.userId || req.user.id;
+        const ext = path.extname(file.originalname).toLowerCase();
+        const fileName = `${userId}-${Date.now()}${ext}`;
         cb(null, fileName);
     },
 });

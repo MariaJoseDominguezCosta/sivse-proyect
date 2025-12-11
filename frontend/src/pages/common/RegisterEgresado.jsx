@@ -16,6 +16,8 @@ import { toast } from "react-toastify";
 
 const OTRO_VALOR = "___OTRO___"; // Constante para identificar la opción "Otro"
 
+const SEXO_OPTIONS = ["Masculino", "Femenino", "Otro"];
+
 const RegisterEgresado = () => {
   const [formData, setFormData] = useState({
     nombre_completo: "",
@@ -25,6 +27,7 @@ const RegisterEgresado = () => {
     email: "",
     password: "",
     confirm_password: "",
+    sexo: "",
     // Campos para el valor de "Otro"
     otro_carrera: "",
     otro_generacion: "",
@@ -42,9 +45,6 @@ const RegisterEgresado = () => {
           axios.get("/auth/carreras"),
           axios.get("/auth/generaciones"),
         ]);
-
-        console.log("Carreras:", carrerasRes.data);
-
         // Asumiendo que la respuesta es un array de strings (como en el controlador)
         setCarrerasOptions(carrerasRes.data);
         setGeneracionesOptions(generacionesRes.data);
@@ -237,6 +237,20 @@ const RegisterEgresado = () => {
             required
           />
         )}
+
+        <FormControl fullWidth margin="normal" required>
+            <InputLabel id="sexo-label">Sexo</InputLabel>
+            <Select 
+                labelId="sexo-label"
+                name="sexo" 
+                value={formData.sexo} 
+                onChange={handleSelectChange} // Usar el handler de Select
+                label="Sexo"
+            >
+              <MenuItem value="" disabled>Selecciona tu Sexo</MenuItem>
+              {SEXO_OPTIONS.map(sexo => <MenuItem key={sexo} value={sexo}>{sexo}</MenuItem>)}
+            </Select>
+        </FormControl>
 
         <TextField
           label="Email"

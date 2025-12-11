@@ -34,7 +34,6 @@ const AlumniTracking = () => {
       try {
         const res = await axios.get('/admin/egresados');
         setAlumni(res.data);
-        console.log('Egresados fetched:', res.data);
       } catch (err) {
         console.error('Error fetching alumni', err);
       }

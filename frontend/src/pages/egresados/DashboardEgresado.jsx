@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Box,
   Typography,
@@ -13,44 +13,37 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { Link, useLocation } from "react-router-dom";
-import api from "../../utils/axiosConfig";
+import api, { IMAGE_BASE_URL } from "../../utils/axiosConfig";
 
 // --- FUNCIÓN UTILITARIA AVANZADA ---
-const formatWelcomeName = (fullName) => {
+const formatWelcomeName = (fullName, sexo) => {
   if (!fullName) return "Usuario";
 
+  // Dividir el nombre completo en partes
   const parts = fullName
     .trim()
     .split(/\s+/)
     .filter((p) => p.length > 0);
 
-  if (parts.length === 0) return "Usuario";
-  if (parts.length === 1) return parts[0];
-
-  let firstName = "";
-  let firstLastName = "";
-
-  if (parts.length === 2) {
-    // Ej: "Juan Pérez"
-    firstName = parts[0];
-    firstLastName = parts[1];
-  } else {
-    // Ej: "Juan Pablo Pérez López" (4 partes)
-    // Asumimos que la última palabra es el Apellido Materno y la penúltima es el Apellido Paterno.
-
-    // El índice del primer apellido (Apellido Paterno) es el total - 2
+  let name = 'Usuario';
+  if (parts.length >= 2) {
     const firstLastNameIndex = parts.length - 2;
-
-    // El Apellido Paterno es la palabra en ese índice
-    firstLastName = parts[firstLastNameIndex];
-
-    // Todos los Nombres son las palabras antes del Apellido Paterno
-    firstName = parts.slice(0, firstLastNameIndex).join(" ");
+    const firstLastName = parts[firstLastNameIndex];
+    name = `${parts.slice(0, firstLastNameIndex).join(' ')} ${firstLastName}`;
+  } else if (parts.length === 1) {
+      name = parts[0];
+  }
+  
+  // Determinar el saludo
+  let greeting = "Bienvenid@";
+  if (sexo === "Femenino") {
+    greeting = "Bienvenida";
+  } else if (sexo === "Masculino") {
+    greeting = "Bienvenido";
   }
 
-  return `${firstName} ${firstLastName}`;
+  return `${greeting}, ${name}`;
 };
-// ------------------------------------
 
 // Función para formatear la fecha de inicio a DD/MM/YYYY
 const formatFechaInicio = (dateString) => {
@@ -73,6 +66,7 @@ const DashboardEgresado = () => {
   const [favoritosCount, setFavoritosCount] = useState(0);
   const [tabValue, setTabValue] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [photoVersion, setPhotoVersion] = useState(0); // Forzar recarga de foto
 
   const location = useLocation();
 
@@ -90,9 +84,10 @@ const DashboardEgresado = () => {
       try {
         const res = await api.get("/egresado/dashboard");
         setProfile(res.data.perfil);
-        console.log("Dashboard data:", res.data.perfil.foto_perfil);
         setFavoritosCount(res.data.favoritosCount);
         setRecommendedVacancies(res.data.vacantesRecomendadas);
+        // Actualizar la versión de la foto para forzar recarga
+        setPhotoVersion((prev) => prev + 1);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
         const errorMessage = error.response?.data?.message || error.message;
@@ -101,8 +96,17 @@ const DashboardEgresado = () => {
         setLoading(false);
       }
     };
+
     fetchDashboardData();
   }, [location.key]);
+
+  // Avatar con versión anti-caché
+  const avatarSrc = useMemo(() => {
+    if (profile?.foto_perfil) {
+      return `${IMAGE_BASE_URL}${profile.foto_perfil}?v=${photoVersion}`;
+    }
+    return "/default-avatar.png";
+  }, [profile?.foto_perfil, photoVersion]);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -111,7 +115,7 @@ const DashboardEgresado = () => {
   return (
     <Box sx={{ p: 0, bgcolor: "var(--primary-light)", minHeight: "100%" }}>
       <Typography variant="h4" sx={{ mb: 2, fontWeight: "bold" }}>
-        Bienvenido, {formatWelcomeName(profile?.nombre_completo)}
+        {formatWelcomeName(profile?.nombre_completo, profile?.sexo)}
       </Typography>
 
       <Typography variant="subtitle1" sx={{ mb: 2 }}>
@@ -132,13 +136,12 @@ const DashboardEgresado = () => {
               }}
             >
               <Avatar
-                src={profile?.foto_perfil}
+                src={avatarSrc}
                 sx={{
                   width: 100,
                   height: 100,
                   mb: 2,
                   bgcolor: "var(--accent)",
-
                 }}
               />
 
@@ -184,8 +187,8 @@ const DashboardEgresado = () => {
             alignContent: "center",
             justifyContent: "space-between",
             mb: 2,
-            width: "500px"
-            }}
+            width: "500px",
+          }}
         >
           {/* Bloque 2: Tabs de Detalle */}
           <Card sx={{ bgcolor: "var(--gray-form)", p: 0, boxShadow: 3, mb: 2 }}>
@@ -291,7 +294,15 @@ const DashboardEgresado = () => {
                 <Grid container spacing={3}>
                   {recommendedVacancies.map((vac) => (
                     <Grid item xs={12} key={vac.id}>
-                      <Card sx={{ bgcolor: "var(--card-bg)", boxShadow: 3, mb: 1, width: "170px", height: "200px" }}>
+                      <Card
+                        sx={{
+                          bgcolor: "var(--card-bg)",
+                          boxShadow: 3,
+                          mb: 1,
+                          width: "170px",
+                          height: "200px",
+                        }}
+                      >
                         <CardContent>
                           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                             {vac.titulo}

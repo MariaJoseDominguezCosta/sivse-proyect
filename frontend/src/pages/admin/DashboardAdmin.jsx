@@ -22,7 +22,6 @@ const Dashboard = () => {
         const res = await axios.get("/admin/dashboard", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log("Stats fetched:", res.data);
         setStats(res.data);
       } catch (err) {
         console.error("Error fetching stats:", err);

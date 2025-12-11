@@ -14,3 +14,5 @@
 /frontend/src/tailwind.config.js
 /backend/src/seeders
 /backend/src/uploads
+/backend/__tests__
+/backend/src/seeders/20251013070947-initial-data.js

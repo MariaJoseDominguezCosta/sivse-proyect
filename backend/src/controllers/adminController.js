@@ -1,5 +1,7 @@
 // backend/src/controllers/adminController.js
-const { Empresa, Vacante, Egresado } = require('../models');
+const { Empresa, Vacante, Egresado, Usuario: User } = require('../models');
+const bcrypt = require('bcrypt');
+const Joi = require('joi');
 
 exports.getEmpresas = async (req, res) => {
   try {
@@ -217,4 +219,39 @@ exports.getDashboardSummary = async (req, res) => {
     console.error('Error fetching dashboard summary:', error);
     res.status(500).json({ message: 'Error al obtener resumen del dashboard', error });
   }
+};
+
+exports.registerAdmin = async (req, res) => {
+  // Validación con Joi
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(8).required(),
+  });
+  const { error } = schema.validate(req.body);
+  if (error) return res.status(400).json({ error: error.details[0].message });
+
+  
+  try {
+        // 2. Verificar duplicado
+        if (await User.findOne({ where: { email } })) return res.status(400).json({ error: 'Email ya existe' });
+
+        // 3. Crear Usuario con rol 'admin'
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await User.create({ 
+            email, 
+            password: hashedPassword, 
+            role: 'admin' // <-- ASIGNACIÓN CLAVE
+        });
+
+        res.status(201).json({ message: 'Nuevo administrador registrado', userId: newUser.id });
+        
+    } catch (err) {
+        console.error('Error registering admin:', err);
+        // Manejo de errores
+        if (err.name === 'SequelizeUniqueConstraintError') {
+            res.status(400).json({ error: 'Email ya existe' });
+        } else {
+            res.status(500).json({ error: 'Error al registrar el administrador' });
+        }
+    }
 };

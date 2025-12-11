@@ -16,7 +16,6 @@ const JobBoard = () => {
       try {
         const res = await axios.get('/admin/vacantes');
         setVacantes(res.data);
-        console.log('Vacantes fetched:', res.data);
       } catch (err) {
         console.error('Error fetching vacantes', err);
       }

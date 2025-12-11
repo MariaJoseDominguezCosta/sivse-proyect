@@ -15,6 +15,7 @@ import {
   Business,
   BarChart,
   Logout,
+  AdminPanelSettings,
 } from "@mui/icons-material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../../App.css";
@@ -199,6 +200,39 @@ const SidebarAdmin = () => {
             />
           </ListItemIcon>
           <ListItemText primary="Reportes y Estadísticas" />
+        </ListItem>
+
+        <ListItem
+          component={Link}
+          to="/admin/register-admin"
+          onClick={() => handleClick("/admin/register-admin")}
+          sx={{
+            bgcolor:
+              activeSection === "/admin/register-admin" ? "#FFE0E0" : "transparent",
+            color: activeSection === "/admin/register-admin" ? 'var(--text-dark)' : "#FFFDFD",
+            "&:hover": {
+              bgcolor:
+                activeSection === "/admin/register-admin"
+                  ? "#FFE0E0"
+                  : "rgba(255, 255, 255, 0.1)",
+            },
+            padding: "10px 15px",
+            margin: "5px 0",
+            borderRadius: "5px",
+            transition: "background-color 0.3s",
+          }}
+        >
+          <ListItemIcon>
+            <AdminPanelSettings
+              sx={{
+                color:
+                  activeSection === "/admin/register-admin"
+                    ? 'var(--text-dark)'
+                    : "#FFFDFD",
+              }}
+            />
+          </ListItemIcon>
+          <ListItemText primary="Administradores" />
         </ListItem>
       </List>
       <Divider sx={{ bgcolor: "#FFFDFD" }} />

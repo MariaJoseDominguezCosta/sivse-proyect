@@ -7,8 +7,8 @@ const {
   Empresa,
   sequelize,
 } = require("../models");
-const fs = require('fs'); // <-- Importar fs
-const path = require('path'); // <-- Importar path
+const fs = require("fs"); // <-- Importar fs
+const path = require("path"); // <-- Importar path
 
 const getUserIdFromReq = (req) => req.user.userId || req.user.id;
 
@@ -58,6 +58,7 @@ exports.getDashboardSummary = async (req, res) => {
         redes: egresado.redes,
         historial: egresado.historial,
         foto_perfil: egresado.foto_perfil,
+        sexo: egresado.sexo,
       },
       favoritosCount: favoritos,
       vacantesRecomendadas,
@@ -204,7 +205,7 @@ exports.updateProfilePhoto = async (req, res) => {
         .json({ message: "Egresado no encontrado o sesión inválida." });
     }
 
-    const oldPhotoUrl = currentEgresado.foto_perfil;
+    const oldPhotoPath = currentEgresado.foto_perfil;
 
     // 2. Actualizar la DB con la nueva URL
     await Egresado.update(
@@ -215,24 +216,13 @@ exports.updateProfilePhoto = async (req, res) => {
     await transaction.commit(); // Éxito en la DB
 
     // --- LÓGICA DE ELIMINACIÓN DEL ARCHIVO ANTIGUO ---
-    if (oldPhotoUrl && !oldPhotoUrl.includes("/default-profile.png")) {
-      // Construir la ruta física del archivo antiguo
-      const oldFilePath = path.join(__dirname, "..", oldPhotoUrl); // Ajusta la ruta si es necesario (ej: path.join(__dirname, '../../uploads', oldPhotoUrl.replace('/uploads/', '')))
-
-      // Determinar el path de la foto antigua. Asumiendo que /uploads está mapeado a src/uploads
-      const oldFilename = oldPhotoUrl.replace("/uploads/", "");
-      const oldPath = path.join(__dirname, "..", "uploads", oldFilename);
-
-      fs.unlink(oldPath, (err) => {
-        if (err) {
-          console.error(
-            "Advertencia: Fallo al eliminar la foto antigua:",
-            oldPath,
-            err
-          );
-        } else {
-          console.log("Foto de perfil antigua eliminada:", oldPath);
-        }
+    if (oldPhotoPath) {
+      const oldFileName = path.basename(oldPhotoPath);
+      const uploadDir = path.join(__dirname, "../uploads"); // Ajusta si tu estructura es diferente
+      const fullOldPath = path.join(uploadDir, oldFileName);
+      fs.unlink(fullOldPath, (err) => {
+        if (err && err.code !== "ENOENT")
+          console.error("Error deleting old photo:", err);
       });
     }
     // ----------------------------------------------------
@@ -246,9 +236,8 @@ exports.updateProfilePhoto = async (req, res) => {
       foto_perfil: updatedEgresado.foto_perfil,
     });
   } catch (error) {
-    if (transaction) {
-      await transaction.rollback();
-    }
+    if (transaction) await transaction.rollback();
+
     // Si hay un error, intentamos eliminar el archivo que acabamos de subir
     fs.unlink(newFilePath, (err) => {
       if (err)
@@ -287,15 +276,8 @@ exports.addFavorito = async (req, res) => {
       return res.status(404).json({ message: "Egresado no encontrado" });
 
     const { vacante_id } = req.body;
-    console.log(
-      "Creando Favorito para Egresado ID:",
-      egresado.id,
-      "y Vacante ID:",
-      vacante_id
-    );
-    // CORRECCIÓN 4: Usar egresado.id
     const favorito = await Favorito.create({
-      egresado_id: egresado.id, // <--- USAR egresado.id
+      egresado_id: egresado.id, 
       vacante_id,
     });
 

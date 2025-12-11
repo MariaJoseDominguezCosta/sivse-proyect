@@ -53,6 +53,7 @@ module.exports = {
         empresa_actual: null,
         puesto: null,
         user_id: 2,
+        sexo: 'Masculino',
         createdAt: new Date('2025-10-15'),
         updatedAt: new Date('2025-10-15'),
       },

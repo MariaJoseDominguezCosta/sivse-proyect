@@ -52,7 +52,6 @@ const EditVacancy = () => {
             ...data, // Sobrescribimos con los datos de la API (titulo, descripcion, etc.)
             empresaAsociada: empresa_id,
         }));
-        console.log("empresa: ", empresa_id);
       } catch (err) {
         console.error("Error fetching vacancy", err);
       }

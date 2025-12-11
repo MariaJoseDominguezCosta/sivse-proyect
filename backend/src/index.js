@@ -1,22 +1,23 @@
 // src/index.js - Archivo principal del servidor (MVC: Punto de entrada)
-require('dotenv').config(); // Carga variables de entorno
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const helmet = require('helmet');
-const http = require('http');
-const { Server } = require('socket.io');
-const sequelize = require('./config/database'); // Conexión DB
-const egresadoRoutes = require('./routes/egresadoRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const path = require('path');
+require("dotenv").config(); // Carga variables de entorno
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const helmet = require("helmet");
+const http = require("http");
+const { Server } = require("socket.io");
+const sequelize = require("./config/database"); // Conexión DB
+const egresadoRoutes = require("./routes/egresadoRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const path = require("path");
+const { startBackupScheduler } = require("./utils/backup");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000', // Ajusta al frontend (React) en desarrollo
-    methods: ['GET', 'POST'],
+    origin: "http://localhost:3000", // Ajusta al frontend (React) en desarrollo
+    methods: ["GET", "POST"],
   },
 });
 const PORT = process.env.PORT || 5000;
@@ -27,35 +28,63 @@ app.use(cors()); // Permite peticiones cross-origin (para frontend)
 app.use(bodyParser.json()); // Parsea JSON en req.body
 
 // Rutas estáticas
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+app.use(
+  "/uploads",[
+  (req, res, next) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    // Opcional pero recomendado:
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    next();
+  },
+  express.static(path.join(__dirname, 'uploads'))
+]);
 // Rutas (asegúrate de incluir todas)
-app.use('/api/auth', require('./routes/authRoutes')); // Rutas públicas (registro/login)
-app.use('/api/egresado', egresadoRoutes); 
-app.use('/api/admin', adminRoutes);
-
+app.use("/api/auth", require("./routes/authRoutes")); // Rutas públicas (registro/login)
+app.use("/api/egresado", egresadoRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Configuración de Socket.io
-io.on('connection', (socket) => {
-  console.log(`Usuario conectado a Socket.io a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}`);
-  socket.on('disconnect', () => {
-    console.log(`Usuario desconectado a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}`);
+io.on("connection", (socket) => {
+  console.log(
+    `Usuario conectado a Socket.io a las ${new Date().toLocaleString("es-MX", {
+      timeZone: "America/Chicago",
+    })}`
+  );
+  socket.on("disconnect", () => {
+    console.log(
+      `Usuario desconectado a las ${new Date().toLocaleString("es-MX", {
+        timeZone: "America/Chicago",
+      })}`
+    );
   });
 });
 
 /// Exporta io para usarlo en controllers
-app.set('io', io);
+app.set("io", io);
 
 // Sincronizar DB y arrancar servidor SOLO si no estamos en modo de prueba
-if (process.env.NODE_ENV !== 'test') {
-  sequelize.sync({ alter: true, force: false })
+if (process.env.NODE_ENV !== "test") {
+  sequelize
+    .sync({ alter: true, force: false })
     .then(() => {
       server.listen(PORT, () => {
-        console.log(`Servidor backend corriendo en http://localhost:${PORT} a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}`);
+        console.log(
+          `Servidor backend corriendo en http://localhost:${PORT} a las ${new Date().toLocaleString(
+            "es-MX",
+            { timeZone: "America/Chicago" }
+          )}`
+        );
+        startBackupScheduler(); // Inicia el programador de tareas
       });
     })
-    .catch(err => {
-      console.error(`Error al conectar DB a las ${new Date().toLocaleString('es-MX', { timeZone: 'America/Chicago' })}:`, err);
+    .catch((err) => {
+      console.error(
+        `Error al conectar DB a las ${new Date().toLocaleString("es-MX", {
+          timeZone: "America/Chicago",
+        })}:`,
+        err
+      );
     });
 }
 

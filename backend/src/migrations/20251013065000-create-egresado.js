@@ -57,7 +57,7 @@ module.exports = {
         allowNull: true,
       },
       foto_perfil: {
-        type: Sequelize.BLOB,
+        type: Sequelize.STRING,
         allowNull: true,
       },
       user_id: {
@@ -69,6 +69,10 @@ module.exports = {
         },
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
+      },
+      sexo: {
+        type: Sequelize.ENUM('Masculino', 'Femenino', 'Otro'),
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

@@ -19,6 +19,12 @@ body {
   color: var(--text-dark);
   font-size: 14px;
   line-height: 1.5;
+  /* Asegura que el contenido se centre verticalmente si es necesario */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* Asegura que el contenido se centre horizontalmente si es necesario */
+  justify-content: center;
 }
 
 /* --- Contenedores de Vistas (Forms, Tables) --- */
