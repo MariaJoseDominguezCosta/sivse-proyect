@@ -1,25 +1,18 @@
 import React from 'react';
+import '../../assets/publicHeader.css';
 
 const PublicHeader = () => {
   return (
     // Usa estilos de tu App.css o estilos inline para el azul oscuro
-    <header style={{
-        backgroundColor: '#003366', // Azul oscuro similar a tu sidebar
-        color: 'white',
-        padding: '10px 20px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-    }}>
+    <header className='header-elm'>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         {/* Placeholder para logo TecNM */}
-        <img src="/logo-tecnologico.png" alt="TecNM" style={{ height: '50px', marginRight: '15px' }} />
+        <img src="/logo-tecnologico.png" alt="TecNM" className='image5-elm2' />
       </div>
-      <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>SIVSE</h1>
+      <h1 className='text-elm1'>SIVSE</h1>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         {/* Placeholder para logo Comitán */}
-        <img src="/logo-tecnologico-comitan-removebg-preview.png" alt="Comitán" style={{ height: '90px' }} />
+        <img src="/logo-tecnologico-comitan-removebg-preview.png" alt="Comitán" className='image5-elm1' />
       </div>
     </header>
   );

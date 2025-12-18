@@ -1,4 +1,4 @@
-/* frontend/src/pages/Login.css */
+/* frontend/src/pages/Login.css
 .login-container {
   display: flex;
   justify-content: center;
@@ -24,7 +24,7 @@
   color: #003366;
   font-size: 1.8rem;
   visibility: visible; /* Asegura que no esté oculto */
-}
+/*}
 
 .form-group {
   margin-bottom: 20px;
@@ -89,5 +89,430 @@
 
   .login-box h2 {
     font-size: 1.5rem;
+  }
+} */
+
+.login-container1 {
+  width: 100%;
+  overflow: auto;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-login-elm {
+  width: 100%;
+  height: 100vh;
+  overflow: auto;
+  flex-shrink: 0;
+  background-color: rgba(224, 242, 255, 1);
+}
+
+.login-form-log-in-elm {
+  gap: 30px;
+  top: 200px;
+  left: 0px;
+  right: 0px;
+  width: 500px;
+  bottom: 0px;
+  height: 450px;
+  margin: auto;
+  display: flex;
+  padding: 25px;
+  position: absolute;
+  flex-shrink: 0;
+  border-color: rgba(217, 217, 217, 1);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 32px;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(251, 251, 251, 1);
+}
+
+
+.login-input-elm1 {
+  color: rgba(179, 179, 179, 1);
+  display: flex;
+  padding: 12px 16px;
+  overflow: hidden;
+  font-size: 24px;
+  align-self: stretch;
+  text-align: left;
+  align-items: center;
+  flex-shrink: 0;
+  font-family: Inter;
+  font-weight: 400;
+  line-height: 1;
+  border-color: rgba(217, 217, 217, 1);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 8px;
+  background-color: rgba(245, 245, 245, 1);
+  width: 450px;
+}
+
+.login-input-elm2 {
+  color: rgba(179, 179, 179, 1);
+  display: flex;
+  padding: 12px 16px;
+  overflow: hidden;
+  font-size: 24px;
+  align-self: stretch;
+  text-align: left;
+  align-items: center;
+  flex-shrink: 0;
+  font-family: Inter;
+  font-weight: 400;
+  line-height: 1;
+  border-color: rgba(217, 217, 217, 1);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 8px;
+  background-color: rgba(245, 245, 245, 1);
+  width: 450px;
+}
+
+.login-button-elm {
+  display: flex;
+  padding: 12px;
+  align-self: center;
+  align-items: center;
+  border-radius: 8px;
+  justify-content: center;
+  background-color: rgba(44, 44, 44, 1);
+}
+
+.login-text-elm4 {
+  color: rgba(245, 245, 245, 1);
+  height: auto;
+  font-size: 24px;
+  font-style: normal;
+  text-align: left;
+  font-family: Inter;
+  font-weight: 400px;
+  line-height: 1;
+  font-stretch: normal;
+  letter-spacing: 0em;
+}
+
+.login-text-elm5 {
+  color: rgba(30, 30, 30, 1);
+  font-size: 24px;
+  font-style: normal;
+  text-align: left;
+  font-family: Inter;
+  font-weight: 400px;
+  line-height: 1;
+  font-stretch: normal;
+  letter-spacing: 0em;
+}
+
+.login-text-link-elm {
+  gap: 20px;
+  width: auto;
+  display: flex;
+  align-self: flex-start;
+  flex-direction: row-reverse;
+}
+
+.login-text-elm6 {
+  color: rgb(150, 22, 22);
+  font-size: 24px;
+  font-style: normal;
+  text-align: center;
+  font-family: Inter;
+  font-weight: 400px;
+  line-height: 0.5px;
+  letter-spacing: 0em;
+}
+
+.login-text-elm7 {
+  color: rgba(30, 30, 30, 1);
+  font-size: 24px;
+  font-style: normal;
+  text-align: left;
+  font-family: Inter;
+  font-weight: 400px;
+  line-height: 0.5px;
+  letter-spacing: 0em;
+  text-decoration: underline;
+}
+
+@media(max-width: 1600px) {
+  .login-login-elm {
+    height: 100vh;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .login-form-log-in-elm {
+    gap: 25px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    width: 450px;
+    bottom: 0px;
+    height: 400px;
+    margin: auto;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-input-elm1 {
+    font-size: 22px;
+    padding-top: 10px;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-bottom: 10px;
+    width: 400px;
+  }
+  .login-input-elm2 {
+    font-size: 22px;
+    padding-top: 10px;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-bottom: 10px;
+    width: 400px;
+  }
+  .login-button-elm {
+    padding: 10px;
+  }
+  .login-text-elm4 {
+    font-size: 22px;
+  }
+  .login-text-elm5 {
+    font-size: 22px;
+    align-self: flex-start;
+  }
+  .login-text-link-elm {
+    flex-direction: row;
+  }
+  .login-text-elm6 {
+    font-size: 22px;
+  }
+  .login-text-elm7 {
+    font-size: 22px;
+  }
+}
+
+@media(max-width: 1200px) {
+
+  .login-form-log-in-elm {
+    gap: 20px;
+    left: 0px;
+    right: 0px;
+    width: 400px;
+    height: 350px;
+    margin: auto;
+    padding: 18px;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .login-input-elm1 {
+    font-size: 20px;
+    padding-top: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 8px;
+    width: 350px;
+  }
+  
+  .login-input-elm2 {
+    font-size: 20px;
+    padding-top: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 8px;
+    width: 350px;
+  }
+  .login-button-elm {
+    padding: 8px;
+  }
+  .login-text-elm4 {
+    font-size: 20px;
+  }
+  .login-text-elm5 {
+    font-size: 20px;
+  }
+  .login-text-elm6 {
+    font-size: 20px;
+  }
+  .login-text-elm7 {
+    font-size: 20px;
+  }
+}
+
+@media(max-width: 991px) {
+  .login-form-log-in-elm {
+    gap: 15px;
+    width: 350px;
+    height: 300px;
+    padding: 16px;
+  }
+  
+  .login-input-elm1 {
+    font-size: 18px;
+    padding-top: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 6px;
+    width: 300px;
+  }
+  
+  .login-input-elm2 {
+    font-size: 18px;
+    padding-top: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 6px;
+    width: 300px;
+  }
+  .login-button-elm {
+    padding: 6px;
+  }
+  .login-text-elm4 {
+    font-size: 18px;
+  }
+  .login-text-elm5 {
+    font-size: 18px;
+  }
+  .login-text-link-elm {
+    gap: 5px;
+  }
+  .login-text-elm6 {
+    font-size: 18px;
+  }
+  .login-text-elm7 {
+    font-size: 18px;
+  }
+}
+
+@media(max-width: 767px) {
+  .login-form-log-in-elm {
+    gap: 10px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    width: 300px;
+    bottom: 0px;
+    height: 250px;
+    margin: auto;
+    padding: 14px;
+  }
+  
+  .login-input-elm1 {
+    font-size: 16px;
+    padding-top: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 4px;
+    width: 250px;
+  }
+  
+  .login-input-elm2 {
+    font-size: 16px;
+    padding-top: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 4px;
+    width: 250px;
+  }
+  .login-button-elm {
+    padding: 4px;
+  }
+  .login-text-elm4 {
+    font-size: 16px;
+  }
+  .login-text-elm5 {
+    font-size: 16px;
+    align-self: center;
+  }
+  .login-text-link-elm {
+    align-self: center;
+  }
+  .login-text-elm6 {
+    font-size: 16px;
+  }
+  .login-text-elm7 {
+    font-size: 16px;
+  }
+}
+
+@media(max-width: 479px) {
+  .login-login-elm {
+    width: 100vw;
+  }
+  .login-header-elm {
+    height: 85px;
+  }
+
+  .login-form-log-in-elm {
+    gap: 5px;
+    width: 250px;
+    bottom: 200px;
+    height: 200px;
+    margin: auto;
+    padding: 12px;
+    position: absolute;
+  }
+  
+  .login-input-elm1 {
+    font-size: 14px;
+    padding-top: 2px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 2px;
+    width: 200px;
+  }
+  .login-input-field-elm2 {
+    width: 200px;
+    justify-content: flex-start;
+  }
+  .login-input-elm2 {
+    width: 200px;
+    height: 50%;
+    font-size: 14px;
+    padding-top: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-bottom: 2px;
+  }
+  .login-button-elm {
+    width: auto;
+    height: auto;
+    padding: 2px;
+    text-align: center;
+  }
+  .login-text-elm4 {
+    font-size: 14px;
+    align-self: center;
+    text-align: center;
+  }
+  .login-text-elm5 {
+    width: auto;
+    height: auto;
+    font-size: 14px;
+    text-align: center;
+  }
+  .login-text-link-elm {
+    top: 214px;
+    left: 0px;
+    width: auto;
+    align-self: center;
+  }
+  .login-text-elm6 {
+    width: auto;
+    font-size: 14px;
+    align-self: center;
+  }
+  .login-text-elm7 {
+    top: 0px;
+    left: 133px;
+    font-size: 14px;
+    align-self: center;
   }
 }

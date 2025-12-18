@@ -36,15 +36,13 @@ const SidebarAdmin = () => {
   };
 
   return (
-    <Box
-      sx={{
-        width: 250,
-        bgcolor: "var(--primary-dark)", // #223373
-        color: "#FFFDFD",
-        height: "100vh",
-        p: 2,
-      }}
-    >
+    <>
+    <div
+      className={`navbar1-container1`}
+    > 
+      <header />
+  
+
       {" "}
       {/* Logo del Tecnológico */}
       <img
@@ -251,7 +249,19 @@ const SidebarAdmin = () => {
         </ListItemIcon>
         <ListItemText primary="Cerrar Sesión" />
       </ListItem>
-    </Box>
+    </div>
+
+    // menu hamburguesa
+    <div className="sidebar-hamburger">
+        {/* Logo del Tecnológico */}
+      <img
+        src="/logo-tecnologico-comitan-removebg-preview.png"
+        alt="Logo"
+        className="navbar1-image"
+      />
+    </div>
+
+    </>
   );
 };
 
