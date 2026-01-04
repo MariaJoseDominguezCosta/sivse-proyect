@@ -17,8 +17,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-// Nota: La exportación de useAuth AHORA está en useAuth.js
-// Remueve: export const useAuth = () => useContext(AuthContext);
-
-// Opcionalmente, puedes exportar AuthProvider como default para simplificar el archivo
-// export default AuthProvider;

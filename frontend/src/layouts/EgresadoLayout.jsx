@@ -2,7 +2,7 @@
 import React from 'react';
 import SectionBanner from '../components/common/SectionBanner';
 import SidebarEgresado from '../components/egresados/SidebarEgresado';
-import { Outlet } from 'react-router-dom';
+import "../assets/adminLayout.css";
 
 // El componente EgresadoLayout recibe el título de App.jsx, aunque su
 // implementación original dentro de App.jsx mezclaba props y children.
@@ -14,7 +14,7 @@ const EgresadoLayout = ({ children, title }) => {
         <SidebarEgresado />
         <main className="admin-content">
           {/* Se integra el SectionBanner para el título */}
-          <SectionBanner title={title || 'SIVSE'} />
+          <SectionBanner title={title } />
           <div className="page-padding">
             {children}
           </div>

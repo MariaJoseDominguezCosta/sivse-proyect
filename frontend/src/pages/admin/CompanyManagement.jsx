@@ -75,16 +75,64 @@ const CompanyManagement = () => {
   });
 
   return (
-    <div className="table-container">
+    <div>
       <div className="search-bar">
         <TextField
           placeholder="Hinted search text"
           value={search}
+          sx={{
+            display: "flex",
+            flexGrow: 1,
+            alignSelf: "stretch",
+            width: "100%",
+            height: "100%",
+            "& .MuiInputBase-input": {
+              padding: "8px",
+              fontSize: {
+                xs: "0.8rem",
+                sm: "1rem",
+                md: "1.2rem",
+              },
+              fontWeight: "normal",
+              lineHeight: "1",
+            },
+            "& .MuiInputBase-root": {
+              borderRadius: "28px",
+              backgroundColor: "#FFFDFD",
+              left: {
+                xs: "50px",
+                sm: "100px",
+                md: "150px",
+              },
+              top: { xs: "200px" },
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              alignSelf: "stretch",
+              right: "auto",
+            },
+          }}
           onChange={(e) => setSearch(e.target.value)}
         />
+      </div>
+      <div className="filters">
         {/* Filtro Tipo Convenio */}
         <Select
           value={convenioFilter}
+          sx={{
+            fontSize: {
+              xs: "0.8rem",
+              sm: "1rem",
+            },
+            fontWeight: "normal",
+            lineHeight: "1",
+            letterSpacing: "0.00938em",
+            width: "auto",
+            height: "auto",
+            backgroundColor: "#FFFDFD",
+            textTransform: "none",
+          }}
           onChange={(e) => setConvenioFilter(e.target.value)}
           displayEmpty
         >
@@ -99,6 +147,19 @@ const CompanyManagement = () => {
         {/* Filtro Sector */}
         <Select
           value={sectorFilter}
+          sx={{
+            fontSize: {
+              xs: "0.8rem",
+              sm: "1rem",
+            },
+            fontWeight: "normal",
+            lineHeight: "1",
+            letterSpacing: "0.00938em",
+            width: "auto",
+            height: "auto",
+            backgroundColor: "#FFFDFD",
+            textTransform: "none",
+          }}
           onChange={(e) => setSectorFilter(e.target.value)}
           displayEmpty
         >
@@ -110,36 +171,466 @@ const CompanyManagement = () => {
           ))}
         </Select>
         <Button
-          className="btn-save"
+          variant="contained"
+          startIcon={<Add />}
+          sx={{
+            display: "flex",
+            padding: {
+              xs: "8px",
+              sm: "10px",
+              md: "12px",
+            },
+            fontSize: {
+              xs: "0.8rem",
+              sm: "1rem",
+            },
+            fontWeight: "normal",
+            lineHeight: "1",
+            letterSpacing: "0.00938em",
+            width: "auto",
+            height: "auto",
+            backgroundColor: "rgba(44, 44, 44, 1)",
+            borderRadius: "8px",
+            color: "rgba(245, 245, 245, 1)",
+            textTransform: "none",
+            "&:hover": {
+              backgroundColor: "rgba(44, 44, 44, 0.9)",
+            },
+          }}
           onClick={() => navigate("/admin/empresas/register")}
         >
           Registrar nueva empresa
         </Button>
       </div>
-      <div style={{ maxHeight: "calc(100vh - 350px)", overflowY: "auto" }}>
-        <TableContainer component={Paper}>
+      <div>
+        <TableContainer
+          component={Paper}
+          className="table-container"
+          sx={{
+            overflow: "auto",
+            maxHeight: "calc(100vh - 300px)",
+            width: {
+              xs: "450px",
+              sm: "600px",
+              md: "750px",
+              lg: "1000px",
+              xl: "1200px",
+            },
+            justifySelf: "center",
+            position: "relative",
+            top: "350px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+            justifyContent: "stretch",
+            "&::-webkit-scrollbar": {
+              width: "1px",
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "#f1f1f1",
+              borderRadius: "1px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "#888",
+              borderRadius: "1px",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: "#555",
+            },
+          }}
+        >
           <Table stickyHeader>
             <TableHead>
-              <TableRow>
-                <TableCell>#</TableCell>
-                <TableCell>Razón Social</TableCell>
-                <TableCell>Sector</TableCell>
-                <TableCell>Tipo Convenio</TableCell>
-                <TableCell>Telefono</TableCell>
-                <TableCell>Vacantes</TableCell>
-                <TableCell>Editar</TableCell>
-                <TableCell>Remover</TableCell>
+              <TableRow
+                sx={{
+                  flexDirection: "row",
+                }}
+              >
+                <TableCell
+                  variant="head"
+                  sx={{
+                    width: {
+                      xs: "10px",
+                      sm: "20px",
+                    },
+                    padding: {
+                      xs: "2px",
+                      sm: "4px",
+                      md: "6px",
+                    },
+                    flexShrink: "0",
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "1rem",
+                      md: "1.2rem",
+                    },
+                    fontWeight: "600",
+                    lineHeight: "1",
+                    justifyContent: "center",
+                    margin: "0px",
+                    alignItems: "center",
+                    textAlign: "center",
+                  }}
+                >
+                  #
+                </TableCell>
+                <TableCell
+                  variant="head"
+                  sx={{
+                    width: {
+                      xs: "80px",
+                      sm: "130px",
+                    },
+                    padding: {
+                      xs: "2px",
+                      sm: "4px",
+                      md: "6px",
+                    },
+                    alignItems: "center",
+                    flexShrink: "0",
+                    justifyContent: "center",
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "1rem",
+                      md: "1.2rem",
+                    },
+                    textAlign: "center",
+                    fontWeight: "600",
+                    lineHeight: "1",
+                    margin: "0px",
+                  }}
+                >
+                  Razón Social
+                </TableCell>
+                <TableCell
+                  variant="head"
+                  sx={{
+                    width: {
+                      xs: "80px",
+                      sm: "130px",
+                    },
+                    padding: {
+                      xs: "2px",
+                      sm: "4px",
+                      md: "6px",
+                    },
+                    alignItems: "center",
+                    flexShrink: "0",
+                    justifyContent: "center",
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "1rem",
+                      md: "1.2rem",
+                    },
+                    textAlign: "center",
+                    fontWeight: "600",
+                    lineHeight: "1",
+                    margin: "0px",
+                  }}
+                >
+                  Sector
+                </TableCell>
+                <TableCell
+                  variant="head"
+                  sx={{
+                    width: {
+                      xs: "100px",
+                      sm: "130px",
+                    },
+                    padding: {
+                      xs: "2px",
+                      sm: "4px",
+                      md: "6px",
+                    },
+                    alignItems: "center",
+                    flexShrink: "0",
+                    justifyContent: "center",
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "1rem",
+                      md: "1.2rem",
+                    },
+                    textAlign: "center",
+                    fontWeight: "600",
+                    lineHeight: "1",
+                    margin: "0px",
+                  }}
+                >
+                  Tipo Convenio
+                </TableCell>
+                <TableCell
+                  variant="head"
+                  sx={{
+                    width: {
+                      xs: "80px",
+                      sm: "130px",
+                    },
+                    padding: {
+                      xs: "2px",
+                      sm: "4px",
+                      md: "6px",
+                    },
+                    alignItems: "center",
+                    flexShrink: "0",
+                    justifyContent: "center",
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "1rem",
+                      md: "1.2rem",
+                    },
+                    textAlign: "center",
+                    fontWeight: "600",
+                    lineHeight: "1",
+                    margin: "0px",
+                  }}
+                >
+                  Telefono
+                </TableCell>
+                <TableCell
+                  variant="head"
+                  sx={{
+                    width: {
+                      xs: "100px",
+                      sm: "130px",
+                      xl: "200px",
+                    },
+                    padding: {
+                      xs: "2px",
+                      sm: "4px",
+                      md: "6px",
+                    },
+                    alignItems: "center",
+                    flexShrink: "0",
+                    justifyContent: "center",
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "1rem",
+                      md: "1.2rem",
+                    },
+                    textAlign: "center",
+                    fontWeight: "600",
+                    lineHeight: "1",
+                    margin: "0px",
+                  }}
+                >
+                  Vacantes
+                </TableCell>
+                <TableCell
+                  variant="head"
+                  sx={{
+                    width: {
+                      xs: "60px",
+                      sm: "100px",
+                    },
+                    padding: {
+                      xs: "2px",
+                      sm: "4px",
+                      md: "6px",
+                    },
+                    alignItems: "center",
+                    flexShrink: "0",
+                    justifyContent: "center",
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "1rem",
+                      md: "1.2rem",
+                    },
+                    textAlign: "center",
+                    fontWeight: "600",
+                    lineHeight: "1",
+                    margin: "0px",
+                  }}
+                >
+                  Editar
+                </TableCell>
+                <TableCell
+                  variant="head"
+                  sx={{
+                    width: {
+                      xs: "60px",
+                      sm: "100px",
+                    },
+                    padding: {
+                      xs: "2px",
+                      sm: "4px",
+                      md: "6px",
+                    },
+                    alignItems: "center",
+                    flexShrink: "0",
+                    justifyContent: "center",
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "1rem",
+                      md: "1.2rem",
+                    },
+                    textAlign: "center",
+                    fontWeight: "600",
+                    lineHeight: "1",
+                    margin: "0px",
+                  }}
+                >
+                  Remover
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredCompanies.map((company, index) => (
                 <TableRow key={company.id}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{company.razon_social}</TableCell>
-                  <TableCell>{company.sector}</TableCell>
-                  <TableCell>{company.tipo_convenio}</TableCell>
-                  <TableCell>{company.telefono}</TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      width: {
+                        xs: "10px",
+                        sm: "20px",
+                      },
+                      padding: {
+                        xs: "4px",
+                        sm: "6px",
+                        md: "8px",
+                      },
+                      flexShrink: "0",
+                      fontSize: {
+                        xs: "0.8rem",
+                        sm: "1rem",
+                      },
+                      fontWeight: "400",
+                      lineHeight: "1",
+                      justifyContent: "center",
+                      margin: "0px",
+                      alignItems: "center",
+                      textAlign: "center",
+                    }}
+                  >
+                    {index + 1}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      width: {
+                        xs: "80px",
+                        sm: "130px",
+                      },
+                      padding: {
+                        xs: "2px",
+                        sm: "4px",
+                        md: "6px",
+                      },
+                      alignItems: "center",
+                      flexShrink: "0",
+                      justifyContent: "center",
+                      fontSize: {
+                        xs: "0.8rem",
+                        sm: "1rem",
+                      },
+                      textAlign: "center",
+                      fontWeight: "400",
+                      lineHeight: "1",
+                      margin: "0px",
+                    }}
+                  >
+                    {company.razon_social}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      width: {
+                        xs: "80px",
+                        sm: "130px",
+                      },
+                      padding: {
+                        xs: "2px",
+                        sm: "4px",
+                        md: "6px",
+                      },
+                      alignItems: "center",
+                      flexShrink: "0",
+                      justifyContent: "center",
+                      fontSize: {
+                        xs: "0.8rem",
+                        sm: "1rem",
+                      },
+                      textAlign: "center",
+                      fontWeight: "400",
+                      lineHeight: "1",
+                      margin: "0px",
+                    }}
+                  >
+                    {company.sector}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      width: {
+                        xs: "100px",
+                        sm: "130px",
+                      },
+                      padding: {
+                        xs: "2px",
+                        sm: "4px",
+                        md: "6px",
+                      },
+                      alignItems: "center",
+                      flexShrink: "0",
+                      justifyContent: "center",
+                      fontSize: {
+                        xs: "0.8rem",
+                        sm: "1rem",
+                      },
+                      textAlign: "center",
+                      fontWeight: "400",
+                      lineHeight: "1",
+                      margin: "0px",
+                    }}
+                  >
+                    {company.tipo_convenio}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      width: {
+                        xs: "80px",
+                        sm: "130px",
+                      },
+                      padding: {
+                        xs: "2px",
+                        sm: "4px",
+                        md: "6px",
+                      },
+                      alignItems: "center",
+                      flexShrink: "0",
+                      justifyContent: "center",
+                      fontSize: {
+                        xs: "0.8rem",
+                        sm: "1rem",
+                      },
+                      textAlign: "center",
+                      fontWeight: "400",
+                      lineHeight: "1",
+                      margin: "0px",
+                    }}
+                  >
+                    {company.telefono}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      width: {
+                        xs: "100px",
+                        sm: "130px",
+                        xl: "200px",
+                      },
+                      padding: {
+                        xs: "2px",
+                        sm: "4px",
+                        md: "6px",
+                      },
+                      alignItems: "center",
+                      flexShrink: "0",
+                      justifyContent: "center",
+                      fontSize: {
+                        xs: "0.8rem",
+                        sm: "1rem",
+                      },
+                      textAlign: "center",
+                      fontWeight: "400",
+                      lineHeight: "1",
+                      margin: "0px",
+                    }}
+                  >
                     <Button
                       onClick={() =>
                         navigate(`/admin/empresas/${company.id}/vacantes`)
@@ -148,7 +639,25 @@ const CompanyManagement = () => {
                       {company.vacantes?.length || 0} Vacantes
                     </Button>
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      width: {
+                        xs: "60px",
+                        sm: "100px",
+                      },
+                      padding: {
+                        xs: "2px",
+                        sm: "4px",
+                        md: "6px",
+                      },
+                      alignItems: "center",
+                      flexShrink: "0",
+                      justifyContent: "center",
+                      textAlign: "center",
+                      lineHeight: "1",
+                      margin: "0px",
+                    }}
+                  >
                     <IconButton
                       onClick={() =>
                         navigate(`/admin/empresas/edit/${company.id}`)
@@ -157,7 +666,25 @@ const CompanyManagement = () => {
                       <Edit />
                     </IconButton>
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      width: {
+                        xs: "60px",
+                        sm: "100px",
+                      },
+                      padding: {
+                        xs: "2px",
+                        sm: "4px",
+                        md: "6px",
+                      },
+                      alignItems: "center",
+                      flexShrink: "0",
+                      justifyContent: "center",
+                      textAlign: "center",
+                      lineHeight: "1",
+                      margin: "0px",
+                    }}
+                  >
                     <IconButton onClick={() => handleDelete(company.id)}>
                       <Delete />
                     </IconButton>

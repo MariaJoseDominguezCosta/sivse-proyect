@@ -1,59 +1,95 @@
-/* frontend/src/pages/admin/BolsaTrabajo.css */
-.bolsa-page {
-  padding: 20px;
-}
+/* frontend/src/assets/SeguimientoEgresados.css */
 
-.bolsa-page h1 {
-  color: #003366;
-  margin-bottom: 20px;
+.search-bar {
+  border-radius: 28px;
+  top: 25px;
+  position: absolute;
+  width: 550px;
+  height: 40px;
 }
 
 .filters {
+  top: 300px;
+  gap: 60px;  
+  width: auto;
+  height: auto;
   display: flex;
-  gap: 10px;
+  position: absolute;
   align-items: center;
-  margin-bottom: 20px;
+  flex-direction: row;
+  justify-content: center;
+  z-index: 1;
+  justify-self: center;
 }
 
-.filters select, .filters input {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+.table-container {
+  top: 410px;
+  width: 900px;
+  display: flex;
+  position: absolute;
+  background-color: #FFFDFD;
+  border-radius: 20px;
+  flex-direction: column;
+  z-index: 1;
+  justify-self: center;
 }
 
-.publish-btn {
-  background: #28a745;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
+
+
+@media (min-width: 1536px) {
+  .search-bar{
+    width: 500px;
+    height: 35px;
+  }
+
+  .table-container {
+    width: 800px;
+  }
+  .filters {
+    gap: 70px;
+  }
+
 }
 
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+@media (min-width: 1200px) and (max-width: 1535px) {
+  .search-bar{
+    width: 450px;
+    height: 30px;
+  }
+  
+  .filters {
+    gap: 40px;
+    top: 280px;
+  }
+  .table-container {
+    top: 350px;
+  }
 }
 
-.data-table th, .data-table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
+@media (min-width: 600px) and (max-width: 1199px) {
+  .search-bar{
+    width: 400px;
+    height: 25px;
+    align-self: center;
+  }
+  
+  .filters {
+    top: 280px;
+  }
+  .table-container {
+    top: 350px;
+  }
 }
 
-.data-table th {
-  background: #f0f0f0;
-  font-weight: bold;
-}
-
-.edit-btn {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: #007bff;
-  cursor: pointer;
+@media (min-width: 0px) and (max-width: 599px) {
+  .search-bar{
+    width: 350px;
+    height: 20px;
+  }
+  .filters {
+    left: 50px;
+  }
+  .table-container {
+    width: 450px;
+  }
 }

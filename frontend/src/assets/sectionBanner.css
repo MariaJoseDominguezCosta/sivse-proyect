@@ -3,24 +3,94 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-direction: row;
   /* El padding horizontal debe coincidir con el de .page-padding */
   padding: 1rem 30px; 
   /* El banner visualmente parece ser transparente, usando el color de fondo del content */
   background-color: transparent; 
   color: var(--text-dark); 
+  position: relative;
   width: 100%;
+  align-self: center;
 }
 
 .section-title {
-  /* Estilo para el título grande y en negrita */
-  font-size: 2.5rem; 
-  font-weight: 700;
-  margin: 0;
-  color: var(--text-dark); /* #1E1E1E */
+  color: var(--text-dark);
+  height: auto;
+  font-size: 55px;
+  position: absolute;
+  font-style: italic;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  line-height: 1;
+  font-stretch: normal;
+  text-decoration: none;
 }
 
 .tecnm-logo-banner {
-  /* Ajustar tamaño del logo para que coincida con las imágenes */
-  height: 60px; 
-  width: auto;
+  width: 300px;
+  position: absolute;
+}
+
+@media (min-width: 1536px) {
+  .section-title {
+    left: 50px;
+    font-size: 45px;
+  }
+  .tecnm-logo-banner {
+    right: 50px;
+    width: 200px;
+  }
+  .section-banner {
+    top: 50px;
+    right: 50px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1535px) {
+  .section-title {
+    top: 50px;
+    left: 50px;
+    font-size: 40px;
+  }
+  .section-banner {
+    top: 50px;
+    right: 25px;
+  }
+  .tecnm-logo-banner {
+    top: 0px;
+    right: 25px;
+    width: 150px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1199px) {
+  .section-title {
+    font-size: 35px;
+    left: 100px;
+  }
+  .tecnm-logo-banner {
+    right: 25px;
+    width: 150px;
+  }
+  .section-banner {
+    top: 100px;
+    right: 25px;
+  }
+}
+
+@media (min-width: 0px) and (max-width: 599px) {
+  .section-title {
+    left: 20px;;
+    font-size: 30px;
+  }
+  .tecnm-logo-banner {
+    width: 100px;
+    right: 10px;
+  }
+  .section-banner {
+    top: 20px;
+    right: 10px;
+  }
 }

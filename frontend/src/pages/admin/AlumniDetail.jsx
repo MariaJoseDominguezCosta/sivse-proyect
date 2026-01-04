@@ -45,32 +45,100 @@ const AlumniDetail = () => {
   }
 
   return (
-    <Box className="form-container">
-      <Typography variant="h5" gutterBottom>
+    <Box sx={{
+      position: "absolute",
+      top: {
+        xs: "200px", sm: "250px", lg: "200px", xl: "250px"
+      },
+      margin: "auto",
+      backgroundColor: "background.paper",
+      padding: "20px",
+      borderRadius: "8px",
+      width: {
+        xs: "300px",
+        sm: "400px",
+        md: "500px",
+        lg: "600px",
+        xl: "700px",
+      },
+      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+      display: "flex",
+      flexDirection: "column",
+      justifySelf: "center",
+      alignSelf: "center",
+    }}>
+      <Typography variant="h5" gutterBottom sx={{
+        fontWeight: "bold", fontSize: {
+          xs: "0.8rem",
+          sm: "1rem",
+          md: "1.2rem",
+          lg: "1.4rem",
+          xl: "1.6rem",
+        }
+      }}>
         {alumni.nombre_completo || 'Sin nombre'} - {alumni.ubicacion || 'Sin ubicación'}
       </Typography>
-      <Typography variant="subtitle1" color="text.secondary">
+      <Typography variant="subtitle1" color="text.secondary"
+        sx={{
+          fontSize: {
+            xs: "0.6rem",
+            sm: "0.8rem",
+            md: "1rem",
+            lg: "1.2rem",
+            xl: "1.4rem"
+          },
+          fontWeight: "normal"
+        }}>
         Generación: {alumni.generacion || 'No especificada'}
       </Typography>
-      <Typography variant="subtitle1" color="text.secondary">
+      <Typography variant="subtitle1" color="text.secondary"
+        sx={{
+          fontSize: {
+            xs: "0.6rem",
+            sm: "0.8rem",
+            md: "1rem",
+            lg: "1.2rem",
+            xl: "1.4rem"
+          },
+          fontWeight: "normal"
+        }}  >
         Carrera: {alumni.carrera || 'No especificada'}
       </Typography>
-      <Typography variant="h6" mt={2} gutterBottom>
+      <Typography variant="h6" mt={2} gutterBottom
+        sx={{
+          fontSize: {
+            xs: "0.6rem",
+            sm: "0.8rem",
+            md: "1rem",
+            lg: "1.2rem",
+            xl: "1.4rem"
+          },
+          fontWeight: "bold"
+        }}>
         Información de empresa actual
       </Typography>
-      <Typography>Nombre: {alumni.empresa_actual || 'No empleada'}</Typography>
-      <Typography>Puesto: {alumni.puesto || 'No especificado'}</Typography>
-      <Typography>Modalidad: {alumni.modalidad || 'No especificada'}</Typography>
-      <Typography variant="h6" mt={2} gutterBottom>
+      <Typography
+        sx={{
+          fontSize: {
+            xs: "0.4rem",
+            sm: "0.6rem",
+            md: "0.8rem",
+            lg: "1rem",
+            xl: "1.2rem"
+          }
+        }}>Nombre: {alumni.empresa_actual || 'No empleada'}</Typography>
+      <Typography sx={{ fontSize: { xs: "0.4rem", sm: "0.6rem", md: "0.8rem", lg: "1rem", xl: "1.2rem" } }}>Puesto: {alumni.puesto || 'No especificado'}</Typography>
+      <Typography sx={{ fontSize: { xs: "0.4rem", sm: "0.6rem", md: "0.8rem", lg: "1rem", xl: "1.2rem" } }}>Modalidad: {alumni.modalidad || 'No especificada'}</Typography>
+      <Typography variant="h6" mt={2} gutterBottom sx={{ fontSize: { xs: "0.6rem", sm: "0.8rem", md: "1rem", lg: "1.2rem", xl: "1.4rem" }, fontWeight: "bold" }}>
         Datos de contacto
       </Typography>
-      <Typography>Teléfono: {alumni.telefono || 'No proporcionado'}</Typography>
-      <Typography variant="h6" mt={2} gutterBottom>
+      <Typography sx={{ fontSize: { xs: "0.4rem", sm: "0.6rem", md: "0.8rem", lg: "1rem", xl: "1.2rem" } }}>Teléfono: {alumni.telefono || 'No proporcionado'}</Typography>
+      <Typography variant="h6" mt={2} gutterBottom sx={{ fontSize: { xs: "0.6rem", sm: "0.8rem", md: "1rem", lg: "1.2rem", xl: "1.4rem" }, fontWeight: "bold" }}>
         Redes sociales
       </Typography>
-      <Typography>LinkedIn: {alumni.redes.linkedin || 'No proporcionado'}</Typography>
-      <Typography>Instagram: {alumni.redes.instagram || 'No proporcionado'}</Typography>
-      <Typography>Otro: {alumni.redes.otro || 'No proporcionado'}</Typography>
+      <Typography sx={{ fontSize: { xs: "0.4rem", sm: "0.6rem", md: "0.8rem", lg: "1rem", xl: "1.2rem" } }}>LinkedIn: {alumni.redes.linkedin || 'No proporcionado'}</Typography>
+      <Typography sx={{ fontSize: { xs: "0.4rem", sm: "0.6rem", md: "0.8rem", lg: "1rem", xl: "1.2rem" } }}>Instagram: {alumni.redes.instagram || 'No proporcionado'}</Typography>
+      <Typography sx={{ fontSize: { xs: "0.4rem", sm: "0.6rem", md: "0.8rem", lg: "1rem", xl: "1.2rem" } }}>Otro: {alumni.redes.otro || 'No proporcionado'}</Typography>
     </Box>
   );
 };

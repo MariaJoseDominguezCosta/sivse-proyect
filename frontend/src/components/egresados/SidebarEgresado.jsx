@@ -1,19 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { Box, List, ListItem, ListItemIcon, ListItemText, Divider, Avatar } from '@mui/material';
-import { Home, Person, Favorite, Work, Logout } from '@mui/icons-material';
+import React, { useState } from 'react';
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Avatar,
+  Typography,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Drawer,
+} from '@mui/material';
+import { Home, Favorite, Work, Logout, Menu as MenuIcon } from '@mui/icons-material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import "../../assets/sidebarAdmin.css"; 
+
+const drawerWidth = 280; 
 
 const SidebarEgresado = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState(location.pathname);
-
-  useEffect(() => {
-    setActiveSection(location.pathname); // Sincroniza con la ruta actual
-  }, [location.pathname]);
-
-  const handleClick = (path) => {
-    setActiveSection(path);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  
+  // No necesitamos 'activeSection' si usamos location.pathname directamente
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
   const handleLogout = () => {
@@ -21,108 +34,145 @@ const SidebarEgresado = () => {
     navigate('/');
   };
 
-  return (
-    <Box sx={{ width: 250, bgcolor: '#223373', color: '#FFFDFD', height: '100vh', p: 2 }}>
-      {/* Logo del Tecnológico */}
-      <img
-      src="/logo-tecnologico-comitan-removebg-preview.png"
-        alt="Logo"
-        style={{ width: "50%", marginBottom: "16px", marginLeft: "25%" }}
-      />
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, color: '#FFFDFD' }}>
-        <Avatar sx={{ bgcolor: '#4F378A', mr: 1 }}>E</Avatar>
-        <span>Egresado</span>
+  // Elementos del menú para evitar repetición
+  const menuItems = [
+    { text: "Inicio", icon: <Home />, path: "/egresado" },
+    // { text: "Editar Perfil", icon: <Person />, path: "/egresados/perfil/edit" },
+    { text: "Favoritos", icon: <Favorite />, path: "/egresados/favoritos" },
+    { text: "Vacantes", icon: <Work />, path: "/egresados/vacantes" },
+  ];
+  
+  const drawerContent = (
+    <Box className="sidebar-content">
+      <Box className="sidebar-header">
+        <img
+          src="/logo-tecnologico-comitan-removebg-preview.png"
+          alt="Logo"
+          className="sidebar-logo"
+        />
+        <Box className="sidebar-profile">
+          <Avatar className="sidebar-avatar" sx={{ bgcolor: '#4F378A' }}>E</Avatar>
+          <Typography className="sidebar-role">Egresado</Typography>
+        </Box>
       </Box>
-      <List>
+
+      <List sx={{ px: 2 }}>
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <ListItem
+              key={item.text}
+              component={Link}
+              to={item.path}
+              onClick={() => setMobileOpen(false)}
+              className={`sidebar-item ${isActive ? "active" : ""}`}
+            >
+              <ListItemIcon className="sidebar-icon">
+                {/* Usar React.cloneElement para pasar el color del icono */}
+                {React.cloneElement(item.icon, {
+                  sx: { color: isActive ? "#FFE0E0" : "#FFFDFD" },
+                })}
+              </ListItemIcon>
+              <ListItemText
+                primary={item.text}
+                primaryTypographyProps={{ className: "sidebar-text" }}
+              />
+            </ListItem>
+          );
+        })}
+
+        {/* Separador */}
+        <Divider sx={{ bgcolor: '#FFFDFD', my: 1 }} /> 
+        
+        {/* Botón de Cerrar Sesión */}
         <ListItem
-          component={Link}
-          to="/egresado"
-          onClick={() => handleClick('/egresado')}
-          sx={{
-            bgcolor: activeSection === '/egresado' ? '#FFE0E0' : 'transparent',
-            color: activeSection === '/egresado' ? '#1E1E1E' : '#FFFDFD',
-            '&:hover': { bgcolor: activeSection === '/egresado' ? '#FFE0E0' : 'rgba(255, 255, 255, 0.1)' },
-            padding: '10px 15px',
-            margin: '5px 0',
-            borderRadius: '5px',
-            transition: 'background-color 0.3s',
-          }}
+          onClick={handleLogout}
+          className="sidebar-item logout-item"
+          sx={{ mt: 2, cursor: "pointer" }}
         >
-          <ListItemIcon>
-            <Home sx={{ color: activeSection === '/egresado' ? '#1E1E1E' : '#FFFDFD' }} />
+          <ListItemIcon className="sidebar-icon">
+            <Logout sx={{ color: "#FFFDFD" }} />
           </ListItemIcon>
-          <ListItemText primary="Inicio" />
-        </ListItem>
-        {/*
-        <ListItem
-          component={Link}
-          to="/egresados/perfil/edit"
-          onClick={() => handleClick('/egresados/perfil/edit')}
-          sx={{
-            bgcolor: activeSection === '/egresados/perfil/edit' ? '#FFE0E0' : 'transparent',
-            color: activeSection === '/egresados/perfil/edit' ? '#1E1E1E' : '#FFFDFD',
-            '&:hover': { bgcolor: activeSection === '/egresados/perfil/edit' ? '#FFE0E0' : 'rgba(255, 255, 255, 0.1)' },
-            padding: '10px 15px',
-            margin: '5px 0',
-            borderRadius: '5px',
-            transition: 'background-color 0.3s',
-          }}
-        >
-          <ListItemIcon>
-            <Person sx={{ color: activeSection === '/egresados/perfil/edit' ? '#1E1E1E' : '#FFFDFD' }} />
-          </ListItemIcon>
-          <ListItemText primary="Editar Perfil" />
-        </ListItem>
-        */}
-        <ListItem
-          component={Link}
-          to="/egresados/favoritos"
-          onClick={() => handleClick('/egresados/favoritos')}
-          sx={{
-            bgcolor: activeSection === '/egresados/favoritos' ? '#FFE0E0' : 'transparent',
-            color: activeSection === '/egresados/favoritos' ? '#1E1E1E' : '#FFFDFD',
-            '&:hover': { bgcolor: activeSection === '/egresados/favoritos' ? '#FFE0E0' : 'rgba(255, 255, 255, 0.1)' },
-            padding: '10px 15px',
-            margin: '5px 0',
-            borderRadius: '5px',
-            transition: 'background-color 0.3s',
-          }}
-        >
-          <ListItemIcon>
-            <Favorite sx={{ color: activeSection === '/egresados/favoritos' ? '#1E1E1E' : '#FFFDFD' }} />
-          </ListItemIcon>
-          <ListItemText primary="Favoritos" />
-        </ListItem>
-        <ListItem
-          component={Link}
-          to="/egresados/vacantes"
-          onClick={() => handleClick('/egresados/vacantes')}
-          sx={{
-            bgcolor: activeSection === '/egresados/vacantes' ? '#FFE0E0' : 'transparent',
-            color: activeSection === '/egresados/vacantes' ? '#1E1E1E' : '#FFFDFD',
-            '&:hover': { bgcolor: activeSection === '/egresados/vacantes' ? '#FFE0E0' : 'rgba(255, 255, 255, 0.1)' },
-            padding: '10px 15px',
-            margin: '5px 0',
-            borderRadius: '5px',
-            transition: 'background-color 0.3s',
-          }}
-        >
-          <ListItemIcon>
-            <Work sx={{ color: activeSection === '/egresados/vacantes' ? '#1E1E1E' : '#FFFDFD' }} />
-          </ListItemIcon>
-          <ListItemText primary="Vacantes" />
+          <ListItemText
+            primary="Cerrar Sesión"
+            primaryTypographyProps={{ className: "sidebar-text" }}
+          />
         </ListItem>
       </List>
-      <Divider sx={{ bgcolor: '#FFFDFD' }} />
-      <ListItem onClick={handleLogout} sx={{ color: '#FFFDFD',
-              '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)' },
-              padding: '10px 15px',
-              margin: '5px 0',
-              borderRadius: '5px',
-            }}>
-        <ListItemIcon><Logout sx={{ color: '#FFFDFD' }} /></ListItemIcon>
-        <ListItemText primary="Cerrar Sesión" />
-      </ListItem>
+    </Box>
+  );
+
+  return (
+    <Box sx={{ display: "flex" }}>
+      {/* NAVBAR PARA MÓVILES (Solo visible en xs y sm) - Copiado de SidebarAdmin */}
+      <AppBar
+        position="fixed"
+        sx={{
+          display: { md: "none" },
+          bgcolor: "#223373",
+          boxShadow: 3,
+        }}
+      >
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <img
+            src="/logo-tecnologico-comitan-removebg-preview.png"
+            alt="Logo"
+            style={{ height: "40px" }}
+          />
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+          >
+            <MenuIcon fontSize="large" />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      {/* NAVEGACIÓN (Drawer) - Copiado de SidebarAdmin */}
+      <Box
+        component="nav"
+        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+      >
+        {/* Drawer para Móvil */}
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }} 
+          sx={{
+            display: { xs: "block", sm: "block", md: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+              bgcolor: "#223373",
+            },
+          }}
+        >
+          {drawerContent}
+        </Drawer>
+
+        {/* Sidebar para Escritorio */}
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: "none", md: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+              bgcolor: "#223373",
+              borderRight: "none",
+            },
+          }}
+          open
+        >
+          {drawerContent}
+        </Drawer>
+      </Box>
+
+      {/* Espaciador para que el contenido no quede debajo de la AppBar en móvil */}
+      <Toolbar sx={{ display: { md: "none" } }} />
     </Box>
   );
 };

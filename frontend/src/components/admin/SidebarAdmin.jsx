@@ -5,8 +5,12 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Divider,
   Avatar,
+  IconButton,
+  AppBar,
+  Toolbar,
+  Drawer,
+  Typography,
 } from "@mui/material";
 import {
   Home,
@@ -16,252 +20,180 @@ import {
   BarChart,
   Logout,
   AdminPanelSettings,
+  Menu as MenuIcon,
 } from "@mui/icons-material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import "../../App.css";
+import "../../assets/sidebarAdmin.css";
 
+const drawerWidth = 280; // Ancho estándar para sidebar
 
 const SidebarAdmin = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [activeSection, setActiveSection] = useState(location.pathname); // Estado inicial basado en la ruta actual
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
-  const handleClick = (path) => {
-    setActiveSection(path); // Actualiza la sección activa al hacer clic
-  };
+  // Elementos del menú para evitar repetición
+  const menuItems = [
+    { text: "Inicio", icon: <Home />, path: "/admin" },
+    {
+      text: "Seguimiento de Egresados",
+      icon: <People />,
+      path: "/admin/egresados",
+    },
+    { text: "Bolsa de Trabajo", icon: <Work />, path: "/admin/vacantes" },
+    {
+      text: "Gestión de Empresas",
+      icon: <Business />,
+      path: "/admin/empresas",
+    },
+    {
+      text: "Reportes y Estadísticas",
+      icon: <BarChart />,
+      path: "/admin/reportes",
+    },
+    {
+      text: "Administradores",
+      icon: <AdminPanelSettings />,
+      path: "/admin/register-admin",
+    },
+  ];
 
-  return (
-    <>
-    <div
-      className={`navbar1-container1`}
-    > 
-      <header />
-  
-
-      {" "}
-      {/* Logo del Tecnológico */}
-      <img
-        src="/logo-tecnologico-comitan-removebg-preview.png"
-        alt="Logo"
-        style={{ width: "50%", marginBottom: "16px", marginLeft: "25%" }}
-      />
-      {/* Ícono de usuario (Administrador) */}
-      <Box
-        sx={{ display: "flex", alignItems: "center", mb: 2, color: "#FFFDFD" }}
-      >
-        <Avatar sx={{ bgcolor: "#4F378A", mr: 1 }}>A</Avatar>
-        <span>Administrador</span>
+  const drawerContent = (
+    <Box className="sidebar-content">
+      <Box className="sidebar-header">
+        <img
+          src="/logo-tecnologico-comitan-removebg-preview.png"
+          alt="Logo"
+          className="sidebar-logo"
+        />
+        <Box className="sidebar-profile">
+          <Avatar className="sidebar-avatar">A</Avatar>
+          <Typography className="sidebar-role">Administrador</Typography>
+        </Box>
       </Box>
-      <List>
-        <ListItem
-          component={Link}
-          to="/admin"
-          onClick={() => handleClick("/admin")}
-          sx={{
-            bgcolor: activeSection === '/admin' ? 'var(--card-bg)' : 'transparent', // Fondo claro para activo (rosado muy claro)
-            color: activeSection === '/admin' ? 'var(--text-dark)' : '#FFFDFD', // Texto oscuro para activo
-            '&:hover': { bgcolor: activeSection === '/admin' ? 'var(--card-bg)' : 'rgba(255, 255, 255, 0.1)' },
-            padding: "10px 15px",
-            margin: "5px 0",
-            borderRadius: "5px",
-            transition: "background-color 0.3s",
-          }}
-        >
-          <ListItemIcon>
-            <Home
-              sx={{ color: activeSection === '/admin' ? 'var(--text-dark)' : '#FFFDFD' }}
-            />
-          </ListItemIcon>
-          <ListItemText primary="Inicio" />
-        </ListItem>
-        <ListItem
-          component={Link}
-          to="/admin/egresados"
-          onClick={() => handleClick("/admin/egresados")}
-          sx={{
-            bgcolor:
-              activeSection === "/admin/egresados" ? "#FFE0E0" : "transparent",
-            color: activeSection === "/admin/egresados" ? 'var(--text-dark)' : "#FFFDFD",
-            "&:hover": {
-              bgcolor:
-                activeSection === "/admin/egresados"
-                  ? "#FFE0E0"
-                  : "rgba(255, 255, 255, 0.1)",
-            },
-            padding: "10px 15px",
-            margin: "5px 0",
-            borderRadius: "5px",
-            transition: "background-color 0.3s",
-          }}
-        >
-          <ListItemIcon>
-            <People
-              sx={{
-                color:
-                  activeSection === "/admin/egresados" ? 'var(--text-dark)' : "#FFFFFF",
-              }}
-            />
-          </ListItemIcon>
-          <ListItemText primary="Seguimiento de Egresados" />
-        </ListItem>
-        <ListItem
-          component={Link}
-          to="/admin/vacantes"
-          onClick={() => handleClick("/admin/vacantes")}
-          sx={{
-            bgcolor:
-              activeSection === "/admin/vacantes" ? "#FFE0E0" : "transparent",
-            color: activeSection === "/admin/vacantes" ? 'var(--text-dark)' : "#FFFDFD",
-            "&:hover": {
-              bgcolor:
-                activeSection === "/admin/vacantes"
-                  ? "#FFE0E0"
-                  : "rgba(255, 255, 255, 0.1)",
-            },
-            padding: "10px 15px",
-            margin: "5px 0",
-            borderRadius: "5px",
-            transition: "background-color 0.3s",
-          }}
-        >
-          <ListItemIcon>
-            <Work
-              sx={{
-                color:
-                  activeSection === "/admin/vacantes" ? 'var(--text-dark)' : "#FFFDFD",
-              }}
-            />
-          </ListItemIcon>
-          <ListItemText primary="Bolsa de Trabajo" />
-        </ListItem>
-        <ListItem
-          component={Link}
-          to="/admin/empresas"
-          onClick={() => handleClick("/admin/empresas")}
-          sx={{
-            bgcolor:
-              activeSection === "/admin/empresas" ? "#FFE0E0" : "transparent",
-            color: activeSection === "/admin/empresas" ? 'var(--text-dark)' : "#FFFDFD",
-            "&:hover": {
-              bgcolor:
-                activeSection === "/admin/empresas"
-                  ? "#FFE0E0"
-                  : "rgba(255, 255, 255, 0.1)",
-            },
-            padding: "10px 15px",
-            margin: "5px 0",
-            borderRadius: "5px",
-            transition: "background-color 0.3s",
-          }}
-        >
-          <ListItemIcon>
-            <Business
-              sx={{
-                color:
-                  activeSection === "/admin/empresas" ? 'var(--text-dark)' : "#FFFDFD",
-              }}
-            />
-          </ListItemIcon>
-          <ListItemText primary="Gestión de Empresas" />
-        </ListItem>
-        <ListItem
-          component={Link}
-          to="/admin/reportes"
-          onClick={() => handleClick("/admin/reportes")}
-          sx={{
-            bgcolor:
-              activeSection === "/admin/reportes" ? "#FFE0E0" : "transparent",
-            color: activeSection === "/admin/reportes" ? 'var(--text-dark)' : "#FFFDFD",
-            "&:hover": {
-              bgcolor:
-                activeSection === "/admin/reportes"
-                  ? "#FFE0E0"
-                  : "rgba(255, 255, 255, 0.1)",
-            },
-            padding: "10px 15px",
-            margin: "5px 0",
-            borderRadius: "5px",
-            transition: "background-color 0.3s",
-          }}
-        >
-          <ListItemIcon>
-            <BarChart
-              sx={{
-                color:
-                  activeSection === "/admin/reportes" ? 'var(--text-dark)' : "#FFFDFD",
-              }}
-            />
-          </ListItemIcon>
-          <ListItemText primary="Reportes y Estadísticas" />
-        </ListItem>
 
+      <List sx={{ px: 2 }}>
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <ListItem
+              key={item.text}
+              component={Link}
+              to={item.path}
+              onClick={() => setMobileOpen(false)}
+              className={`sidebar-item ${isActive ? "active" : ""}`}
+            >
+              <ListItemIcon className="sidebar-icon">
+                {React.cloneElement(item.icon, {
+                  sx: { color: isActive ? "#FFE0E0" : "#FFFDFD" },
+                })}
+              </ListItemIcon>
+              <ListItemText
+                primary={item.text}
+                primaryTypographyProps={{ className: "sidebar-text" }}
+              />
+            </ListItem>
+          );
+        })}
+        <Divider sx={{ bgcolor: '#FFFDFD', mx: 2 }} />
         <ListItem
-          component={Link}
-          to="/admin/register-admin"
-          onClick={() => handleClick("/admin/register-admin")}
-          sx={{
-            bgcolor:
-              activeSection === "/admin/register-admin" ? "#FFE0E0" : "transparent",
-            color: activeSection === "/admin/register-admin" ? 'var(--text-dark)' : "#FFFDFD",
-            "&:hover": {
-              bgcolor:
-                activeSection === "/admin/register-admin"
-                  ? "#FFE0E0"
-                  : "rgba(255, 255, 255, 0.1)",
-            },
-            padding: "10px 15px",
-            margin: "5px 0",
-            borderRadius: "5px",
-            transition: "background-color 0.3s",
-          }}
+          onClick={handleLogout}
+          className="sidebar-item logout-item"
+          sx={{ mt: 2, cursor: "pointer" }}
         >
-          <ListItemIcon>
-            <AdminPanelSettings
-              sx={{
-                color:
-                  activeSection === "/admin/register-admin"
-                    ? 'var(--text-dark)'
-                    : "#FFFDFD",
-              }}
-            />
+          <ListItemIcon className="sidebar-icon">
+            <Logout sx={{ color: "#FFFDFD" }} />
           </ListItemIcon>
-          <ListItemText primary="Administradores" />
+          <ListItemText
+            primary="Cerrar Sesión"
+            primaryTypographyProps={{ className: "sidebar-text" }}
+          />
         </ListItem>
       </List>
-      <Divider sx={{ bgcolor: "#FFFDFD" }} />
-      <ListItem
-        onClick={handleLogout}
+    </Box>
+  );
+
+  return (
+    <Box sx={{ display: "flex" }}>
+      {/* NAVBAR PARA MÓVILES (Solo visible en xs y sm) */}
+      <AppBar
+        position="fixed"
         sx={{
-          color: "#FFFDFD",
-          "&:hover": { bgcolor: "rgba(255, 255, 255, 0.1)" },
-          padding: "10px 15px",
-          margin: "5px 0",
-          borderRadius: "5px",
+          display: { md: "none" },
+          bgcolor: "#223373",
+          boxShadow: 3,
         }}
       >
-        <ListItemIcon>
-          <Logout sx={{ color: "#FFFDFD" }} />
-        </ListItemIcon>
-        <ListItemText primary="Cerrar Sesión" />
-      </ListItem>
-    </div>
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <img
+            src="/logo-tecnologico-comitan-removebg-preview.png"
+            alt="Logo"
+            style={{ height: "40px" }}
+          />
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+          >
+            <MenuIcon fontSize="large" />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
 
-    // menu hamburguesa
-    <div className="sidebar-hamburger">
-        {/* Logo del Tecnológico */}
-      <img
-        src="/logo-tecnologico-comitan-removebg-preview.png"
-        alt="Logo"
-        className="navbar1-image"
-      />
-    </div>
+      {/* NAVEGACIÓN (Drawer) */}
+      <Box
+        component="nav"
+        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+      >
+        {/* Drawer para Móvil */}
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }} // Mejora el rendimiento en móvil
+          sx={{
+            display: { xs: "block", sm: "block", md: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+              bgcolor: "#223373",
+            },
+          }}
+        >
+          {drawerContent}
+        </Drawer>
 
-    </>
+        {/* Sidebar para Escritorio */}
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: "none", md: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+              bgcolor: "#223373",
+              borderRight: "none",
+            },
+          }}
+          open
+        >
+          {drawerContent}
+        </Drawer>
+      </Box>
+
+      {/* Espaciador para que el contenido no quede debajo de la AppBar en móvil */}
+      <Toolbar sx={{ display: { md: "none" } }} />
+    </Box>
   );
 };
 

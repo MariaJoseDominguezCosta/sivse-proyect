@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, TextField, Typography, Link } from "@mui/material";
+import { Box, Button, TextField, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -50,50 +50,49 @@ const Login = () => {
   };
 
   return (
-    <Box className="login-container">
+    <Box className="login-form">
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
-        className="login-login-elm"
       >
         {({ isSubmitting, errors }) => (
-          <Form className="login-form-log-in-elm">
+          <Form style={{ width: "100%" }}>
             {/* Campos de Formik Field */}
             <Field
-              as={TextField}
               name="email"
-              label="Email"
-              fullWidth
               margin="normal"
               variant="outlined"
-              placeholder="Value"
-              className="login-input-elm1"
+              placeholder="Email"
+              className="login-input"
+              type="email"
+              autoComplete="email"
             />
             <ErrorMessage
               name="email"
               component="div"
-              className="login-text-elm6"
+              style={{ color: "red", fontSize: "0.8rem", marginBottom: "2px" }}
             />
             <Field
-              as={TextField}
               name="password"
               type="password"
-              label="Password"
-              fullWidth
-              margin="normal"
               variant="outlined"
-              placeholder="Value"
-              className="login-input-elm2"
+              placeholder="Password"
+              className="login-input"
+              autoComplete="current-password"
             />
             <ErrorMessage
               name="password"
               component="div"
-              className="login-text-elm6"
+              style={{ color: "red", fontSize: "0.8rem", marginBottom: "2px" }}
             />
             {errors.general && (
               <div
-                className="login-text-elm6"
+                style={{
+                  color: "red",
+                  fontSize: "0.8rem",
+                  marginBottom: "2px",
+                }}
               >
                 {errors.general}
               </div>
@@ -104,21 +103,43 @@ const Login = () => {
               variant="contained"
               type="submit"
               disabled={isSubmitting}
-              className="login-button-elm"
-            >
-              <span className="login-text-elm4">Iniciar Sesión</span>
-            </Button>
+              sx={{
+                padding : {
+                  xs: "2px",
+                  sm: "4px",
+                  md: "6px",
+                  lg: "8px",
+                  xl: "10px",
+                },
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                justifySelf: "center",
+                borderRadius: "8px",
+                backgroundColor: "var(--button-save)",
+                color: "rgba(245, 245, 245, 1)",
+                fontSize: "1rem",
+                textTransform: "none",
+                marginTop: "10px",
+                "&:hover": {
+                  backgroundColor: "var(--button-save)", opacity: 0.9
+                },
 
-            {/* Links de recuperación y registro */}
-            <Link href="/recover" variant="body2" className="login-link-elm">
-              ¿Olvidaste tu contraseña?
-            </Link>
-            <Link href="/register" variant="body2" className="login-link-elm">
-              Regístrate como egresado
-            </Link>
+              }}
+            >
+              Iniciar Sesión
+            </Button>
           </Form>
         )}
       </Formik>
+
+      {/* Links de recuperación y registro */}
+      <Link href="/recover" variant="body2" className="login-text-link">
+        ¿Olvidaste tu contraseña?
+      </Link>
+      <Link href="/register" variant="body2" className="login-text-link">
+        Regístrate como egresado
+      </Link>
     </Box>
   );
 };

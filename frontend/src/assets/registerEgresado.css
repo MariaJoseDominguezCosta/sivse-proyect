@@ -1,0 +1,10 @@
+.formulario-registro {
+    gap: 10px;
+    display: grid;
+    padding: 10px;
+    flex-shrink: 1;
+    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    align-self: center;
+    justify-self: center;
+}

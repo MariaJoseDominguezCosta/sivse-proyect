@@ -10,9 +10,6 @@ const SectionBanner = ({ title = "Sección" }) => {
     // Si no es un dashboard, o si quieres mostrar el título, usa el estilo normal
     <div
       className="section-banner"
-      style={
-        isDashboard ? { justifyContent: "flex-end", padding: "1rem 30px" } : {}
-      }
     >
       {/* El título solo se muestra si NO estamos en el Dashboard de inicio del egresado */}
       {!isDashboard && <h2 className="section-title">{title}</h2>}
@@ -26,7 +23,7 @@ const SectionBanner = ({ title = "Sección" }) => {
           e.target.src =
             "https://via.placeholder.com/150x50/FFFFFF/003366?text=TecNM";
         }}
-        style={isDashboard ? { height: "30px" } : {}}
+        
       />
     </div>
   );

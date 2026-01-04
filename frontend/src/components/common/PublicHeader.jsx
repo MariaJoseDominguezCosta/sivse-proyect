@@ -9,7 +9,7 @@ const PublicHeader = () => {
         {/* Placeholder para logo TecNM */}
         <img src="/logo-tecnologico.png" alt="TecNM" className='image5-elm2' />
       </div>
-      <h1 className='text-elm1'>SIVSE</h1>
+      <h1 className='text'>SIVSE</h1>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         {/* Placeholder para logo Comitán */}
         <img src="/logo-tecnologico-comitan-removebg-preview.png" alt="Comitán" className='image5-elm1' />

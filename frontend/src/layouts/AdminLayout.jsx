@@ -7,7 +7,6 @@ import "../assets/adminLayout.css";
 const AdminLayout = ({ children, title }) => {
   return (
     <div className="admin-layout">
-      {/* REMOVIDO: <Header userRole="admin" userName="Admin SIVSE" /> */}
       <div className="admin-body">
         <SidebarAdmin />
         <main className="admin-content">

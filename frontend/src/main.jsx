@@ -21,6 +21,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <App />
       <ToastContainer
         position="top-right"
+        theme="dark"
+        limit={1}
+        style={{ fontSize: '0.8rem', margin: '0.5rem' }}
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}

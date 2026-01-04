@@ -1,22 +1,99 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Select,
-  MenuItem,
-  Link,
-  InputLabel,
-  FormControl,
-} from "@mui/material"; // AGREGAR FormControl, InputLabel
+import { Button, Typography, Select, MenuItem, Link } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 import axios from "../../utils/axiosConfig";
 import { toast } from "react-toastify";
+import "../../assets/registerEgresado.css";
 
 const OTRO_VALOR = "___OTRO___"; // Constante para identificar la opción "Otro"
 
 const SEXO_OPTIONS = ["Masculino", "Femenino", "Otro"];
+
+// --- ESTILOS COMUNES PARA TODOS LOS INPUTS (TEXTO Y SELECT) ---
+const CommonInputStyles = (theme) => ({
+  "label + &": {
+    marginTop: theme.spacing(2.9),
+  },
+  // Estilos para la raíz del OutlinedInput (el contenedor con el borde)
+  "& .MuiOutlinedInput-root,": {
+    borderRadius: "8px",
+    paddingRight: 0, // Asegura que el padding no interfiera con EndAdornment
+    backgroundColor: "rgba(245, 245, 245, 1)", // Fondo gris claro
+    boxSizing: "border-box",
+    height: "30px", // Permitir que el padding controle la altura
+
+    // Borde personalizado
+    "& fieldset": {
+      borderColor: "#cacaca", // Borde ligero, como en la imagen
+    },
+    "&:hover fieldset": {
+      borderColor: "rgba(217, 217, 217, 1) !important", // Mantener borde al pasar el ratón
+    },
+    "&.Mui-focused fieldset": {
+      // Usar color primario o un color de enfoque si es necesario, o mantener consistente
+      borderColor: theme.palette.primary.main,
+    },
+  },
+
+  // Estilos para el elemento de entrada real (texto, contraseña o select)
+  "& .MuiOutlinedInput-input, & .MuiSelect-select": {
+    backgroundColor: "transparent", // Fondo gris claro
+    borderRadius: "8px",
+    boxSizing: "border-box",
+    lineHeight: "normal", // Mejor que '1px' para alineación de texto
+
+    // Padding y tamaño de fuente responsivo (Unificado)
+    padding: {
+      xs: "2px 6px 2px 6px",
+      sm: "4px 8px 4px 8px",
+      md: "6px 10px 6px 10px",
+      lg: "8px 12px 8px 12px",
+      xl: "10px 14px 10px 14px",
+    },
+    fontSize: {
+      xs: "0.8rem",
+      sm: "1rem",
+      md: "1.2rem",
+      lg: "1.4rem",
+      xl: "1.6rem",
+    },
+    "& fieldset": {
+      borderColor: "#cacaca", // Borde ligero, como en la imagen
+    },
+  },
+
+  // Ajuste para el ícono del select
+  "& .MuiSelect-icon": {
+    right: {
+      xs: "6px",
+      sm: "8px",
+      md: "10px",
+      lg: "12px",
+      xl: "14px",
+    },
+  },
+});
+
+// Componente para campos de texto/contraseña
+const CustomOutlinedInput = styled(OutlinedInput)(({ theme }) =>
+  CommonInputStyles(theme)
+);
+
+// Componente para campos select
+const CustomSelectField = styled((props) => (
+  <TextField {...props} select variant="outlined" />
+))(({ theme }) => CommonInputStyles(theme));
+// --- FIN ESTILOS COMUNES ---
 
 const RegisterEgresado = () => {
   const [formData, setFormData] = useState({
@@ -123,56 +200,179 @@ const RegisterEgresado = () => {
     }
   };
 
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpPassword = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        mt: 8,
+        width: {
+          xs: "300px",
+          sm: "600px",
+          md: "800px",
+          lg: "900px",
+        },
+
+        margin: {
+          xs: "12px",
+          sm: "14px",
+          md: "16px",
+          lg: "18px",
+          xl: "20px",
+        },
+        padding: {
+          xs: "12px",
+          sm: "14px",
+          md: "16px",
+          lg: "18px",
+          xl: "20px",
+        },
+        top: {
+          xs: "150px",
+          md: "200px",
+          sm: "150px ",
+          xl: "300px",
+        },
+        backgroundColor: "rgba(255, 253, 253, 1)",
+        position: "absolute",
+        borderRadius: "10px",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
       }}
     >
-      <Typography variant="h4">Registro de Egresado</Typography>
+      <Typography
+        variant="h5"
+        sx={{
+          justifySelf: "center",
+        }}
+      >
+        Registro de Egresado
+      </Typography>
       <Box
         component="form"
         onSubmit={handleSubmit}
-        sx={{
-          mt: 3,
-          p: 3,
-          bgcolor: "white",
-          borderRadius: 2,
-          boxShadow: 3,
-          width: "100%",
-          maxWidth: 400,
-        }}
+        className="formulario-registro"
       >
-        <TextField
-          label="Nombre completo"
-          name="nombre_completo"
-          value={formData.nombre_completo}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <TextField
-          label="Teléfono"
-          name="telefono"
-          value={formData.telefono}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
+        <FormControl
+          variant="standard"
+          sx={{
+            width: {
+              xs: "125px",
+              sm: "250px",
+              md: "300px",
+              lg: "350px",
+            },
+            display: "flex",
+            flexGrow: 1,
+            flexShrink: 0,
+            flexDirection: "column",
+          }}
+        >
+          <InputLabel
+            shrink
+            sx={{
+              fontSize: {
+                xs: "1rem",
+                sm: "1.2rem",
+                md: "1.4rem",
+                lg: "1.6rem",
+                xl: "1.8rem",
+              },
+            }}
+          >
+            Nombre Completo
+          </InputLabel>
+
+          <CustomOutlinedInput
+            name="nombre_completo"
+            value={formData.nombre_completo}
+            onChange={handleChange}
+            required
+          />
+        </FormControl>
+        <FormControl
+          variant="standard"
+          sx={{
+            width: {
+              xs: "125px",
+              sm: "250px",
+              md: "300px",
+              lg: "350px",
+            },
+            display: "flex",
+            flexGrow: 1,
+            flexShrink: 0,
+            flexDirection: "column",
+          }}
+        >
+          <InputLabel
+            shrink
+            sx={{
+              fontSize: {
+                xs: "1rem",
+                sm: "1.2rem",
+                md: "1.4rem",
+                lg: "1.6rem",
+                xl: "1.8rem",
+              },
+            }}
+          >
+            Teléfono
+          </InputLabel>
+          <CustomOutlinedInput
+            name="telefono"
+            value={formData.telefono}
+            onChange={handleChange}
+            required
+            // Se eliminaron los sx redundantes de estilo de input
+          />
+        </FormControl>
 
         {/* Generación Select */}
-        <FormControl fullWidth margin="normal" required>
-          <InputLabel id="generacion-label">Generación</InputLabel>
-          <Select
-            labelId="generacion-label"
+        <FormControl
+          variant="standard"
+          sx={{
+            width: {
+              xs: "125px",
+              sm: "250px",
+              md: "300px",
+              lg: "350px",
+            },
+            display: "flex",
+            flexGrow: 1,
+            flexShrink: 0,
+            flexDirection: "column",
+          }}
+        >
+          <InputLabel
+            shrink
+            sx={{
+              fontSize: {
+                xs: "1rem",
+                sm: "1.2rem",
+                md: "1.4rem",
+                lg: "1.6rem",
+                xl: "1.8rem",
+              },
+            }}
+            id="generacion-label"
+          >
+            Generación
+          </InputLabel>
+          <CustomSelectField
+            id="generacion"
             name="generacion"
             value={formData.generacion}
             onChange={handleSelectChange}
-            label="Generación"
+            // Se eliminaron los sx redundantes de estilo de select
           >
             <MenuItem value="" disabled>
               Selecciona tu Generación
@@ -183,32 +383,88 @@ const RegisterEgresado = () => {
               </MenuItem>
             ))}
             <MenuItem value={OTRO_VALOR}>Otro...</MenuItem>
-          </Select>
+          </CustomSelectField>
         </FormControl>
 
-        {/* Generación Otro TextField (Muestra condicionalmente) */}
+        {/* Generación Otro CustomOutlinedInput (Muestra condicionalmente) */}
         {formData.generacion === OTRO_VALOR && (
-          <TextField
-            label="Especifique la Generación"
-            name="otro_generacion"
-            value={formData.otro_generacion}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            required
-          />
+          <FormControl
+            variant="standard"
+            sx={{
+              width: {
+                xs: "125px",
+                sm: "250px",
+                md: "300px",
+                lg: "350px",
+              },
+              display: "flex",
+              flexGrow: 1,
+              flexShrink: 0,
+              flexDirection: "column",
+            }}
+          >
+            <InputLabel
+              shrink
+              sx={{
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.2rem",
+                  md: "1.4rem",
+                  lg: "1.6rem",
+                  xl: "1.8rem",
+                },
+              }}
+            >
+              Especifique la Generación
+            </InputLabel>
+            <CustomOutlinedInput
+              name="otro_generacion"
+              value={formData.otro_generacion}
+              onChange={handleChange}
+              required
+              // Se eliminaron los sx redundantes de estilo de input
+            />
+          </FormControl>
         )}
 
         {/* Carrera Select */}
-        <FormControl fullWidth margin="normal" required>
-          <InputLabel id="carrera-label">Carrera</InputLabel>
-          <Select
-            labelId="carrera-label"
+        <FormControl
+          variant="standard"
+          sx={{
+            gap: "10px",
+            width: {
+              xs: "125px",
+              sm: "250px",
+              md: "300px",
+              lg: "350px",
+            },
+            display: "flex",
+            flexGrow: 1,
+            flexShrink: 0,
+            flexDirection: "column",
+          }}
+        >
+          <InputLabel
+            shrink
+            sx={{
+              fontSize: {
+                xs: "1rem",
+                sm: "1.2rem",
+                md: "1.4rem",
+                lg: "1.6rem",
+                xl: "1.8rem",
+              },
+            }}
+            id="carrera-label"
+          >
+            Carrera
+          </InputLabel>
+          <CustomSelectField
             name="carrera"
+            id="carrera-label"
             value={formData.carrera}
             onChange={handleSelectChange}
-            label="Carrera" // El label debe coincidir con el texto de InputLabel
-            // displayEmpty // DEBEMOS removerlo o asegurarnos de que el primer MenuItem tenga value=""
+            // Se eliminaron los sx redundantes de estilo de select
           >
             {/* Opción deshabilitada para placeholder si no usamos displayEmpty */}
             <MenuItem value="" disabled>
@@ -222,77 +478,280 @@ const RegisterEgresado = () => {
               </MenuItem>
             ))}
             <MenuItem value={OTRO_VALOR}>Otro...</MenuItem>
-          </Select>
+          </CustomSelectField>
         </FormControl>
 
-        {/* Carrera Otro TextField (Muestra condicionalmente) */}
+        {/* Carrera Otro CustomOutlinedInput (Muestra condicionalmente) */}
         {formData.carrera === OTRO_VALOR && (
-          <TextField
-            label="Especifique la Carrera"
-            name="otro_carrera"
-            value={formData.otro_carrera}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            required
-          />
+          <FormControl
+            variant="standard"
+            sx={{
+              width: {
+                xs: "125px",
+                sm: "250px",
+                md: "300px",
+                lg: "350px",
+              },
+              display: "flex",
+              flexGrow: 1,
+              flexShrink: 0,
+              flexDirection: "column",
+            }}
+          >
+            <InputLabel
+              shrink
+              sx={{
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.2rem",
+                  md: "1.4rem",
+                  lg: "1.6rem",
+                  xl: "1.8rem",
+                },
+              }}
+            >
+              Especifique la Carrera
+            </InputLabel>
+
+            <CustomOutlinedInput
+              name="otro_carrera"
+              value={formData.otro_carrera}
+              onChange={handleChange}
+              required
+              // Se eliminaron los sx redundantes de estilo de input
+            />
+          </FormControl>
         )}
 
-        <FormControl fullWidth margin="normal" required>
-            <InputLabel id="sexo-label">Sexo</InputLabel>
-            <Select 
-                labelId="sexo-label"
-                name="sexo" 
-                value={formData.sexo} 
-                onChange={handleSelectChange} // Usar el handler de Select
-                label="Sexo"
-            >
-              <MenuItem value="" disabled>Selecciona tu Sexo</MenuItem>
-              {SEXO_OPTIONS.map(sexo => <MenuItem key={sexo} value={sexo}>{sexo}</MenuItem>)}
-            </Select>
+        <FormControl
+          variant="standard"
+          sx={{
+            gap: "10px",
+            width: {
+              xs: "125px",
+              sm: "250px",
+              md: "300px",
+              lg: "350px",
+            },
+            display: "flex",
+            flexGrow: "1",
+            flexShrink: "0",
+            flexDirection: "column",
+          }}
+        >
+          <InputLabel
+            shrink
+            sx={{
+              fontSize: {
+                xs: "1rem",
+                sm: "1.2rem",
+                md: "1.4rem",
+                lg: "1.6rem",
+                xl: "1.8rem",
+              },
+            }}
+          >
+            Sexo
+          </InputLabel>
+          <CustomSelectField
+            id="sexo-label"
+            name="sexo"
+            value={formData.sexo}
+            onChange={handleSelectChange} // Usar el handler de Select
+            // Se eliminaron los sx redundantes de estilo de select
+          >
+            {/* Se cambió el valor "Selecciona tu Sexo" a un valor vacío para que el placeholder funcione con disabled */}
+            <MenuItem value="" disabled>
+              Selecciona tu Sexo
+            </MenuItem>
+            {SEXO_OPTIONS.map((sexo) => (
+              <MenuItem key={sexo} value={sexo}>
+                {sexo}
+              </MenuItem>
+            ))}
+          </CustomSelectField>
         </FormControl>
+        <FormControl
+          variant="standard"
+          sx={{
+            width: {
+              xs: "125px",
+              sm: "250px",
+              md: "300px",
+              lg: "350px",
+            },
+            display: "flex",
+            flexGrow: 1,
+            flexShrink: 0,
+            flexDirection: "column",
+          }}
+        >
+          <InputLabel
+            shrink
+            sx={{
+              fontSize: {
+                xs: "1rem",
+                sm: "1.2rem",
+                md: "1.4rem",
+                lg: "1.6rem",
+                xl: "1.8rem",
+              },
+            }}
+          >
+            Email
+          </InputLabel>
 
-        <TextField
-          label="Email"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <TextField
-          label="Contraseña"
-          name="password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <TextField
-          label="Confirmar Contraseña"
-          name="confirm_password"
-          type="password"
-          value={formData.confirm_password}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
+          <CustomOutlinedInput
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            // Se eliminaron los sx redundantes de estilo de input
+          />
+        </FormControl>
+        <FormControl
+          variant="standard"
+          sx={{
+            width: {
+              xs: "125px",
+              sm: "250px",
+              md: "300px",
+              lg: "350px",
+            },
+            display: "flex",
+            flexGrow: 1,
+            flexShrink: 0,
+            flexDirection: "column",
+          }}
+        >
+          <InputLabel
+            shrink
+            sx={{
+              fontSize: {
+                xs: "1rem",
+                sm: "1.2rem",
+                md: "1.4rem",
+                lg: "1.6rem",
+                xl: "1.8rem",
+              },
+            }}
+          >
+            Contraseña
+          </InputLabel>
+          <CustomOutlinedInput // Usamos el componente estilizado
+            name="password"
+            id="password"
+            type={showPassword ? "text" : "password"}
+            value={formData.password}
+            onChange={handleChange}
+            required
+            // Se eliminaron los sx redundantes de estilo de input
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label={
+                    showPassword ? "hide the password" : "display the password"
+                  }
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  onMouseUp={handleMouseUpPassword}
+                  // Añadimos un pequeño sx al IconButton si es necesario para centrado vertical o color
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <FormControl
+          variant="standard"
+          sx={{
+            width: {
+              xs: "125px",
+              sm: "250px",
+              md: "300px",
+              lg: "350px",
+            },
+            display: "flex",
+            flexGrow: 1,
+            flexShrink: 0,
+            flexDirection: "column",
+          }}
+        >
+          <InputLabel
+            shrink
+            sx={{
+              fontSize: {
+                xs: "1rem",
+                sm: "1.2rem",
+                md: "1.4rem",
+                lg: "1.6rem",
+                xl: "1.8rem",
+              },
+            }}
+          >
+            Confirmar Contraseña
+          </InputLabel>
+          <CustomOutlinedInput // Usamos el componente estilizado
+            name="confirm_password"
+            type="password"
+            value={formData.confirm_password}
+            onChange={handleChange}
+            required
+            // Se eliminaron los sx redundantes de estilo de input
+          />
+        </FormControl>
 
         <Button
           variant="contained"
           type="submit"
-          fullWidth
-          sx={{ mt: 2, bgcolor: "#001f3f" }}
+          sx={{
+            padding: {
+              xs: "6px 12px",
+              sm: "8px 16px",
+              md: "10px 20px",
+              lg: "12px 24px",
+              xl: "14px 28px",
+            },
+            gridColumn: "span 2",
+            marginTop: "20px",
+            width: "auto",
+            fontSize: {
+              xs: "0.8rem",
+              sm: "1rem",
+              md: "1.2rem",
+              lg: "1.4rem",
+              xl: "1.6rem",
+            },
+            justifySelf: "center",
+            backgroundColor: "var(--button-save)",
+            color: "rgba(245, 245, 245, 1)",
+            textTransform: "none",
+            "&:hover": {
+              backgroundColor: "var(--button-save)",
+              opacity: 0.9,
+            },
+          }}
         >
           Registrar
         </Button>
       </Box>
-      <Link href="/" sx={{ mt: 1, fontSize: "0.9rem" }}>
+      <Link
+        href="/"
+        sx={{
+          mt: 1,
+          fontSize: {
+            xs: "0.8rem",
+            sm: "1rem",
+            md: "1.2rem",
+            lg: "1.4rem",
+            xl: "1.6rem",
+          },
+          justifySelf: "center",
+          display: "flex",
+        }}
+      >
         ¿Ya tienes cuenta? Inicia sesión
       </Link>
     </Box>

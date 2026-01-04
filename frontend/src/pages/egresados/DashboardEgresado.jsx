@@ -31,9 +31,9 @@ const formatWelcomeName = (fullName, sexo) => {
     const firstLastName = parts[firstLastNameIndex];
     name = `${parts.slice(0, firstLastNameIndex).join(' ')} ${firstLastName}`;
   } else if (parts.length === 1) {
-      name = parts[0];
+    name = parts[0];
   }
-  
+
   // Determinar el saludo
   let greeting = "Bienvenid@";
   if (sexo === "Femenino") {
@@ -69,7 +69,7 @@ const DashboardEgresado = () => {
   const [photoVersion, setPhotoVersion] = useState(0); // Forzar recarga de foto
 
   const location = useLocation();
-
+  // hay veces que cuando paso el mouse a traves de la pantalla cuando esta el aviso de inactividad, este se abre y cierra varias veces, las primeras veces no aparece el boton de "permanecer activo" y hasta despues aparece ese botón pero ni siquiera deja presionarlo porque el toast se cierra y se abre de nuevo, por eso se usa el useEffect para que se ejecute cada vez que se cambie la ubicacion de la pantalla
   useEffect(() => {
     const fetchDashboardData = async () => {
       const token = localStorage.getItem("token");
@@ -113,26 +113,126 @@ const DashboardEgresado = () => {
   };
 
   return (
-    <Box sx={{ p: 0, bgcolor: "var(--primary-light)", minHeight: "100%" }}>
-      <Typography variant="h4" sx={{ mb: 2, fontWeight: "bold" }}>
+    <Box sx={{
+      position: "relative",
+      display: "flex",
+      // top: {
+      //   xs: "90px",
+      //   md: "120px",
+      //   lg: "10px",
+      // },
+      // left: {
+      //   xs: "25px",
+      //   md: "300px",
+      //   lg: "350px",
+      // },
+      width: "auto",
+      height: "auto",
+      flexDirection: "column",
+
+    }}>
+      <Typography variant="h4" sx={{
+        fontWeight: "bold",
+        fontSize: {
+          xs: "1.4rem",
+          sm: "1.6rem",
+          md: "2rem",
+          lg: "2.2rem",
+          xl: "2.4rem",
+        },
+
+      }}>
         {formatWelcomeName(profile?.nombre_completo, profile?.sexo)}
       </Typography>
 
-      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+      <Typography variant="subtitle1" sx={{
+        mb: 1,
+        fontSize: {
+          xs: "1rem",
+          sm: "1.2rem",
+          md: "1.4rem",
+          lg: "1.6rem",
+          xl: "1.8rem",
+        },
+      }}>
         Favoritos: {favoritosCount}
       </Typography>
 
-      <Grid container spacing={4}>
+      <Grid container sx={{
+        width: "100%",
+        height: "100%",
+        display: {
+          xs: "flex",
+          sm: "grid"
+        },
+        flexDirection: {
+          xs: "column",
+          sm: "none"
+        },
+        gap: {
+          xs: "10px",
+          md: "20px",
+          lg: "40px",
+          xl: "50px",
+        },
+        gridTemplateColumns: {
+          xs: "1fr",
+          sm: "repeat(2, 1fr)",
+        },
+        gridTemplateRows: {
+          xs: "1fr",
+          sm: "repeat(1, 1fr)",
+        },
+        alignSelf: "center",
+        justifySelf: "center",
+        alignItems: "center",
+        justifyContent: "center",
+
+      }}>
         {/* === COLUMNA IZQUIERDA (Perfil y Tabs) === */}
-        <Grid item xs={12} md={6}>
+        <Grid item sx={{
+          gridRowStart: "1",
+          gridColumnStart: "1",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          mb: 1,
+        }}>
           {/* Bloque 1: Tarjeta Principal de Perfil */}
-          <Card sx={{ bgcolor: "var(--card-bg)", p: 3, boxShadow: 3, mb: 4 }}>
+          <Card
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+
+              p: {
+                xs: "10px",
+                md: "14px",
+              },
+              width: {
+                xs: "400px",
+                sm: "200px",
+                md: "250px",
+                xl: "400px",
+              },
+              height: {
+                xs: "auto",
+                sm: "450px",
+                md: "500px",
+              },
+              bgcolor: "var(--gray-form)",
+              boxShadow: 3,
+            }}>
             <CardContent
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                p: 0,
+                justifyContent: "space-between",
+                justifySelf: "center",
+                width: "100%",
+                height: "100%"
               }}
             >
               <Avatar
@@ -145,16 +245,42 @@ const DashboardEgresado = () => {
                 }}
               />
 
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              <Typography variant="h6" sx={{
+                fontWeight: "bold", textAlign: "center", fontSize: {
+                  xs: "1rem",
+                  sm: "1.2rem",
+                  md: "1.4rem",
+                }
+              }}>
                 {profile?.nombre_completo || "N/A"}
               </Typography>
-              <Typography variant="body1">
+              <Typography variant="body1" sx={{
+                fontSize: {
+                  xs: "0.8rem",
+                  sm: "1rem",
+                  md: "1.2rem",
+                }
+              }}>
                 {profile?.carrera || "N/A"}
               </Typography>
-              <Typography variant="body1">
+              <Typography variant="body1" sx={{
+                fontSize: {
+                  xs: "0.8rem",
+                  sm: "1rem",
+                  md: "1.2rem",
+                }
+              }}>
+                Generación:
                 {profile?.generacion || "N/A"}
               </Typography>
-              <Typography variant="body1" sx={{ mb: 2 }}>
+              <Typography variant="body1" sx={{
+                mb: 1, fontSize: {
+                  xs: "0.8rem",
+                  sm: "1rem",
+                  md: "1.2rem",
+                },
+                textAlign: "center"
+              }}>
                 Estado laboral: {profile?.estado_laboral || "N/A"}
               </Typography>
 
@@ -178,45 +304,128 @@ const DashboardEgresado = () => {
         {/* === COLUMNA DERECHA (Vacantes Recomendadas) === */}
         <Grid
           item
-          xs={10}
-          md={6}
           sx={{
             display: "flex",
             flexDirection: "column",
-            flexWrap: "nowrap",
-            alignContent: "center",
             justifyContent: "space-between",
-            mb: 2,
-            width: "500px",
+            mb: 1,
+            gridRowStart: "1",
+            gridColumnStart: "2",
+            width: {
+              xs: "400px",
+              lg: "600px",
+              xl: "auto",
+            },
+
           }}
         >
           {/* Bloque 2: Tabs de Detalle */}
-          <Card sx={{ bgcolor: "var(--gray-form)", p: 0, boxShadow: 3, mb: 2 }}>
+          <Card sx={{
+            bgcolor: "var(--gray-form)",
+            boxShadow: 3, mb: 2,
+
+            height: {
+              xs: "auto",
+              md: "250px",
+            },
+            gap: {
+              xs: "10px",
+              sm: "20px",
+              md: "30px",
+              lg: "40px",
+              xl: "50px",
+            },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            justifySelf: "center",
+
+          }}>
             <Tabs
               value={tabValue}
               onChange={handleTabChange}
               sx={{
                 borderBottom: 1,
+                gap: "10px",
+                display: "flex",
+                width: "auto",
+                justifyContent: "center",
+                alignItems: "center",
+
                 borderColor: "divider",
                 "& .MuiTabs-indicator": { bgcolor: "var(--accent)" },
               }}
             >
-              <Tab label="Personal" sx={{ textTransform: "none" }} />
-              <Tab label="Empleo" sx={{ textTransform: "none" }} />
-              <Tab label="Redes" sx={{ textTransform: "none" }} />
-              <Tab label="Historial" sx={{ textTransform: "none" }} />
+              <Tab label="Personal" sx={{
+                textTransform: "none", fontSize: {
+                  xs: "0.7rem",
+                  sm: "0.8rem",
+                  md: "0.9rem",
+                  lg: "1rem",
+                  xl: "1.1rem",
+                }
+              }} />
+              <Tab label="Empleo" sx={{
+                textTransform: "none", fontSize: {
+                  xs: "0.7rem",
+                  sm: "0.8rem",
+                  md: "0.9rem",
+                  lg: "1rem",
+                  xl: "1.1rem",
+                }
+              }} />
+              <Tab label="Redes" sx={{
+                textTransform: "none", fontSize: {
+                  xs: "0.7rem",
+                  sm: "0.8rem",
+                  md: "0.9rem",
+                  lg: "1rem",
+                  xl: "1.1rem",
+                }
+              }} />
+              <Tab label="Historial" sx={{
+                textTransform: "none", fontSize: {
+                  xs: "0.7rem",
+                  sm: "0.8rem",
+                  md: "0.9rem",
+                  lg: "1rem",
+                  xl: "1.1rem",
+                }
+              }} />
             </Tabs>
 
-            <Box sx={{ p: 3, minHeight: "200px" }}>
+            <Box sx={{ width: "100%", height: "100%", overflowY: "auto", display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center" }}>
               {tabValue === 0 && ( // Personal
-                <Box>
-                  <Typography variant="body1">
+                <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                  <Typography variant="body1" sx={{
+                textTransform: "none", fontSize: {
+                  xs: "0.7rem",
+                  sm: "0.8rem",
+                  md: "0.9rem",
+                  lg: "1rem",
+                  xl: "1.1rem",
+                }}}>
                     <strong>Correo:</strong> {profile?.email || "N/A"}
                   </Typography>
-                  <Typography variant="body1">
+                  <Typography variant="body1" sx={{
+                textTransform: "none", fontSize: {
+                  xs: "0.7rem",
+                  sm: "0.8rem",
+                  md: "0.9rem",
+                  lg: "1rem",
+                  xl: "1.1rem",
+                }}}>
                     <strong>Teléfono:</strong> {profile?.telefono || "N/A"}
                   </Typography>
-                  <Typography variant="body1">
+                  <Typography variant="body1" sx={{
+                textTransform: "none", fontSize: {
+                  xs: "0.7rem",
+                  sm: "0.8rem",
+                  md: "0.9rem",
+                  lg: "1rem",
+                  xl: "1.1rem",
+                }}}>
                     <strong>Ubicación:</strong> {profile?.ubicacion || "N/A"}
                   </Typography>
                 </Box>
@@ -258,8 +467,8 @@ const DashboardEgresado = () => {
               {tabValue === 3 && ( // Historial
                 <Box>
                   {profile?.historial &&
-                  Array.isArray(profile.historial) &&
-                  profile.historial.length > 0 ? (
+                    Array.isArray(profile.historial) &&
+                    profile.historial.length > 0 ? (
                     profile.historial.map((item, index) => (
                       <Typography key={index}>
                         {item.fecha}: {item.descripcion}
@@ -274,14 +483,14 @@ const DashboardEgresado = () => {
           </Card>
 
           {/* Bloque 3: Vacantes Recomendadas */}
-          <Card sx={{ mb: 1 }}>
+          <Card>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
               Vacantes recomendadas
             </Typography>
 
             <Box
               sx={{
-                maxHeight: "calc(100vh - 200px)",
+
                 overflowY: "auto",
                 pr: 1,
               }}
@@ -291,9 +500,9 @@ const DashboardEgresado = () => {
                   <CircularProgress />
                 </Box>
               ) : (
-                <Grid container spacing={3}>
+                <Grid container>
                   {recommendedVacancies.map((vac) => (
-                    <Grid item xs={12} key={vac.id}>
+                    <Grid item key={vac.id}>
                       <Card
                         sx={{
                           bgcolor: "var(--card-bg)",

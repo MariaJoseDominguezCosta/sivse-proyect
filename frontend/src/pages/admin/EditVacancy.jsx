@@ -46,11 +46,12 @@ const EditVacancy = () => {
       try {
         const res = await axios.get(`/admin/vacantes/${id}`);
         const data = res.data;
-        const empresa_id = data.empresa_id || (data.empresa ? data.empresa.id : '');
-        setFormData(prevData => ({
-            ...prevData, // Mantenemos la estructura inicial si es necesario
-            ...data, // Sobrescribimos con los datos de la API (titulo, descripcion, etc.)
-            empresaAsociada: empresa_id,
+        const empresa_id =
+          data.empresa_id || (data.empresa ? data.empresa.id : "");
+        setFormData((prevData) => ({
+          ...prevData, // Mantenemos la estructura inicial si es necesario
+          ...data, // Sobrescribimos con los datos de la API (titulo, descripcion, etc.)
+          empresaAsociada: empresa_id,
         }));
       } catch (err) {
         console.error("Error fetching vacancy", err);
@@ -78,61 +79,164 @@ const EditVacancy = () => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} className="form-container">
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        gap: "10px",
+        top: {
+          xs: "200px",
+          lg: "250px",
+        },
+        p: {
+          xs: "10px",
+          sm: "15px",
+          md: "20px",
+          lg: "25px",
+          xl: "30px",
+        },
+        width: {
+          xs: "450px",
+          md: "500px",
+          lg: "600px",
+          xl: "700px",
+        },
+        justifySelf: "center",
+        alignSelf: "center",
+        backgroundColor: "#FFFDFD",
+        borderRadius: "8px",
+        boxShadow: 3,
+        display: "grid",
+        flexDirection: "column",
+        position: "absolute",
+        WebkitAlignItems: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        WebkitJustifyContent: "center",
+        gridTemplateRows: "repeat(5, 1fr)",
+        gridTemplateColumns: "repeat(2, 1fr)",
+      }}
+    >
       <TextField
         name="titulo"
         label="Título"
         value={formData.titulo}
         onChange={handleChange}
-        fullWidth
-        margin="normal"
-        placeholder="Value"
-      />
+        placeholder="Ej: Desarrollador Frontend"
+        sx={{
+          width: {
+            xs: "150px",
+            sm: "200px",
+            md: "250px",
+            lg: "300px",
+            xl: "350px",
+          },
+          gridRowStart: "1",
+          gridRowEnd: "2",
+          gridColumnStart: "1",
+          gridColumnEnd: "2",
+        }} />
       <TextField
         name="salario_estimado"
         label="Salario"
         value={formData.salario_estimado}
         onChange={handleChange}
-        fullWidth
-        margin="normal"
-        placeholder="Value"
+        placeholder="Ej: 20000"
+        sx={{
+          width: {
+            xs: "150px",
+            sm: "200px",
+            md: "250px",
+            lg: "300px",
+            xl: "350px",
+          },
+          gridRowStart: "1",
+          gridRowEnd: "2",
+          gridColumnStart: "2",
+          gridColumnEnd: "3",
+        }}
       />
       <TextField
         name="descripcion"
         label="Descripción"
         value={formData.descripcion}
         onChange={handleChange}
-        fullWidth
-        margin="normal"
         multiline
-        placeholder="Value"
+        placeholder="Ej: Descripción de la vacante"
+        sx={{
+          width: {
+            xs: "150px",
+            sm: "200px",
+            md: "250px",
+            lg: "300px",
+            xl: "350px",
+          },
+          gridRowStart: "2",
+          gridRowEnd: "4",
+          gridColumnStart: "1",
+          gridColumnEnd: "2",
+        }}
+
       />
       <TextField
         name="ubicacion"
         label="Ubicación"
         value={formData.ubicacion}
         onChange={handleChange}
-        fullWidth
-        margin="normal"
         placeholder="Ej: Ciudad de México o Remoto"
+        sx={{
+          width: {
+            xs: "150px",
+            sm: "200px",
+            md: "250px",
+            lg: "300px",
+            xl: "350px",
+          },
+          gridRowStart: "2",
+          gridRowEnd: "3",
+          gridColumnStart: "2",
+          gridColumnEnd: "3",
+        }}
       />
       <TextField
         name="modalidad"
         label="Modalidad"
         value={formData.modalidad}
         onChange={handleChange}
-        fullWidth
-        margin="normal"
-        placeholder="Value"
+        sx={{
+          width: {
+            xs: "150px",
+            sm: "200px",
+            md: "250px",
+            lg: "300px",
+            xl: "350px",
+          },
+          gridRowStart: "4",
+          gridRowEnd: "5",
+          gridColumnStart: "1",
+          gridColumnEnd: "2",
+        }}
+        placeholder="Ej: Presencial o Remoto"
       />
       <TextField
         name="requisitos"
         label="Requisitos (Separados con comas)"
         value={formData.requisitos}
         onChange={handleChange}
-        fullWidth
-        margin="normal"
-        placeholder="Value"
+        sx={{
+          width: {
+            xs: "150px",
+            sm: "200px",
+            md: "250px",
+            lg: "300px",
+            xl: "350px",
+          },
+          gridRowStart: "3",
+          gridRowEnd: "4",
+          gridColumnStart: "2",
+          gridColumnEnd: "3",
+        }}
+        placeholder="Ej: Experiencia en HTML, CSS y JavaScript"
       />
       <FormControlLabel
         control={
@@ -143,13 +247,39 @@ const EditVacancy = () => {
           />
         }
         label="Estado Activa/Inactiva"
+        sx={{
+          width: {
+            xs: "150px",
+            sm: "200px",
+            md: "250px",
+            lg: "300px",
+            xl: "350px",
+          },
+          gridRowStart: "4",
+          gridRowEnd: "5",
+          gridColumnStart: "2",
+          gridColumnEnd: "3",
+          display: "flex",
+          justifySelf: "center",
+        }}
       />
       <Select
         name="empresaAsociada"
         value={formData.empresaAsociada || ""} // Usar '' si es null o undefined para evitar errores de MUI
         onChange={handleChange}
-        fullWidth
-        margin="normal"
+        sx={{
+          width: {
+            xs: "150px",
+            sm: "200px",
+            md: "250px",
+            lg: "300px",
+            xl: "350px",
+          },
+          gridRowStart: "5",
+          gridRowEnd: "6",
+          gridColumnStart: "1",
+          gridColumnEnd: "2",
+        }}
         displayEmpty
       >
         <MenuItem value="" disabled>
@@ -167,21 +297,46 @@ const EditVacancy = () => {
         type="date"
         value={formData.fecha_publicacion}
         onChange={handleChange}
-        fullWidth
-        margin="normal"
-        placeholder="Value"
+        sx={{
+          width: {
+            xs: "150px",
+            sm: "200px",
+            md: "250px",
+            lg: "300px",
+            xl: "350px",
+          },
+          gridRowStart: "5",
+          gridRowEnd: "6",
+          gridColumnStart: "2",
+          gridColumnEnd: "3",
+        }}
+        placeholder="Ej: 2023-08-15"
         InputLabelProps={{
           shrink: true,
         }}
       />
-      <Box className="buttons">
+      <Box component="div"
+        sx={{
+          gridColumn: "span 2",
+          display: "flex",
+          gap: 2,
+          justifyContent: "center",
+          marginTop: 1,
+        }}>
         <Button
-          className="btn-cancel"
+          variant="outlined"
           onClick={() => navigate("/admin/vacantes")}
+          sx={{
+            p: {
+              xs: 1,
+            },
+            color: "rgba(30, 30, 30, 1)",
+            borderColor: "rgba(118, 118, 118, 1)",
+          }}
         >
           Cancelar
         </Button>
-        <Button className="btn-save" type="submit">
+        <Button variant="contained" type="submit" sx={{ p: { xs: 1 }, bgcolor: "rgba(44, 44, 44, 1)" }}>
           Guardar
         </Button>
       </Box>

@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PrivateRoute from './components/common/PrivateRoute';
+import "./app.css";
 
 // Common Pages
 import Login from './pages/common/Login';
@@ -33,59 +34,130 @@ import FavoritesList from './pages/egresados/FavoritesList';
 import VacantesList from './pages/egresados/VacantesList';
 import VacanteDetail from './pages/egresados/VacanteDetail';
 
+
+// Función de utilidad para Debounce
+// Esto limita la frecuencia con la que se llama a una función.
+const debounce = (func, delay) => {
+  let timeout;
+  return function(...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), delay);
+  };
+};
+
+// **NUEVO:** Componente de Acción para el Toast de Advertencia
+const InactivityWarningContent = ({ closeToast, resetTimer }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <p style={{ margin: 0 }}>Tu sesión está a punto de expirar. ¿Deseas permanecer activo?</p>
+    <button
+      onClick={() => {
+        resetTimer();   // Llama a la función para reiniciar los temporizadores
+        closeToast();   // Cierra la notificación
+      }}
+      // Estilos para que se vea como un botón de acción simple
+      style={{
+        alignSelf: 'flex-start',
+        padding: '6px 12px',
+        backgroundColor: '#4CAF50', // Color verde para "activo"
+        color: 'white',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+      }}
+    >
+      Permanecer Activo
+    </button>
+  </div>
+);
+
+
 // **NUEVO COMPONENTE:** Lógica de Inactividad Separada
 const InactivityMonitor = ({ isAuthenticated }) => {
   const navigate = useNavigate();
   
   // La lógica de inactividad solo debe ejecutarse si isAuthenticated es TRUE
+  
+  // Usamos useCallback para que startTimer tenga una referencia estable
+  const startTimer = useCallback(() => {
+    
+    // Si no está autenticado, simplemente salimos.
+    if (!isAuthenticated) return; 
+
+    // Limpiamos los timeouts si existen (no los manejamos como estado aquí)
+    let inactivityTimeoutId = window.__inactivityTimeoutId;
+    let warningTimeoutId = window.__warningTimeoutId;
+
+    clearTimeout(inactivityTimeoutId);
+    clearTimeout(warningTimeoutId);
+    toast.dismiss(); // Asegura que se cierre cualquier toast de advertencia abierto
+
+    // Temporizador de advertencia
+    warningTimeoutId = setTimeout(() => {
+      const CustomContent = ({ closeToast }) => (
+        <InactivityWarningContent closeToast={closeToast} resetTimer={startTimer} />
+      );
+
+      toast.warn(CustomContent, {
+        position: 'top-right',
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+      });
+      window.__warningTimeoutId = warningTimeoutId;
+    }, 15 * 60 * 1000 - 1 * 60 * 1000); // 14 minutos
+
+    // Temporizador principal de inactividad
+    inactivityTimeoutId = setTimeout(() => {
+      localStorage.removeItem('token');
+      navigate('/');
+      toast.info('Sesión cerrada por inactividad.', { autoClose: 3000 });
+      window.__inactivityTimeoutId = undefined; // Limpiar al expirar
+      window.__warningTimeoutId = undefined;
+    }, 15 * 60 * 1000); // 15 minutos
+
+    // Almacenamos en el objeto global para poder accederlos desde fuera de este scope
+    // Esto es una técnica para persistir timers sin usar useRef o useState, que son difíciles en listeners globales.
+    window.__inactivityTimeoutId = inactivityTimeoutId;
+    window.__warningTimeoutId = warningTimeoutId;
+
+  }, [navigate, isAuthenticated]); // Dependencias
+
   useEffect(() => {
-    if (!isAuthenticated) return; // Salir si no está autenticado
+    if (!isAuthenticated) {
+      // Limpiar en caso de logout manual
+      clearTimeout(window.__inactivityTimeoutId);
+      clearTimeout(window.__warningTimeoutId);
+      toast.dismiss();
+      return; 
+    }
 
-    let inactivityTimeoutId;
-    let warningTimeoutId;
+    // Usamos debouce para limitar la frecuencia con la que se llama a startTimer
+    const DEBOUNCE_DELAY_MS = 1000; // Solo permitir una llamada a startTimer por segundo
+    const debouncedStartTimer = debounce(startTimer, DEBOUNCE_DELAY_MS);
 
-    // Configuración del tiempo de inactividad
-    const INACTIVITY_TIMEOUT = 15 * 60 * 1000;
-    const WARNING_TIMEOUT = 1 * 60 * 1000;
-
-    const resetTimeout = () => {
-      clearTimeout(inactivityTimeoutId);
-      clearTimeout(warningTimeoutId);
-
-      // ... (Lógica de advertencia de timeout, es la misma) ...
-      warningTimeoutId = setTimeout(() => {
-        toast.warn('Tu sesión está a punto de expirar. ¿Deseas permanecer activo?', {
-          position: 'top-right',
-          autoClose: false,
-          closeOnClick: false,
-          draggable: false,
-          onClose: () => resetTimeout(), 
-          action: {
-            label: 'Permanecer Activo',
-            onClick: () => resetTimeout(),
-          },
-        });
-      }, INACTIVITY_TIMEOUT - WARNING_TIMEOUT);
-
-
-      // Cierre de sesión después del tiempo total
-      inactivityTimeoutId = setTimeout(() => {
-        localStorage.removeItem('token');
-        navigate('/');
-        toast.info('Sesión cerrada por inactividad.', { autoClose: 3000 });
-      }, INACTIVITY_TIMEOUT);
-    };
-
+    // Eventos que reinician el temporizador
     const events = ['mousemove', 'keydown', 'scroll', 'touchstart'];
-    events.forEach((event) => window.addEventListener(event, resetTimeout));
-    resetTimeout();
+    
+    // Añadir event listeners
+    events.forEach((event) => window.addEventListener(event, debouncedStartTimer));
+    
+    // Iniciar los temporizadores por primera vez
+    startTimer();
 
+    // Limpiar en el desmontaje del componente
     return () => {
-      events.forEach((event) => window.removeEventListener(event, resetTimeout));
-      clearTimeout(inactivityTimeoutId);
-      clearTimeout(warningTimeoutId);
+      // Limpiar al desmontar
+      clearTimeout(window.__inactivityTimeoutId);
+      clearTimeout(window.__warningTimeoutId);
+      toast.dismiss();
+
+      // Remover listeners usando la misma referencia de función debounced
+      events.forEach((event) => window.removeEventListener(event, debouncedStartTimer));
     };
-  }, [navigate, isAuthenticated]); // Re-ejecutar solo si isAuthenticated cambia
+
+  }, [isAuthenticated, startTimer]); // startTimer es una dependencia estable gracias a useCallback
 
   return null; // Este componente no renderiza nada visible
 };
@@ -116,7 +188,7 @@ const AppContent = () => {
         <Route path="/admin/reportes" element={<AdminLayout title="Reportes"><ReportsStats /></AdminLayout>} />
       </Route>
 
-       {/* Egresado routes */}
+      {/* Egresado routes */}
       <Route element={<PrivateRoute allowedRoles={['egresado']} />}>
         <Route path="/egresado" element={<EgresadoLayout title=""><DashboardEgresado /></EgresadoLayout>} />
         <Route path="/egresados/perfil/edit" element={<EgresadoLayout title="Perfil del Egresado"><EditPerfil /></EgresadoLayout>} /> {/* Título corregido según imagen */}
@@ -132,7 +204,6 @@ function App() {
   const isAuthenticated = !!localStorage.getItem('token');
   return (
     <Router>
-      <ToastContainer />
       <InactivityMonitor isAuthenticated={isAuthenticated} /> {/* Renderizar el monitor aquí */}
       <AppContent />
     </Router>

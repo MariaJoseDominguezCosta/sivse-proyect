@@ -33,20 +33,45 @@ const RegisterAdmin = () => {
         try {
             // Usar la instancia de axios configurada
             const res = await axios.post("/admin/register", dataToSend);
-            
+
             // Mostrar mensaje de éxito y redirigir
-            toast.success(res.data.message || "Administrador registrado exitosamente.");
+            toast.success(
+                res.data.message || "Administrador registrado exitosamente."
+            );
             navigate("/admin"); // Redirigir al dashboard de admin tras el registro
         } catch (err) {
-            console.error("Error registering admin:", err.response?.data || err.message);
-            toast.error(err.response?.data?.error || "Error al registrar el administrador.");
+            console.error(
+                "Error registering admin:",
+                err.response?.data || err.message
+            );
+            toast.error(
+                err.response?.data?.error || "Error al registrar el administrador."
+            );
         }
     };
 
     return (
-        <Container maxWidth="sm">
-            <Box sx={{ mt: 5, p: 3, boxShadow: 3, borderRadius: 2, bgcolor: 'background.paper' }}>
-                <Typography variant="h4" gutterBottom>Registro de Administrador</Typography>                
+        <Container
+            maxWidth="sm"
+            sx={{ position: "relative", display: "flex", top: 100, justifySelf: "center", alignSelf: "center" }}
+        >
+            <Box
+                sx={{
+                    mt: 5,
+                    p: 3,
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    bgcolor: "background.paper",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 2,
+                    
+                }}
+            >
+                <Typography variant="h4" gutterBottom>
+                    Registro de Administrador
+                </Typography>
                 <form onSubmit={handleSubmit}>
                     <TextField
                         name="email"
@@ -77,14 +102,20 @@ const RegisterAdmin = () => {
                         margin="normal"
                         required
                     />
-                    <Button type="submit" variant="contained" color="primary" fullWidth>
+                    <Button type="submit" variant="contained" color="primary" 
+                        sx={{
+                            p: { xs: 1 },
+                            bgcolor: "rgba(44, 44, 44, 1)",
+                            justifySelf: "center",
+                            mt: 2,
+                            display: "flex",
+                        }}>
                         Registrar
                     </Button>
                 </form>
             </Box>
         </Container>
     );
-    
 };
 
 export default RegisterAdmin;
