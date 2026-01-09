@@ -90,7 +90,7 @@ const Login = () => {
               <div
                 style={{
                   color: "red",
-                  fontSize: "0.8rem",
+                  fontSize: "0.9rem",
                   marginBottom: "2px",
                 }}
               >
@@ -118,7 +118,7 @@ const Login = () => {
                 borderRadius: "8px",
                 backgroundColor: "var(--button-save)",
                 color: "rgba(245, 245, 245, 1)",
-                fontSize: "1rem",
+                fontSize: "0.95rem",
                 textTransform: "none",
                 marginTop: "10px",
                 "&:hover": {
@@ -134,10 +134,14 @@ const Login = () => {
       </Formik>
 
       {/* Links de recuperación y registro */}
-      <Link href="/recover" variant="body2" className="login-text-link" >
+      <Link href="/recover" variant="body2" className="login-text-link" sx={{
+        fontSize: "0.95rem"
+      }} >
         ¿Olvidaste tu contraseña?
       </Link>
-      <Link href="/register" variant="body2" className="login-text-link">
+      <Link href="/register" variant="body2" className="login-text-link" sx={{
+        fontSize: "0.95rem"
+      }}>
         Regístrate como egresado
       </Link>
     </Box>

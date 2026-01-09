@@ -66,9 +66,18 @@ const FavoritesList = () => {
     };
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "auto", alignItems: "center", position: "relative", justifyContent: "space-between", gap: "20px", paddingBottom: "20px", paddingTop: "20px" }}>
+        <Box 
+        sx={{ 
+            display: "flex", 
+            flexDirection: "column", 
+            height: "auto",
+             width: "auto",   
+             justifyContent: "space-between", 
+             gap: "20px", 
+             paddingBottom: "20px", 
+             paddingTop: "20px" }}>
             <Box sx={{
-                display: "flex", position: "relative",
+                display: "flex", 
                 width: {
                     xs: "350px",
                     sm: "400px",
@@ -84,6 +93,7 @@ const FavoritesList = () => {
                     lg: "35px",
                 },
                 marginBottom: "10px",
+                alignSelf: "center"
 
             }}>
                 <TextField placeholder="Búsqueda" value={search} onChange={(e) => setSearch(e.target.value)} sx={{
@@ -114,7 +124,7 @@ const FavoritesList = () => {
                 }}
                 />
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center", position: "relative", gap: "20px" }}>
+            <Box sx={{ display: "flex", alignItems: "center", position: "relative", gap: "20px", alignSelf: "center"}}>
                 <Select value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} displayEmpty
                     sx={{
                         fontSize: {
@@ -161,17 +171,17 @@ const FavoritesList = () => {
                 flexDirection: "column",
                 alignItems: "stretch",
                 justifyContent: "stretch",
-                justifySelf: "center",
-                alignSelf: "center",
+                alignSelf:{ xs:"center", sm: "center", md: "center"},
                 width: {
-                    xs: "400px",
-                    sm: "500px",
+                    xs: "80vw",
+                    sm: "545px",
                     md: "550px",
+                    lg: "600px",
                 },
                 boxShadow: 3,
             }}>
 
-                <Table sx={{ minWidth: 300 }} aria-label="favorites table">
+                <Table sx={{ minWidth: "300px" }} aria-label="favorites table">
                     <TableHead>
                         <TableRow stickyHeader sx={{
                             flexDirection: "row",
