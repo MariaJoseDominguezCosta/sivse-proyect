@@ -7,4 +7,5 @@
     grid-template-columns: repeat(2, 1fr);
     align-self: center;
     justify-self: center;
+    position: relative;
 }

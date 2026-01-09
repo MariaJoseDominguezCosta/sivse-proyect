@@ -42,8 +42,7 @@ const EditCompany = () => {
       sx={{
         gap: "10px",
         top: {
-          xs: "200px",
-          lg: "250px",
+          xs: "50px",
         },
         p: {
           xs: "10px",
@@ -65,7 +64,7 @@ const EditCompany = () => {
         boxShadow: 3,
         display: "grid",
         flexDirection: "column",
-        position: "absolute",
+        position: "relative",
         WebkitAlignItems: "center",
         alignItems: "center",
         justifyContent: "center",
@@ -172,7 +171,6 @@ const EditCompany = () => {
           gridColumnStart: "1",
           gridColumnEnd: "2",
           display: "flex",
-          justifySelf: "center",
         }} />
       <Box component="div"
         sx={{

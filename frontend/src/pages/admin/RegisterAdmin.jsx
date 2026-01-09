@@ -1,6 +1,6 @@
 // src/pages/admin/RegisterAdmin.jsx - Página de registro de administradores
 import React, { useState } from "react";
-import { TextField, Button, Container, Typography, Box } from "@mui/material";
+import { TextField, Button, Container, Typography, Box, CircularProgress } from "@mui/material"; // Importar CircularProgress
 import axios from "../../utils/axiosConfig";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ const RegisterAdmin = () => {
         password: "",
         confirm_password: "",
     });
+    const [loading, setLoading] = useState(false); // Nuevo estado de carga
 
     const navigate = useNavigate();
 
@@ -30,6 +31,9 @@ const RegisterAdmin = () => {
             email: formData.email,
             password: formData.password,
         };
+
+        setLoading(true); // Iniciar carga
+
         try {
             // Usar la instancia de axios configurada
             const res = await axios.post("/admin/register", dataToSend);
@@ -47,17 +51,24 @@ const RegisterAdmin = () => {
             toast.error(
                 err.response?.data?.error || "Error al registrar el administrador."
             );
+        } finally {
+            setLoading(false); // Finalizar carga
         }
     };
 
     return (
         <Container
             maxWidth="sm"
-            sx={{ position: "relative", display: "flex", top: 100, justifySelf: "center", alignSelf: "center" }}
+            sx={{
+                position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center", // Mejor usar alignItems para centrar verticalmente si el Box no ocupa todo el alto
+                minHeight: '70vh' // Ajuste para visualizar el centrado
+            }}
         >
             <Box
                 sx={{
-                    mt: 5,
                     p: 3,
                     boxShadow: 3,
                     borderRadius: 2,
@@ -66,13 +77,20 @@ const RegisterAdmin = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     gap: 2,
-                    
+                    width: '100%' // Asegurar que el Box use el ancho de su Container
                 }}
             >
-                <Typography variant="h4" gutterBottom>
+                <Typography variant="h4" gutterBottom align="center" sx={{
+                    fontWeight: "bold",
+                    fontSize: {
+                        xs: "1.4rem",
+                        sm: "1.6rem",
+                        md: "1.8rem",
+                    },
+                }}>
                     Registro de Administrador
                 </Typography>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} style={{ width: '100%' }}>
                     <TextField
                         name="email"
                         label="Correo"
@@ -102,15 +120,21 @@ const RegisterAdmin = () => {
                         margin="normal"
                         required
                     />
-                    <Button type="submit" variant="contained" color="primary" 
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        disabled={loading} // Deshabilitar el botón durante la carga
                         sx={{
                             p: { xs: 1 },
-                            bgcolor: "rgba(44, 44, 44, 1)",
-                            justifySelf: "center",
                             mt: 2,
                             display: "flex",
-                        }}>
-                        Registrar
+                            justifySelf: "center",
+                            justifyContent: "center", // Centrar contenido (spinner)
+                            bgcolor: 'var(--button-save)',
+                            '&:hover': { bgcolor: 'var(--button-save)', opacity: 0.9 }
+                        }}
+                    >
+                        {loading ? <CircularProgress size={24} color="inherit" /> : "Registrar"}
                     </Button>
                 </form>
             </Box>

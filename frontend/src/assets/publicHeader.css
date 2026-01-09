@@ -1,53 +1,37 @@
 /* src/components/PublicHeader.css */
 .header-elm {
-  width: 100%;
   height: 200px;
-  position: absolute;
+  padding: 0px 20px 0px 20px;
+  position: relative;
   align-items: center;
-  flex-shrink: 1;
-  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   background-color: rgba(27, 57, 107, 1);
 }
 
 .text {
-  top: 0px;
-  left: 0px;
   color: rgba(245, 245, 245, 1);
-  right: 0px;
   width: auto;
-  bottom: 0px;
-  height: auto;
-  margin: auto;
-  position: absolute;
+  position: relative;
   font-size: 64px;
   align-self: center;
   font-style: Semi Bold;
   text-align: center;
-  align-items: center;
   font-family: Inter;
   font-weight: 700;
-  line-height: 1;
   font-stretch: normal;
-  justify-content: center;
   text-decoration: none;
 }
 
 .image5-elm1 {
-  top: 0px;
-  bottom: 0px;
-  margin: auto;
-  right: 200px;
   width: 200px;
-  position: absolute;
+  position: relative;
 }
 
 .image5-elm2 {
-  top: 0px;
-  left: 200px;
-  bottom: 0px;
   width: 150px;
-  margin: auto;
-  position: absolute;
+  position: relative;
 }
 
 @media (min-width: 1536px) {
@@ -55,23 +39,16 @@
     height: 120px;
   }
   .text {
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
     margin: auto;
     font-size: 48px;
     text-align: center;
   }
   .image5-elm1 {
-    right: 100px;
-    bottom: 0px;
     width: 120px;
     display: block;
     padding-right: 0px;
   }
   .image5-elm2 {
-    left: 100px;
     width: 120px;
   }
 }
@@ -82,11 +59,9 @@
   }
   .image5-elm1 {
     width: 100px;
-    right: 50px;
   }
   .image5-elm2 {
     width: 100px;
-    left: 50px;
   }
 }
 
@@ -97,7 +72,6 @@
   .text {
     color: rgb(245, 245, 245);
     margin: auto;
-    position: absolute;
     font-size: 35px;
     align-self: center;
     text-align: center;
@@ -106,15 +80,10 @@
     font-stretch: normal;
   }
   .image5-elm1 {
-    right: 50px;
-    bottom: 0px;
     width: 80px;
     margin: auto;
   }
   .image5-elm2 {
-    left: 50px;
-    top: 0px;
-    bottom: 0px;
     width: 80px;
     margin: auto;
   }
@@ -128,14 +97,10 @@
     font-size: 30px;
   }
   .image5-elm1 {
-    top: 0px;
-    right: 20px;
-    bottom: 0px;
     width: 60px;
     margin: auto;
   }
   .image5-elm2 {
-    left: 20px;
     width: 60px;
     margin: auto;
   }

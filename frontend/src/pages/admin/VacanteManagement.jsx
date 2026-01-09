@@ -9,11 +9,11 @@ import {
   TableRow,
   Paper,
   Button,
+  Box,
 } from "@mui/material"; // Removido TextField, Add
 import { Add } from "@mui/icons-material";
 import axios from "../../utils/axiosConfig";
 import { useParams, useNavigate } from "react-router-dom";
-import "../../assets/bolsaTrabajo.css"
 
 const VacanteManagement = () => {
   const { empresa_id } = useParams(); // Usaremos empresa_id para ser consistentes con el routes.js
@@ -45,13 +45,12 @@ const VacanteManagement = () => {
   // Asumiendo que el SectionBanner maneja el título:
 
   return (
-    <div >
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%", width: "100%", alignItems: "center", position: "relative", justifyContent: "space-between", gap: "20px", paddingBottom: "20px", paddingTop: "20px" }}>
       {/* Botón para añadir vacante, reemplaza el formulario inline */}
       <Button
         type="button"
         variant="contained"
         startIcon={<Add />}
-        className="btn-save"
         onClick={handleRedirectRegister}
         sx={{
           display: "flex",
@@ -76,50 +75,38 @@ const VacanteManagement = () => {
           "&:hover": {
             backgroundColor: "rgba(44, 44, 44, 0.9)",
           },
-          top: "300px",
-          position: "absolute",
+          gap: "8px",
+          position: "relative",
           alignItems: "center",
           flexDirection: "row",
           justifyContent: "center",
-          zIndex: 1,
           justifySelf: "center",
         }}
       >
         Publicar nueva vacante
       </Button>
-      <div>
-        <TableContainer component={Paper} className="table-container" sx={{
-          overflow: "auto",
-          maxHeight: "calc(100vh - 300px)",
-          width: {
-            xs: "450px",
-            sm: "600px",
-            md: "750px",
-            lg: "1000px",
-            xl: "1200px",
-          },
-          justifySelf: "center",
-          position: "relative",
-          top: "350px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "stretch",
-          justifyContent: "stretch",
-          "&::-webkit-scrollbar": {
-            width: "1px",
-          },
-          "&::-webkit-scrollbar-track": {
-            backgroundColor: "#f1f1f1",
-            borderRadius: "1px",
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#888",
-            borderRadius: "1px",
-          },
-          "&::-webkit-scrollbar-thumb:hover": {
-            backgroundColor: "#555",
-          },
-        }}>
+      <Box sx={{
+        display: "flex", position: "relative", justifyContent: "center", width: {
+          xs: "400px",
+          sm: "500px",
+          md: "550px",
+        },
+      }}>
+        <TableContainer component={Paper}
+          sx={{
+            overflow: "auto",
+            scrollbarWidth: "thin",
+            maxHeight: "calc(100vh - 300px)",
+            width: "100%",
+            borderRadius: "8px",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+            justifyContent: "stretch",
+            justifySelf: "center",
+            alignSelf: "center",
+          }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow sx={{
@@ -137,11 +124,10 @@ const VacanteManagement = () => {
                       sm: "4px",
                       md: "6px",
                     },
-                    flexShrink: "0",
                     fontSize: {
-                      xs: "0.8rem",
+                      xs: "0.9rem",
                       sm: "1rem",
-                      md: "1.2rem",
+                      md: "1.1rem",
                     },
                     fontWeight: "600",
                     lineHeight: "1",
@@ -165,12 +151,11 @@ const VacanteManagement = () => {
                       md: "6px",
                     },
                     alignItems: "center",
-                    flexShrink: "0",
                     justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
+                      xs: "0.9rem",
                       sm: "1rem",
-                      md: "1.2rem",
+                      md: "1.1rem",
                     },
                     textAlign: "center",
                     fontWeight: "600",
@@ -189,12 +174,11 @@ const VacanteManagement = () => {
                       md: "6px",
                     },
                     alignItems: "center",
-                    flexShrink: "0",
                     justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
+                      xs: "0.9rem",
                       sm: "1rem",
-                      md: "1.2rem",
+                      md: "1.1rem",
                     },
                     textAlign: "center",
                     fontWeight: "600",
@@ -213,12 +197,11 @@ const VacanteManagement = () => {
                       md: "6px",
                     },
                     alignItems: "center",
-                    flexShrink: "0",
                     justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
+                      xs: "0.9rem",
                       sm: "1rem",
-                      md: "1.2rem",
+                      md: "1.1rem",
                     },
                     textAlign: "center",
                     fontWeight: "600",
@@ -240,14 +223,14 @@ const VacanteManagement = () => {
                       sm: "20px",
                     },
                     padding: {
-                      xs: "4px",
-                      sm: "6px",
-                      md: "8px",
+                      xs: "2px",
+                      sm: "4px",
+                      md: "6px",
                     },
-                    flexShrink: "0",
                     fontSize: {
-                      xs: "0.8rem",
-                      sm: "1rem",
+                      xs: "0.7rem",
+                      sm: "0.8rem",
+                      md: "0.9rem",
                     },
                     fontWeight: "400",
                     lineHeight: "1",
@@ -260,26 +243,26 @@ const VacanteManagement = () => {
                     {vacante.id}
                   </TableCell>
                   <TableCell sx={{
-                    margin: "0px",
                     width: {
                       xs: "80px",
                       sm: "130px",
                     },
                     padding: {
-                      xs: "4px",
-                      sm: "6px",
-                      md: "8px",
+                      xs: "2px",
+                      sm: "4px",
+                      md: "6px",
                     },
-                    alignItems: "center",
-                    flexShrink: "0",
-                    justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
-                      sm: "1rem",
+                      xs: "0.7rem",
+                      sm: "0.8rem",
+                      md: "0.9rem",
                     },
-                    textAlign: "center",
                     fontWeight: "400",
                     lineHeight: "1",
+                    justifyContent: "center",
+                    margin: "0px",
+                    alignItems: "center",
+                    textAlign: "center",
                   }}>{vacante.titulo}</TableCell>
                   <TableCell sx={{
                     width: {
@@ -287,21 +270,21 @@ const VacanteManagement = () => {
                       sm: "130px",
                     },
                     padding: {
-                      xs: "4px",
-                      sm: "6px",
-                      md: "8px",
+                      xs: "2px",
+                      sm: "4px",
+                      md: "6px",
                     },
-                    alignItems: "center",
-                    flexShrink: "0",
-                    justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
-                      sm: "1rem",
+                      xs: "0.7rem",
+                      sm: "0.8rem",
+                      md: "0.9rem",
                     },
-                    textAlign: "center",
                     fontWeight: "400",
                     lineHeight: "1",
+                    justifyContent: "center",
                     margin: "0px",
+                    alignItems: "center",
+                    textAlign: "center",
                   }}>{vacante.descripcion}</TableCell>
                   <TableCell sx={{
                     width: {
@@ -313,17 +296,17 @@ const VacanteManagement = () => {
                       sm: "4px",
                       md: "6px",
                     },
-                    alignItems: "center",
-                    flexShrink: "0",
-                    justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
-                      sm: "1rem",
+                      xs: "0.7rem",
+                      sm: "0.8rem",
+                      md: "0.9rem",
                     },
-                    textAlign: "center",
                     fontWeight: "400",
                     lineHeight: "1",
+                    justifyContent: "center",
                     margin: "0px",
+                    alignItems: "center",
+                    textAlign: "center",
                   }}>
                     {new Date(vacante.fecha_publicacion).toLocaleDateString()}
                   </TableCell>
@@ -332,8 +315,8 @@ const VacanteManagement = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

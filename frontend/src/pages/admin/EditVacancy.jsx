@@ -84,16 +84,15 @@ const EditVacancy = () => {
       onSubmit={handleSubmit}
       sx={{
         gap: "10px",
-        top: {
-          xs: "200px",
-          lg: "250px",
-        },
         p: {
           xs: "10px",
           sm: "15px",
           md: "20px",
           lg: "25px",
           xl: "30px",
+        },
+        top: {
+          xs: "50px",
         },
         width: {
           xs: "450px",
@@ -108,13 +107,14 @@ const EditVacancy = () => {
         boxShadow: 3,
         display: "grid",
         flexDirection: "column",
-        position: "absolute",
+        position: "relative",
         WebkitAlignItems: "center",
         alignItems: "center",
         justifyContent: "center",
         WebkitJustifyContent: "center",
         gridTemplateRows: "repeat(5, 1fr)",
         gridTemplateColumns: "repeat(2, 1fr)",
+        mt: "20px",
       }}
     >
       <TextField
@@ -260,7 +260,6 @@ const EditVacancy = () => {
           gridColumnStart: "2",
           gridColumnEnd: "3",
           display: "flex",
-          justifySelf: "center",
         }}
       />
       <Select

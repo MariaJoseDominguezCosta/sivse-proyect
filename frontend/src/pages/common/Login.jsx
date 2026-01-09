@@ -134,7 +134,7 @@ const Login = () => {
       </Formik>
 
       {/* Links de recuperación y registro */}
-      <Link href="/recover" variant="body2" className="login-text-link">
+      <Link href="/recover" variant="body2" className="login-text-link" >
         ¿Olvidaste tu contraseña?
       </Link>
       <Link href="/register" variant="body2" className="login-text-link">

@@ -11,11 +11,11 @@ import {
   Select,
   MenuItem,
   IconButton,
+  Box,
 } from "@mui/material";
 import { Info } from "@mui/icons-material";
 import axios from "../../utils/axiosConfig";
 import { useNavigate } from "react-router-dom";
-import "../../assets/seguimientoEgresados.css";
 
 const AlumniTracking = () => {
   const [alumni, setAlumni] = useState([]);
@@ -62,14 +62,30 @@ const AlumniTracking = () => {
   }, []);
 
   return (
-    <div>
-      <div className="search-bar">
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%", width: "100%", alignItems: "center", position: "relative", justifyContent: "space-between", gap: "20px", paddingBottom: "20px", paddingTop: "20px" }}>
+      <Box sx={{
+        display: "flex", position: "relative", width: {
+          xs: "350px",
+          sm: "400px",
+          md: "450px",
+          lg: "500px",
+        },
+        alignItems: "center",
+        justifyContent: "center",
+        height: {
+          xs: "20px",
+          sm: "25px",
+          md: "30px",
+          lg: "35px",
+        },
+        marginBottom: "10px",
+
+      }}>
         <TextField
           placeholder="Hinted search text"
           value={search}
           sx={{
             display: "flex",
-            flexGrow: 1,
             alignSelf: "stretch",
             width: "100%",
             height: "100%",
@@ -77,8 +93,8 @@ const AlumniTracking = () => {
               padding: "8px",
               fontSize: {
                 xs: "0.8rem",
-                sm: "1rem",
-                md: "1.2rem",
+                sm: "0.9rem",
+                md: "1rem",
               },
               fontWeight: "normal",
               lineHeight: "1",
@@ -86,24 +102,18 @@ const AlumniTracking = () => {
             "& .MuiInputBase-root": {
               borderRadius: "28px",
               backgroundColor: "#FFFDFD",
-              left: {
-                xs: "50px",
-                sm: "100px",
-                md: "150px",
-              },
-              top: { xs: "200px" },
+              height: "100%",
+              width: "100%",
               position: "relative",
               display: "flex",
-              alignItems: "center",
               justifyContent: "center",
               alignSelf: "stretch",
-              right: "auto",
             },
           }}
           onChange={(e) => setSearch(e.target.value)}
         />
-      </div>
-      <div className="filters">
+      </Box>
+      <Box sx={{ display: "flex", alignItems: "center", position: "relative", gap: "20px" }}>
         {/* Filtro Generación */}
         <Select
           value={generacionFilter}
@@ -114,7 +124,6 @@ const AlumniTracking = () => {
               md: "1.2rem",
             },
             fontWeight: "normal",
-            lineHeight: "1",
             letterSpacing: "0.00938em",
             width: "auto",
             height: "auto",
@@ -142,7 +151,6 @@ const AlumniTracking = () => {
               md: "1.2rem",
             },
             fontWeight: "normal",
-            lineHeight: "1",
             letterSpacing: "0.00938em",
             width: "auto",
             height: "auto",
@@ -157,42 +165,30 @@ const AlumniTracking = () => {
             </MenuItem>
           ))}
         </Select>
-      </div>
-      <div>
+      </Box>
+      <Box sx={{
+        display: "flex", position: "relative", justifyContent: "center", width: {
+          xs: "400px",
+          sm: "500px",
+          md: "570px",
+
+        },
+      }}>
         <TableContainer
           component={Paper}
-          className="table-container"
           sx={{
             overflow: "auto",
+            scrollbarWidth: "thin",
             maxHeight: "calc(100vh - 300px)",
-            width: {
-              xs: "450px",
-              sm: "600px",
-              md: "750px",
-              lg: "1000px",
-              xl: "1200px",
-            },
-            justifySelf: "center",
+            width: "auto",
+            borderRadius: "8px",
             position: "relative",
-            top: "350px",
             display: "flex",
             flexDirection: "column",
             alignItems: "stretch",
             justifyContent: "stretch",
-            "&::-webkit-scrollbar": {
-              width: "1px",
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: "#f1f1f1",
-              borderRadius: "1px",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "#888",
-              borderRadius: "1px",
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              backgroundColor: "#555",
-            },
+            justifySelf: "center",
+            alignSelf: "center",
           }}
         >
           <Table stickyHeader>
@@ -214,18 +210,17 @@ const AlumniTracking = () => {
                       sm: "4px",
                       md: "6px",
                     },
-                    flexShrink: "0",
                     fontSize: {
-                      xs: "0.8rem",
+                      xs: "0.9rem",
                       sm: "1rem",
-                      md: "1.2rem",
+                      md: "1.1rem",
                     },
                     fontWeight: "600",
                     lineHeight: "1",
                     justifyContent: "center",
-                    margin: "0px",
                     alignItems: "center",
                     textAlign: "center",
+                    margin: "0px",
                   }}
                 >
                   #
@@ -244,12 +239,11 @@ const AlumniTracking = () => {
                       md: "6px",
                     },
                     alignItems: "center",
-                    flexShrink: "0",
                     justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
+                      xs: "0.9rem",
                       sm: "1rem",
-                      md: "1.2rem",
+                      md: "1.1rem",
                     },
                     textAlign: "center",
                     fontWeight: "600",
@@ -271,12 +265,11 @@ const AlumniTracking = () => {
                       md: "6px",
                     },
                     alignItems: "center",
-                    flexShrink: "0",
                     justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
+                      xs: "0.9rem",
                       sm: "1rem",
-                      md: "1.2rem",
+                      md: "1.1rem",
                     },
                     textAlign: "center",
                     fontWeight: "600",
@@ -299,12 +292,11 @@ const AlumniTracking = () => {
                       md: "6px",
                     },
                     alignItems: "center",
-                    flexShrink: "0",
                     justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
+                      xs: "0.9rem",
                       sm: "1rem",
-                      md: "1.2rem",
+                      md: "1.1rem",
                     },
                     textAlign: "center",
                     fontWeight: "600",
@@ -327,12 +319,11 @@ const AlumniTracking = () => {
                       md: "6px",
                     },
                     alignItems: "center",
-                    flexShrink: "0",
                     justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
+                      xs: "0.9rem",
                       sm: "1rem",
-                      md: "1.2rem",
+                      md: "1.1rem",
                     },
                     textAlign: "center",
                     fontWeight: "600",
@@ -356,12 +347,11 @@ const AlumniTracking = () => {
                       md: "6px",
                     },
                     alignItems: "center",
-                    flexShrink: "0",
                     justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
+                      xs: "0.9rem",
                       sm: "1rem",
-                      md: "1.2rem",
+                      md: "1.1rem",
                     },
                     textAlign: "center",
                     fontWeight: "600",
@@ -384,12 +374,11 @@ const AlumniTracking = () => {
                       md: "6px",
                     },
                     alignItems: "center",
-                    flexShrink: "0",
                     justifyContent: "center",
                     fontSize: {
-                      xs: "0.8rem",
+                      xs: "0.9rem",
                       sm: "1rem",
-                      md: "1.2rem",
+                      md: "1.1rem",
                     },
                     textAlign: "center",
                     fontWeight: "600",
@@ -421,10 +410,10 @@ const AlumniTracking = () => {
                         sm: "6px",
                         md: "8px",
                       },
-                      flexShrink: "0",
                       fontSize: {
-                        xs: "0.8rem",
-                        sm: "1rem",
+                        xs: "0.7rem",
+                        sm: "0.8rem",
+                        md: "0.9rem",
                       },
                       fontWeight: "400",
                       lineHeight: "1",
@@ -438,7 +427,6 @@ const AlumniTracking = () => {
                   </TableCell>
                   <TableCell
                     sx={{
-                      margin: "0px",
                       width: {
                         xs: "80px",
                         sm: "130px",
@@ -448,16 +436,17 @@ const AlumniTracking = () => {
                         sm: "6px",
                         md: "8px",
                       },
-                      alignItems: "center",
-                      flexShrink: "0",
-                      justifyContent: "center",
                       fontSize: {
-                        xs: "0.8rem",
-                        sm: "1rem",
+                        xs: "0.7rem",
+                        sm: "0.8rem",
+                        md: "0.9rem",
                       },
-                      textAlign: "center",
                       fontWeight: "400",
                       lineHeight: "1",
+                      justifyContent: "center",
+                      margin: "0px",
+                      alignItems: "center",
+                      textAlign: "center",
                     }}
                   >
                     {alum.nombre_completo}
@@ -473,17 +462,17 @@ const AlumniTracking = () => {
                         sm: "6px",
                         md: "8px",
                       },
-                      alignItems: "center",
-                      flexShrink: "0",
-                      justifyContent: "center",
                       fontSize: {
-                        xs: "0.8rem",
-                        sm: "1rem",
+                        xs: "0.7rem",
+                        sm: "0.8rem",
+                        md: "0.9rem",
                       },
-                      textAlign: "center",
                       fontWeight: "400",
                       lineHeight: "1",
+                      justifyContent: "center",
                       margin: "0px",
+                      alignItems: "center",
+                      textAlign: "center",
                     }}
                   >
                     {alum.generacion}
@@ -499,17 +488,17 @@ const AlumniTracking = () => {
                         sm: "6px",
                         md: "8px",
                       },
-                      alignItems: "center",
-                      flexShrink: "0",
-                      justifyContent: "center",
                       fontSize: {
-                        xs: "0.8rem",
-                        sm: "1rem",
+                        xs: "0.7rem",
+                        sm: "0.8rem",
+                        md: "0.9rem",
                       },
-                      textAlign: "center",
                       fontWeight: "400",
                       lineHeight: "1",
+                      justifyContent: "center",
                       margin: "0px",
+                      alignItems: "center",
+                      textAlign: "center",
                     }}
                   >
                     {alum.puesto}
@@ -525,17 +514,17 @@ const AlumniTracking = () => {
                         sm: "6px",
                         md: "8px",
                       },
-                      alignItems: "center",
-                      flexShrink: "0",
-                      justifyContent: "center",
                       fontSize: {
-                        xs: "0.8rem",
-                        sm: "1rem",
+                        xs: "0.7rem",
+                        sm: "0.8rem",
+                        md: "0.9rem",
                       },
-                      textAlign: "center",
                       fontWeight: "400",
                       lineHeight: "1",
+                      justifyContent: "center",
                       margin: "0px",
+                      alignItems: "center",
+                      textAlign: "center",
                     }}
                   >
                     {alum.ubicacion}
@@ -552,17 +541,17 @@ const AlumniTracking = () => {
                         sm: "6px",
                         md: "8px",
                       },
-                      alignItems: "center",
-                      flexShrink: "0",
-                      justifyContent: "center",
                       fontSize: {
-                        xs: "0.8rem",
-                        sm: "1rem",
+                        xs: "0.7rem",
+                        sm: "0.8rem",
+                        md: "0.9rem",
                       },
-                      textAlign: "center",
                       fontWeight: "400",
                       lineHeight: "1",
+                      justifyContent: "center",
                       margin: "0px",
+                      alignItems: "center",
+                      textAlign: "center",
                     }}
                   >
                     {alum.empresa_actual}
@@ -578,17 +567,24 @@ const AlumniTracking = () => {
                         sm: "6px",
                         md: "8px",
                       },
-                      alignItems: "center",
-                      flexShrink: "0",
+                      fontWeight: "400",
+                      lineHeight: "1",
                       justifyContent: "center",
                       margin: "0px",
+                      alignItems: "center",
                       textAlign: "center",
                     }}
                   >
                     <IconButton
                       onClick={() => navigate(`/admin/egresados/${alum.id}`)}
                     >
-                      <Info sx={{}} />
+                      <Info sx={{
+                        fontSize: {
+                          xs: "1rem",
+                          sm: "1.1rem",
+                          md: "1.2rem",
+                        },
+                      }} />
                     </IconButton>
                   </TableCell>
                 </TableRow>
@@ -596,8 +592,8 @@ const AlumniTracking = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

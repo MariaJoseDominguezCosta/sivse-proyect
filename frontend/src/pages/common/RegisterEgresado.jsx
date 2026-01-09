@@ -236,14 +236,9 @@ const RegisterEgresado = () => {
           lg: "18px",
           xl: "20px",
         },
-        top: {
-          xs: "150px",
-          md: "200px",
-          sm: "150px ",
-          xl: "300px",
-        },
+        top: "50px",
         backgroundColor: "rgba(255, 253, 253, 1)",
-        position: "absolute",
+        position: "relative",
         borderRadius: "10px",
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
       }}

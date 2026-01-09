@@ -2,13 +2,12 @@
 
 .login-form{
   gap: 50px;
-  top: 200px;
   justify-self: center;
   width: 500px;
   height: 450px;
   display: flex;
   padding: 25px;
-  position: absolute;
+  position: relative;
   flex-shrink: 0;
   border-color: rgba(217, 217, 217, 1);
   border-style: solid;
@@ -39,12 +38,16 @@
   width: 450px;
   margin-top: 10px;
   justify-self: center;
+  position: relative;
 }
 
 .login-text-link {
   gap: 20px;
   display: flex;
   align-self: center;
+  position: relative;
+  font-size: 1.6rem;
+
 }
 
 @media (min-width: 1536px) {

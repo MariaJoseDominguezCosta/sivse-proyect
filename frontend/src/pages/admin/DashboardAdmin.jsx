@@ -3,7 +3,6 @@ import { Grid, Card, CardContent, Typography, Avatar } from "@mui/material";
 import { People, Business, Work } from "@mui/icons-material";
 import axios from "../../utils/axiosConfig";
 import { toast } from "react-toastify";
-import "../../assets/dashboardAdmin.css";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -43,12 +42,12 @@ const Dashboard = () => {
         flexDirection: { xs: "column", sm: "row" },
         gap: { xs: "10px" },
         top: {
-          xs: "200px",
+          xs: "50px",
         },
         gridTemplateRows: { sm: "repeat(2, 1fr)" },
         gridTemplateColumns: { sm: "repeat(2, 1fr)" },
         justifyItems: "center",
-        position: "absolute",
+        position: "relative",
         width: "auto",
         height: "auto",
         justifySelf: "center",

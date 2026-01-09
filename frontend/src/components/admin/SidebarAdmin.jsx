@@ -10,6 +10,7 @@ import {
   AppBar,
   Toolbar,
   Drawer,
+  Divider,
   Typography,
 } from "@mui/material";
 import {
@@ -22,6 +23,7 @@ import {
   AdminPanelSettings,
   Menu as MenuIcon,
 } from "@mui/icons-material";
+
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../../assets/sidebarAdmin.css";
 

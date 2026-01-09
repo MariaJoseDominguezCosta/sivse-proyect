@@ -28,8 +28,7 @@ const RegisterCompany = () => {
       sx={{
         gap: "10px",
         top: {
-          xs: "200px",
-          lg: "250px",
+          xs: "50px",
         },
         p: {
           xs: "10px",
@@ -51,7 +50,7 @@ const RegisterCompany = () => {
         boxShadow: 3,
         display: "grid",
         flexDirection: "column",
-        position: "absolute",
+        position: "relative",
         WebkitAlignItems: "center",
         alignItems: "center",
         justifyContent: "center",
@@ -158,7 +157,6 @@ const RegisterCompany = () => {
           gridColumnStart: "1",
           gridColumnEnd: "2",
           display: "flex",
-          justifySelf: "center",
         }} />
       <Box component="div"
         sx={{
@@ -177,7 +175,10 @@ const RegisterCompany = () => {
             borderColor: "rgba(118, 118, 118, 1)",
           }}>Cancelar</Button>
         <Button variant='contained' type="submit"
-          sx={{ p: { xs: 1 }, bgcolor: "rgba(44, 44, 44, 1)" }}>Guardar</Button>
+          sx={{
+            p: { xs: 1 }, bgcolor: 'var(--button-save)', // Negro
+            '&:hover': { bgcolor: 'var(--button-save)', opacity: 0.9 }
+          }}>Guardar</Button>
       </Box>
     </Box>
   );

@@ -189,16 +189,37 @@ const EditPerfil = () => {
   return (
     // Aplicar estilos del formulario
     <Box
-      className="form-container"
-      sx={{ maxWidth: "900px", margin: "30px auto" }}
+      sx={{
+        flexDirection: "column",
+        position: "relative",
+        backgroundColor: "#FFFDFD",
+        borderRadius: "8px",
+        boxShadow: 3,
+        gap: "20px",
+        flex: 1,
+        overflow: "auto",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        alignSelf: "center",
+        justifySelf: "center",
+        top: {
+          xs: "50px",
+        },
+        marginBottom: "50px",
+        p: "20px",
+        width: { xs: "auto", sm: "500px", md: "600px", lg: "700px" },
+        height: "auto",
+      }}
     >
       {/* -- Campo de foto de perfil -- */}
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
+          justifyContent: "center",
           alignItems: "center",
-          mb: 3,
+          width: "auto",
         }}
       >
         <Avatar
@@ -228,10 +249,12 @@ const EditPerfil = () => {
         initialValues={initialData}
         validationSchema={validationSchema}
         onSubmit={handleSave}
+
       >
         {({ isSubmitting, errors, touched }) => (
-          <Form>
-            <Grid container spacing={2}>
+          <Form style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "auto", }}>
+            <Grid container spacing={2}
+              sx={{ width: "100%", display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}>
               {/* Columna Izquierda */}
               <Grid item xs={12} md={6}>
                 <Field
@@ -242,6 +265,7 @@ const EditPerfil = () => {
                   margin="normal"
                   error={touched.nombre_completo && !!errors.nombre_completo}
                   helperText={touched.nombre_completo && errors.nombre_completo}
+
                 />
                 <Field
                   as={TextField}
@@ -283,10 +307,6 @@ const EditPerfil = () => {
                   fullWidth
                   margin="normal"
                 />
-              </Grid>
-
-              {/* Columna Derecha */}
-              <Grid item xs={12} md={6}>
                 <Field
                   as={TextField}
                   name="fecha_inicio"
@@ -296,6 +316,11 @@ const EditPerfil = () => {
                   margin="normal"
                   InputLabelProps={{ shrink: true }}
                 />
+              </Grid>
+
+              {/* Columna Derecha */}
+              <Grid item xs={12} md={6}>
+
                 <Field
                   as={TextField}
                   name="modalidad"
@@ -348,23 +373,26 @@ const EditPerfil = () => {
             </Grid>
 
             {/* Botones */}
-            <Box className="buttons">
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 2, gap: 2 }}>
               <Button
-                className="btn-cancel"
+                variant="outlined"
                 onClick={() => navigate("/egresado")}
-              >
-                Cancelar
-              </Button>
-              <Button
-                className="btn-save"
-                type="submit"
+                sx={{
+                  p: {
+                    xs: 1,
+                  },
+                  color: "rgba(30, 30, 30, 1)",
+                  borderColor: "rgba(118, 118, 118, 1)",
+                }}>Cancelar</Button>
+              <Button variant='contained' type="submit"
+                sx={{ p: { xs: 1 }, bgcolor: "rgba(44, 44, 44, 1)" }}
                 disabled={isSubmitting}
               >
                 Guardar
               </Button>
             </Box>
             {error && (
-              <Typography color="error" sx={{ mt: 1 }}>
+              <Typography color="error" sx={{ mt: 1, textAlign: "center", position: "relative" }}>
                 {error}
               </Typography>
             )}

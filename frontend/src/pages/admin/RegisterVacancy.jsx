@@ -76,8 +76,7 @@ const RegisterVacancy = () => {
       sx={{
         gap: "10px",
         top: {
-          xs: "200px",
-          lg: "250px",
+          xs: "50px",
         },
         p: {
           xs: "10px",
@@ -87,7 +86,7 @@ const RegisterVacancy = () => {
           xl: "30px",
         },
         width: {
-          xs: "450px",
+          xs: "auto",
           md: "500px",
           lg: "600px",
           xl: "700px",
@@ -99,7 +98,7 @@ const RegisterVacancy = () => {
         boxShadow: 3,
         display: "grid",
         flexDirection: "column",
-        position: "absolute",
+        position: "relative",
         WebkitAlignItems: "center",
         alignItems: "center",
         justifyContent: "center",
@@ -251,7 +250,6 @@ const RegisterVacancy = () => {
           gridColumnStart: "2",
           gridColumnEnd: "3",
           display: "flex",
-          justifySelf: "center",
         }}
       />
       <Select

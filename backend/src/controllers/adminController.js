@@ -222,15 +222,17 @@ exports.getDashboardSummary = async (req, res) => {
 };
 
 exports.registerAdmin = async (req, res) => {
-  // Validación con Joi
+  // 1. Validación con Joi
   const schema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
   });
-  const { error } = schema.validate(req.body);
+  const { error, value } = schema.validate(req.body); // <- USAR value
   if (error) return res.status(400).json({ error: error.details[0].message });
 
-  
+  // Extracción de las variables validadas
+  const { email, password } = value; // <- CORRECCIÓN CLAVE: Desestructurar de 'value' o de req.body
+
   try {
         // 2. Verificar duplicado
         if (await User.findOne({ where: { email } })) return res.status(400).json({ error: 'Email ya existe' });
@@ -246,8 +248,8 @@ exports.registerAdmin = async (req, res) => {
         res.status(201).json({ message: 'Nuevo administrador registrado', userId: newUser.id });
         
     } catch (err) {
+        // ... (Manejo de errores existente) ...
         console.error('Error registering admin:', err);
-        // Manejo de errores
         if (err.name === 'SequelizeUniqueConstraintError') {
             res.status(400).json({ error: 'Email ya existe' });
         } else {

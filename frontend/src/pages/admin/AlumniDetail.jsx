@@ -46,11 +46,8 @@ const AlumniDetail = () => {
 
   return (
     <Box sx={{
-      position: "absolute",
-      top: {
-        xs: "200px", sm: "250px", lg: "200px", xl: "250px"
-      },
-      margin: "auto",
+      position: "relative",
+      mt: "20px",
       backgroundColor: "background.paper",
       padding: "20px",
       borderRadius: "8px",
