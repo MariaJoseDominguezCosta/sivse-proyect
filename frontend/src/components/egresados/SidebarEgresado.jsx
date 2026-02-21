@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Importar useEffect
 import {
   Box,
   List,
@@ -16,6 +16,7 @@ import {
 import { Home, Favorite, Work, Logout, Menu as MenuIcon } from '@mui/icons-material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import "../../assets/sidebarAdmin.css"; 
+import api, { IMAGE_BASE_URL } from "../../utils/axiosConfig"; // Importar API
 
 const drawerWidth = 280; 
 
@@ -24,7 +25,24 @@ const SidebarEgresado = () => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   
-  // No necesitamos 'activeSection' si usamos location.pathname directamente
+  // Estado para guardar la información básica del perfil
+  const [profile, setProfile] = useState(null);
+
+  // Efecto para obtener el nombre y foto del egresado
+  useEffect(() => {
+    const fetchSidebarData = async () => {
+      try {
+        // Reutilizamos el endpoint del dashboard ya que devuelve la foto y el nombre
+        const res = await api.get("/egresado/dashboard");
+        setProfile(res.data.perfil);
+      } catch (error) {
+        console.error("Error al cargar datos del sidebar:", error);
+      }
+    };
+
+    fetchSidebarData();
+  }, []);
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -34,10 +52,8 @@ const SidebarEgresado = () => {
     navigate('/');
   };
 
-  // Elementos del menú para evitar repetición
   const menuItems = [
     { text: "Inicio", icon: <Home />, path: "/egresado" },
-    // { text: "Editar Perfil", icon: <Person />, path: "/egresados/perfil/edit" },
     { text: "Favoritos", icon: <Favorite />, path: "/egresados/favoritos" },
     { text: "Vacantes", icon: <Work />, path: "/egresados/vacantes" },
   ];
@@ -50,10 +66,34 @@ const SidebarEgresado = () => {
           alt="Logo"
           className="sidebar-logo"
         />
+        
+        {/* --- SECCIÓN PERFIL ACTUALIZADA --- */}
         <Box className="sidebar-profile">
-          <Avatar className="sidebar-avatar" sx={{ bgcolor: '#4F378A' }}>E</Avatar>
-          <Typography className="sidebar-role">Egresado</Typography>
+          <Avatar 
+            className="sidebar-avatar" 
+            sx={{ bgcolor: '#4F378A' }}
+            // Si hay foto, la mostramos. Si no, usamos la letra inicial o el icono por defecto.
+            src={profile?.foto_perfil ? `${IMAGE_BASE_URL}${profile.foto_perfil}` : null}
+          >
+            {/* Si no hay foto, muestra la inicial del nombre o 'E' */}
+            {profile?.nombre_completo ? profile.nombre_completo.charAt(0).toUpperCase() : "E"}
+          </Avatar>
+          
+          <Typography 
+            className="sidebar-role"
+            sx={{ 
+              textAlign: "center", 
+              px: 2, 
+              fontSize: "0.9rem", // Ajuste ligero de tamaño para nombres largos
+              wordBreak: "break-word"
+            }}
+          >
+            {/* Muestra el nombre si existe, sino muestra 'Egresado' */}
+            {profile?.nombre_completo || "Egresado"}
+          </Typography>
         </Box>
+        {/* ---------------------------------- */}
+
       </Box>
 
       <List sx={{ px: 2 }}>
@@ -68,7 +108,6 @@ const SidebarEgresado = () => {
               className={`sidebar-item ${isActive ? "active" : ""}`}
             >
               <ListItemIcon className="sidebar-icon">
-                {/* Usar React.cloneElement para pasar el color del icono */}
                 {React.cloneElement(item.icon, {
                   sx: { color: isActive ? "#FFE0E0" : "#FFFDFD" },
                 })}
@@ -81,10 +120,8 @@ const SidebarEgresado = () => {
           );
         })}
 
-        {/* Separador */}
         <Divider sx={{ bgcolor: '#FFFDFD', my: 1 }} /> 
         
-        {/* Botón de Cerrar Sesión */}
         <ListItem
           onClick={handleLogout}
           className="sidebar-item logout-item"
@@ -104,7 +141,6 @@ const SidebarEgresado = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      {/* NAVBAR PARA MÓVILES (Solo visible en xs y sm) - Copiado de SidebarAdmin */}
       <AppBar
         position="fixed"
         sx={{
@@ -130,12 +166,10 @@ const SidebarEgresado = () => {
         </Toolbar>
       </AppBar>
 
-      {/* NAVEGACIÓN (Drawer) - Copiado de SidebarAdmin */}
       <Box
         component="nav"
         sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
       >
-        {/* Drawer para Móvil */}
         <Drawer
           variant="temporary"
           open={mobileOpen}
@@ -153,7 +187,6 @@ const SidebarEgresado = () => {
           {drawerContent}
         </Drawer>
 
-        {/* Sidebar para Escritorio */}
         <Drawer
           variant="permanent"
           sx={{
@@ -171,7 +204,6 @@ const SidebarEgresado = () => {
         </Drawer>
       </Box>
 
-      {/* Espaciador para que el contenido no quede debajo de la AppBar en móvil */}
       <Toolbar sx={{ display: { md: "none" } }} />
     </Box>
   );

@@ -245,39 +245,33 @@ const VacantesList = () => {
           ))}
         </Select>
       </Box>
-      <Grid container spacing={2} sx={{
-        mt: 2, display: { xs: "flex", sm: "grid" },
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: { xs: "column", sm: "row" },
-        gap: { xs: "10px" },
-        gridTemplateRows: { sm: "repeat(2, 1fr)" },
-        gridTemplateColumns: { sm: "repeat(3, 1fr)" },
-        position: "relative",
-        width: "auto",
-        height: "auto",
-        justifySelf: "center",
-      }}>
+      <Grid container spacing={3} justifyContent="center"
+        sx={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+        }}>
         {filteredVacancies.map((vac) => (
-          <Grid item xs={12} md={4} key={vac.id} sx={{ display: "flex", }}>
+          <Grid item xs={12}
+            sm={6}
+            md={4}
+            key={vac.id}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}>
             <Card sx={{
+              width: "100%",
+              maxWidth: "320px",
+              minHeight: "260px",
               borderRadius: "10px",
-              padding: "20px",
+              padding: "16px",
               transition: "all 0.3s ease-in-out",
-              width: {
-                xs: "auto",
-                sm: "250px",
-              },
-              height: {
-                xs: "auto",
-                sm: "250px",
-              },
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
               backgroundColor: "rgba(245, 235, 235, 1)",
               display: "flex",
               flexDirection: "column",
-              overflowY: "hidden",
-              "&:hover": { transform: "scale(1.05)", scrollbarWidth: 0, overflowY: "hidden" },
+              justifyContent: "space-between",
+              "&:hover": { transform: "scale(1.03)" },
             }}>
               <CardContent sx={{
                 display: "flex",
@@ -345,7 +339,7 @@ const VacantesList = () => {
                   ))}
                 </Box>
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap:0 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 0 }}>
                   <Button
                     variant="outlined"
                     sx={{
